@@ -6,8 +6,8 @@ body:
     attributes:
       label: 📑 설명
       description: 개발할 새로운 기능에 대한 설명 작성
-      validations:
-        required: true
+  validations:
+      required: true
   - type: textarea
     attributes:
       label: ✅ 작업할 내용
