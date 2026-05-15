@@ -1,8 +1,12 @@
+import { Routes, Route } from 'react-router-dom';
+import CreateProfilePage from './pages/CreateProfile/CreateProfile';
+
+
 const App = () => {
   return (
-    <div>
-      <text className="text-2xl font-black">Hello</text>
-    </div>
+    <Routes>
+      <Route path="/create-profile" element={<CreateProfilePage />} />
+    </Routes>
   )
 }
 

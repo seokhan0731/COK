@@ -1,5 +1,22 @@
 @import 'tailwindcss';
 
+@theme {
+  /* color */
+  --color-background: #fafaf9; /* stone-50 */
+
+  --color-primary-blue: #155dfc; /* blue-600 */
+  --color-primary-emerald: #5ee9b5; /* emerald-300 */
+
+  --color-font-black: #09090b; /* zinc-950 */
+  --color-font-white: #fafafa; /* zinc-50 */
+
+  --color-border: #e4e4e7; /* zinc-200 */
+  --color-border-strong: #9f9fa9; /* zinc-400 */
+
+  /* font */
+  --font-sans: 'Roboto', sans-serif;
+}
+
 :root {
   font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.5;
@@ -9,6 +26,43 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+  min-height: 100dvh;
+}
+
 body {
   margin: 0;
+  min-width: 360px;
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+}
+
+/* Radar Chart Setting */
+.recharts-wrapper,
+.recharts-wrapper *,
+.recharts-wrapper:focus,
+.recharts-wrapper svg:focus {
+  outline: none;
+}
+
+@layer base {
+  span,
+  p {
+    @apply text-sm text-font-black lg:text-base;
+  } 
+}
+
+@layer components {
+  .text-h1 {
+    @apply text-4xl lg:text-5xl text-font-black;
+  }
+  .text-h2 {
+    @apply text-3xl lg:text-4xl text-font-black;
+  }
+  .text-h3 {
+    @apply text-2xl lg:text-3xl text-font-black;
+  }
+  .text-h4 {
+    @apply text-xl lg:text-2xl text-font-black;
+  }
 }
