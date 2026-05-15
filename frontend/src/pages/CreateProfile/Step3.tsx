@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-
 import type { Grade, EnrollmentStatus } from "../../utils/type/profile";
 
 export default function FinalModal ({ onNext, onPrev } : StepProps) {
@@ -57,7 +56,7 @@ return (
                 </div>
             </section>
 
-                    <hr className="border-border-strong/30 border-1"/>
+                    <hr className="border-border-strong/30 border"/>
             <section >
                 <p className="mb-4 text-lg font-bold text-slate-700">재학</p>
                 <div className="grid grid-cols-3 gap-3">
