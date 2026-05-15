@@ -56,7 +56,7 @@ const CardDeck = () => {
           return (
             <motion.div
               key={memberIdx}
-              className="absolute rounded-2xl overflow-hidden border border-border shadow-xl bg-white"
+              className="absolute rounded-2xl overflow-hidden border border-border shadow-xl bg-card-background"
               style={{
                 width: CARD_W,
                 height: CARD_H,
@@ -92,7 +92,7 @@ const CardDeck = () => {
               </div>
               <div
                 className={cn(
-                  'p-3 bg-white transition-opacity duration-150',
+                  'p-3 bg-card-background transition-opacity duration-150',
                   isTop && !isFlipping ? 'opacity-100' : 'opacity-0',
                 )}
               >

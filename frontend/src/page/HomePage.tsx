@@ -217,7 +217,7 @@ const HomePage = () => {
               <FaQuoteRight className="self-end-safe text-2xl text-primary-blue" />
             </div>
 
-            <AnimatedDiv className="w-full max-w-100" scrollRef={scrollRef}>
+            <AnimatedDiv className="w-full max-w-105" scrollRef={scrollRef}>
               <MacCard className="w-full" title="Visualization Radar Chart">
                 <HomeRadarChart data={CompetencyDummyData} />
               </MacCard>
@@ -320,7 +320,7 @@ const HomePage = () => {
             scrollRef={scrollRef}
           >
             <MacCard
-              className="w-full max-w-100"
+              className="w-full max-w-105"
               title="Visualization Radar Chart"
             >
               <HomeRadarChart data={CompetencyDummyData} />
@@ -378,7 +378,7 @@ const HomePage = () => {
             </AnimatedDiv>
 
             <AnimatedDiv className="w-full max-w-2xl" scrollRef={scrollRef}>
-              <MacCard className="w-full" title="Planning Service">
+              <MacCard className="w-full" title="DashBoard Service">
                 <img src={previewImage} alt="" />
               </MacCard>
             </AnimatedDiv>
