@@ -1,10 +1,11 @@
 import { useState } from "react";
 
 import type { Grade, EnrollmentStatus } from "../../util/type/profile";
+import NextButton from "../../component/buttons";
 
 export default function FinalModal ({ onNext, onPrev } : StepProps) {
     const [info, setInfo] = useState({
-        Grade: "3학년" as Grade,  
+        Grade: "1학년" as Grade,  
         Status: "ENROLLED" as EnrollmentStatus 
     });
     const grades: Grade[] = ["1학년", "2학년", "3학년", "4학년", "기타"];
@@ -27,28 +28,28 @@ export default function FinalModal ({ onNext, onPrev } : StepProps) {
 return (
     <div className="flex w-full flex-col items-center">
         <div className="w-full pt-4 flex flex-col items-center">
-            <div className="mb-7 flex items-center justify-center">
-                <span className="text-lg text-border-strong font-medium">프로필을 생성하고 </span>
-                <span className="text-lg text-blue-500 font-medium skew-x-[-10deg] mx-1">COK</span>
-                <span className="text-lg text-border-strong font-medium"> 을 시작해보세요</span>
+            <div className="mb-5 lg:mb-7 flex items-center justify-center">
+                <span className="text-base lg:text-lg text-gray-500 font-medium">프로필을 생성하고&nbsp; </span>
+                <span className="text-base lg:text-lg text-primary-blue font-medium skew-x-[-10deg]">COK</span>                    
+                <span className="text-base lg:text-lg text-gray-500 font-medium">을 시작해보세요</span>    
             </div>
-            <div className="mb-6 text-xl font-semibold text-slate-800">
+            <div className="mb-6 lg:text-xl text-lg font-semibold text-font-black">
                 사용자님의 학년/재학 정보를 알려주세요.
             </div>
         </div>
 
         <div className="w-95 px-6 flex flex-col gap-3">
             <section>
-                <p className="mb-4 text-lg font-bold text-slate-700">학년</p>
-                <div className="grid grid-cols-5 gap-3">
+                <p className="mb-4 ml-2 lg:ml-1 text-base lg:text-lg font-base text-slate-700 dark:text-font-white/90">학년</p>
+                <div className="grid grid-cols-5 lg:gap-3 gap-2 mb-2">
                     {grades.map((g) => (
                         <button
                             key={g}
                             onClick={() => setInfo({ ...info, Grade: g })}
-                            className={`h-12 rounded-xl text-sm font-semibold transition-all flex items-center justify-center ${
+                            className={`w-14 h-10  rounded-lg text-xs font-medium transition-all flex items-center justify-center ${
                                 info.Grade === g
-                                    ? "bg-blue-500 text-white shadow-md"
-                                    : "bg-gray-100 text-slate-500 hover:bg-slate-200"
+                                    ? "bg-blue-400 text-white shadow-md "
+                                    : "bg-gray-100 text-black hover:bg-slate-200 hover:text-black/80"
                             }`}
                         > {g}
                         </button>
@@ -56,18 +57,19 @@ return (
                 </div>
             </section>
 
-                    <hr className="border-border-strong/30 border"/>
+                    <hr className="border-border border"/>
+
             <section >
-                <p className="mb-4 text-lg font-bold text-slate-700">재학</p>
-                <div className="grid grid-cols-3 gap-3">
+                <p className="mb-4  ml-2 lg:ml-1  text-base lg:text-lg  font-base text-slate-700 dark:text-font-white/90">재학</p>
+                <div className="grid grid-cols-3 gap-5 justify-items-center ">
                     {statusOptions.map((o) => (
                         <button
                             key={o.value}
                             onClick={() => setInfo({ ...info, Status: o.value })}
-                            className={`h-12 rounded-xl text-sm font-semibold transition-all flex items-center justify-center ${
+                            className={`w-20 h-11 rounded-lg text-sm font-medium transition-all flex items-center justify-center ${
                                 info.Status === o.value
-                                    ? "bg-blue-500 text-white shadow-md"
-                                    : "bg-gray-100 text-slate-500 hover:bg-slate-200"
+                                    ? "bg-blue-400 text-white shadow-md "
+                                    : "bg-gray-100 text-black hover:bg-slate-200 hover:text-black/80"
                             }`}
                         > {o.label}
                         </button>
@@ -79,16 +81,12 @@ return (
         <div className="w-full flex justify-between items-center mt-8 px-6 pb-6">
             <button
                 onClick={handlePrevClick}
-                className="text-border-strong text-sm font-medium"
-            >
+                className="text-background-dark/40 text-xs lg:text-sm font-medium dark:text-font-white/70  hover:font-bold hover:text-font-black/60 dark:hover:text-font-white">
                 이전 설문으로
             </button>
-            <button
-                onClick={handleNextClick}
-                className="w-32 h-12 bg-black rounded-full flex justify-center items-center text-zinc-100 text-lg font-semibold hover:bg-zinc-800"
-            >
-                시작하기
-            </button>
+            <NextButton 
+                        label="시작하기"
+                        onClick={handleNextClick}/>
         </div>
     </div>
 );

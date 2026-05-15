@@ -27,13 +27,16 @@ export default function CreateProfilePage(){
     }
 }
     return(
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm  dark:bg-white/40">
             
-            <div className="w-108 h-130 rounded-2xl bg-stone-50 floex-col items-center justify-center">
+                <div className=
+                {`lg:w-108 lg:h-130 w-90  rounded-2xl bg-background floex-col items-center justify-center dark:bg-zinc-900
+                    ${step === 3 ? "h-115" : "h-85"
+                }`}>
 
-                <div className="w-full  mt-9 flex items-center justify-center">
-                    <ProgressBar step={step} />
-                </div>
+                <div className="w-full  mt-8 flex items-center justify-center">
+                        <ProgressBar step={step} />
+                    </div>
 
                 <div className="grow flex flex-col items-center"></div>
                     {step === 1? (

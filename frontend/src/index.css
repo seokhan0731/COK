@@ -1,55 +1,43 @@
 @import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* color */
+  /* Background */
   --color-background: #fafaf9; /* stone-50 */
+  --color-background-dark: #0c0a09; /* stone-950 */
+  --color-background-grid: #27272a; /* zinc-600 */
+  --color-background-grid-dark: #f4f4f5; /* zinc-100 */
 
+  /* Card */
+  --color-card-background: #ffffff; /* white */
+  --color-card-background-dark: #27272a; /* zinc-800 */
+
+  /* Primary */
   --color-primary-blue: #155dfc; /* blue-600 */
   --color-primary-emerald: #5ee9b5; /* emerald-300 */
-
+  --color-sub-blue: #2B7FFF; /*blue-500*/  
+  
+  /* Text */
   --color-font-black: #09090b; /* zinc-950 */
   --color-font-white: #fafafa; /* zinc-50 */
 
+  /* Border */
   --color-border: #e4e4e7; /* zinc-200 */
-  --color-border-strong: #9f9fa9; /* zinc-400 */
+  --color-border-dark: #3f3f46; /* zinc-700 */
 
   /* font */
   --font-sans: 'Roboto', sans-serif;
 }
 
-:root {
-  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
-  line-height: 1.5;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#root {
-  min-height: 100dvh;
-}
-
-body {
-  margin: 0;
-  min-width: 360px;
-  min-height: 100dvh;
-  font-family: var(--font-sans);
-}
-
-/* Radar Chart Setting */
-.recharts-wrapper,
-.recharts-wrapper *,
-.recharts-wrapper:focus,
-.recharts-wrapper svg:focus {
-  outline: none;
-}
-
 @layer base {
   span,
   p {
-    @apply text-sm text-font-black lg:text-base;
-  } 
+    @apply text-sm text-font-black break-keep lg:text-base;
+  }
+
+  button {
+    @apply text-sm text-font-black cursor-pointer;
+  }
 }
 
 @layer components {
@@ -65,4 +53,58 @@ body {
   .text-h4 {
     @apply text-xl lg:text-2xl text-font-black;
   }
+  .text-h5 {
+    @apply text-lg lg:text-xl text-font-black;
+  }
+}
+
+@utility bg-grid {
+  background-size: 60px 60px;
+  background-image:
+    linear-gradient(var(--color-background-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-background-grid) 1px, transparent 1px);
+}
+
+:root {
+  line-height: 1.5;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  @apply transition-colors! duration-300! ease-in-out!;
+}
+
+body {
+  margin: 0;
+  min-width: 360px;
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+
+  @apply bg-background;
+}
+
+/* Radar Chart Setting */
+.recharts-wrapper,
+.recharts-wrapper *,
+.recharts-wrapper:focus,
+.recharts-wrapper svg:focus {
+  outline: none;
+}
+
+.dark {
+  --color-background: var(--color-background-dark);
+  --color-background-grid: var(--color-background-grid-dark);
+  --color-font-black: var(--color-font-white);
+  --color-border: var(--color-border-dark);
+  --color-card-background: var(--color-card-background-dark);
 }
