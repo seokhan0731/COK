@@ -15,4 +15,4 @@ services:
       - "54321:5432"
     # 데이터 보존을 /postgres_data
     volumes:
-      - ./postgres_data:/var/lib/postrgresql/data
+      - ./postgres_data:/var/lib/postgresql/data
