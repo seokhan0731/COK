@@ -5,8 +5,8 @@ import type { Grade, EnrollmentStatus } from "../../utils/type/profile";
 
 export default function FinalModal ({ onNext, onPrev } : StepProps) {
     const [info, setInfo] = useState({
-        Grade: "3학년" as Grade,   // grade -> Grade
-        Status: "ENROLLED" as EnrollmentStatus // status -> Status
+        Grade: "3학년" as Grade,  
+        Status: "ENROLLED" as EnrollmentStatus 
     });
     const grades: Grade[] = ["1학년", "2학년", "3학년", "4학년", "기타"];
 
@@ -27,7 +27,6 @@ export default function FinalModal ({ onNext, onPrev } : StepProps) {
 
 return (
     <div className="flex w-full flex-col items-center">
-        {/* 상단 텍스트 영역 */}
         <div className="w-full pt-4 flex flex-col items-center">
             <div className="mb-7 flex items-center justify-center">
                 <span className="text-lg text-border-strong font-medium">프로필을 생성하고 </span>
@@ -78,7 +77,6 @@ return (
             </section>
         </div>
 
-        {/* 하단 버튼 영역 */}
         <div className="w-full flex justify-between items-center mt-8 px-6 pb-6">
             <button
                 onClick={handlePrevClick}

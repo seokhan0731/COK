@@ -1,4 +1,3 @@
-// ProgressBar.tsx
 interface ProgressBarProps {
   step: number;
 }

@@ -9,10 +9,6 @@ import NameModal from "./Step1";
 import BirthModal from "./Step2";
 import FinalModal from "./Step3";
 
-type Props = {
-    onClose: () => void;
-};
-
 export default function CreateProfilePage(){
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState<User>({
