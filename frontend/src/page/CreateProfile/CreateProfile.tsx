@@ -2,7 +2,7 @@ import { useState } from "react"
 import ProgressBar from "./Progress bar";
 
 //Type
-import type { User } from "../../utils/type/profile"
+import type { User } from "../../util/type/profile"
 
 //Modal
 import NameModal from "./Step1";
@@ -22,7 +22,6 @@ export default function CreateProfilePage(){
     try {
         console.log("최종 프로필 데이터:", data);
 
-        // onclose();
     } catch (error) {
         console.error("프로필 전송 실패:", error);
     }

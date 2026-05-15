@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import CreateProfilePage from './pages/CreateProfile/CreateProfile';
+import CreateProfilePage from './page/CreateProfile/CreateProfile';
 
 
 const App = () => {
