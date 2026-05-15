@@ -7,7 +7,7 @@ export type Competency =
   | 'infrastructure'
 
 export const CompetencyLabel: Record<Competency, string> = {
-  collaboration: '협업/커뮤니케이션',
+  collaboration: '협업',
   cs: 'cs지식',
   implementation: '구현력',
   algorithm: '알고리즘',
