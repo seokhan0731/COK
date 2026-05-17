@@ -9,7 +9,11 @@ import NameModal from "./Step1";
 import BirthModal from "./Step2";
 import FinalModal from "./Step3";
 
-export default function CreateProfilePage(){
+interface Props {
+    onClose: () => void;
+}
+
+export default function CreateProfilePage({ onClose } : Props){
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState<User>({
         name: '',

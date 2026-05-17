@@ -41,7 +41,7 @@
 # .idea/modules.xml
 # .idea/*.iml
 # .idea/modules
-# *.iml
+*.iml
 # *.ipr
 
 # CMake
@@ -419,6 +419,11 @@ gradle-app.setting
 *.hprof
 
 # End of https://www.toptal.com/developers/gitignore/api/java,python,react,intellij+all,windows,macos,venv,gradle,visualstudiocode
+
+
+#-----------------------------------------------------------------
+# 도커 데이터 파일
+postgres_data/
 # Logs
 logs
 *.log
