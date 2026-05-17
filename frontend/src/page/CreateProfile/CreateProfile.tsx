@@ -31,7 +31,7 @@ export default function CreateProfilePage({ onClose } : Props){
     }
 }
     return(
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm  dark:bg-white/40">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
             
                 <div className=
                 {`lg:w-108 lg:h-130 w-90  rounded-2xl bg-background floex-col items-center justify-center dark:bg-zinc-900
