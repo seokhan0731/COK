@@ -32,7 +32,7 @@ export default function CreateProfilePage(){
                 <div className=
                 {`lg:w-108 lg:h-130 w-90  rounded-2xl bg-background floex-col items-center justify-center dark:bg-zinc-900
                     ${step === 3 ? "h-115" : "h-85"
-                }`}>
+                }`}>    
 
                 <div className="w-full  mt-8 flex items-center justify-center">
                         <ProgressBar step={step} />
