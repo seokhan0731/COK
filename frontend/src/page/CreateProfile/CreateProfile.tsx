@@ -13,7 +13,7 @@ interface Props {
     onClose: () => void;
 }
 
-export default function CreateProfilePage({ onClose } : Props){
+export default function CreateProfilePage(){
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState<User>({
         name: '',

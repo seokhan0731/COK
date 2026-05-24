@@ -282,7 +282,8 @@ const HomePage = () => {
                   </div>
                 </div>
 
-                <button className="flex items-center-safe gap-3 p-2 mt-1 bg-card-background border border-border rounded-xl">
+                <button 
+                className="flex items-center-safe gap-3 p-2 mt-1 bg-card-background border border-border rounded-xl">
                   <div className="p-2 bg-primary-blue/10 border border-border rounded-full">
                     <FaCode className="text-h5" />
                   </div>
