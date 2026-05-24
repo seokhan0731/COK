@@ -9,6 +9,7 @@ import ProfilePage from '../page/mypage/ProfilePage';
 import EditProfilePage from '../page/mypage/EditProfilePage';
 import EditSkillPage from '../page/mypage/EditSkillPage';
 import RootLayout from '../layout/RootLayout';
+import PlanningPage from '../page/PlanningPage';
 
 export const router = createBrowserRouter([
   {
@@ -29,4 +30,12 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
+  {
+    path: '/planning',
+    element: <PlanningPage />,
+  },
+  {
+    path: '/kakao/oauth/loading',
+    element: <KakaoOauthLoadingPage />,
+  },
+])
