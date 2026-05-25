@@ -3,6 +3,9 @@ import { createRoot } from 'react-dom/client'
 import { RouterProvider } from 'react-router'
 import { router } from './util/router.tsx'
 
+/* Provider */
+import ModalProvider from './component/provider/ModalProvider.tsx'
+
 /* Font */
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
@@ -13,7 +16,7 @@ import '@fontsource/roboto/800.css'
 import './index.css'
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  <ModalProvider>
     <RouterProvider router={router} />
-  </StrictMode>,
+  </ModalProvider>,
 )

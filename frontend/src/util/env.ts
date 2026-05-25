@@ -2,10 +2,11 @@
 
 export const env = {
   API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
+  VITE_MOCK_API_BASE_URL: import.meta.env.VITE_MOCK_API_BASE_URL,
   KAKAO_REST_API_KEY: import.meta.env.VITE_KAKAO_API_KEY,
   KAKAO_REDIRECT_URI: import.meta.env.VITE_KAKAO_REDIRECT_URL,
-} as const
+} as const;
 
 Object.entries(env).forEach(([key, value]) => {
-  if (!value) throw new Error(`Missing env: ${key}`)
-})
+  if (!value) throw new Error(`Missing env: ${key}`);
+});

@@ -1,40 +1,35 @@
 // src/pages/HomePage.tsx
-import { useRef } from 'react'
+import { useRef } from 'react';
 import {
   FaAngleRight,
   FaCode,
   FaQuoteLeft,
   FaQuoteRight,
-} from 'react-icons/fa6'
-import { motion } from 'framer-motion'
+} from 'react-icons/fa6';
+import { motion } from 'framer-motion';
 
 /* Component */
-import AnimatedDiv from '../component/div/AnimatedDiv'
-import HomeHeader from '../component/header/HomeHeader'
-import MacCard from '../component/card/MacCard'
-import HomeRadarChart from '../component/chart/HomeRadarChart'
-import CardDeck from '../component/card/CardDeck'
+import AnimatedDiv from '../component/div/AnimatedDiv';
+import DefaultHeader from '../component/header/DefaultHeader';
+import MacCard from '../component/card/MacCard';
+import HomeRadarChart from '../component/chart/HomeRadarChart';
+import CardDeck from '../component/card/CardDeck';
 
 /* Data */
-import { CompetencyDummyData } from '../dummy/HomeDummy'
+import { CompetencyDummyData } from '../dummy/HomeDummy';
 
 /* Preview Image */
-import previewImage from '../asset/preview/Preview.png'
+import previewImage from '../asset/preview/Preview.png';
 
 /* Util */
-import clsx from 'clsx'
-
-const sectionBase = clsx(
-  'relative snap-start h-[calc(100dvh-75px)] overflow-hidden',
-  '[@media(max-height:700px)]:h-auto [@media(max-height:700px)]:min-h-[calc(100dvh-75px)]',
-)
+import clsx from 'clsx';
 
 const HomePage = () => {
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className="flex flex-col">
-      <HomeHeader />
+      <DefaultHeader />
 
       <div
         className={clsx(
@@ -46,7 +41,7 @@ const HomePage = () => {
         {/* Mobile & PC Section */}
         <section
           className={clsx(
-            sectionBase,
+            'home-base-section',
             'flex flex-col justify-center-safe items-center-safe',
           )}
         >
@@ -104,7 +99,7 @@ const HomePage = () => {
         {/* Mobile Section */}
         <section
           className={clsx(
-            sectionBase,
+            'home-base-section',
             'flex flex-col items-center-safe justify-center-safe w-full px-8',
             'lg:hidden',
           )}
@@ -182,7 +177,7 @@ const HomePage = () => {
         {/* Mobile Section */}
         <section
           className={clsx(
-            sectionBase,
+            'home-base-section',
             'flex flex-col items-center-safe justify-center-safe w-full px-8',
             'lg:hidden',
           )}
@@ -228,7 +223,7 @@ const HomePage = () => {
         {/* PC Section */}
         <section
           className={clsx(
-            sectionBase,
+            'home-base-section',
             'hidden flex-col items-center-safe justify-center-safe w-full px-8 gap-25',
             'lg:flex',
           )}
@@ -345,7 +340,7 @@ const HomePage = () => {
         {/* Mobile & PC Section */}
         <section
           className={clsx(
-            sectionBase,
+            'home-base-section',
             'flex flex-col items-center-safe justify-center-safe w-full px-8',
           )}
         >
@@ -388,7 +383,7 @@ const HomePage = () => {
         {/* Mobile & PC Section */}
         <section
           className={clsx(
-            sectionBase,
+            'home-base-section',
             'flex flex-col items-center-safe justify-center-safe w-full px-8',
           )}
         >
@@ -427,7 +422,7 @@ const HomePage = () => {
         </section>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;

@@ -1,35 +1,83 @@
-import type { ReactNode } from 'react'
-import KakaoLogo from '../component/logo/KakaoLogo'
-import clsx from 'clsx'
-import LoadingDots from '../component/loading/DotLoading'
+// src/page/KakaoOauthLoadingPage.tsx
 
-/* Type */
-type Props = {
-  children?: ReactNode
-}
+import { useNavigate, useSearchParams } from 'react-router';
+import { useEffect } from 'react';
 
-const KakaoOauthLoadingPage = ({ children }: Props) => {
+/* Api */
+import * as AuthApi from '../api/authApi';
+
+/* Component */
+import KakaoLogo from '../component/logo/KakaoLogo';
+import DefaultHeader from '../component/header/DefaultHeader';
+import LoadingDots from '../component/loading/DotLoading';
+import type { UserType } from '../type';
+import { useAuthStore } from '../store/authStore';
+
+const KakaoOauthLoadingPage = () => {
+  const navigate = useNavigate();
+  const setAuth = useAuthStore((s) => s.setAuth);
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const code = searchParams.get('code');
+    if (!code) {
+      alert('소셜 로그인 중 에러 발생했습니다. 홈으로 이동합니다.');
+      navigate('/', { replace: true });
+      return;
+    }
+
+    const exchangeToken = async () => {
+      try {
+        const { accessToken, userState } = await AuthApi.KakaoAuthApi({ code });
+        useAuthStore.setState({ accessToken });
+        console.log(`accessToken: ${accessToken}\nuserState: ${userState}`);
+
+        /* 기존 사용자의 경우 로그인 */
+        if (userState === 'USER') {
+          const user: UserType = await AuthApi.fetchMeApi();
+          console.log('user: ', user);
+          setAuth(accessToken, user);
+          navigate('/', { replace: true });
+          return;
+        }
+
+        /* 로그인을 처음 하거나 로그인을 했지만 프로필 생성을 안한 경우 프로필 생성 페이지 이동*/
+        navigate('/', { replace: true });
+      } catch (error) {
+        console.error('카카오 로그인 실패: ', error);
+        navigate('/', { replace: true });
+      }
+    };
+
+    const timer = setTimeout(() => exchangeToken(), 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="relative flex flex-col justify-center-safe items-center-safe min-h-dvh">
-      <div className="absolute inset-0 opacity-5 -z-10 bg-grid" />
-      <div
-        className={clsx(
-          'flex flex-col items-center-safe w-full max-w-xs px-6 py-12 bg-card-background rounded-2xl border border-border shadow-md',
-          'lg:max-w-sm',
-        )}
-      >
-        <span className="mb-12 text-h2 text-primary-blue font-bold">COK</span>
-        <div className="p-3 bg-[#FEE500] border border-border rounded-xl">
-          <KakaoLogo className="w-6 h-6" />
+    <>
+      <div className="relative flex flex-col">
+        <DefaultHeader />
+
+        <div className="flex flex-col justify-center-safe items-center-safe min-h-[calc(100dvh-75px)]">
+          <p className="text-h1 text-primary-blue font-bold">COK</p>
+          <LoadingDots className="my-10" />
+          <p className="text-h5 font-bold mb-2">로그인 중입니다.</p>
+          <p className="text-default text-font-gray mb-8">
+            잠시만 기다려 주세요
+          </p>
+
+          <div className="flex items-center-safe px-2.5 py-1 gap-2 bg-primary-blue/5 border border-border rounded-full">
+            <div className="flex justify-center-safe items-center-safe p-1.5 bg-[#FEE500] border border-border rounded-full">
+              <KakaoLogo className="w-4 h-4" />
+            </div>
+            <span className="text-default text-font-gray">
+              카카오 계정으로 인증 중
+            </span>
+          </div>
         </div>
-
-        <LoadingDots className="my-8" />
-
-        <p>카카오 계정으로 로그인 중</p>
-        <p className="text-sm text-border-strong">잠시만 기다려 주세요</p>
       </div>
-    </div>
-  )
-}
+    </>
+  );
+};
 
-export default KakaoOauthLoadingPage
+export default KakaoOauthLoadingPage;
