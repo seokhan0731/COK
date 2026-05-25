@@ -1,3 +1,11 @@
-export type { Competency, CompetencyData } from './chart'
+export type { Competency, CompetencyData } from './chart';
 
-export type { KakaoAuthRequest } from './authType'
+export type { KakaoAuthRequest, KakaoAuthResponse } from './authType';
+
+export type {
+  UserType,
+  UserStateType,
+  GradeType,
+  AttendStatusType,
+  AlgorithmLevelType,
+} from './userType';
