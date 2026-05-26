@@ -15,7 +15,8 @@
   /* Primary */
   --color-primary-blue: #155dfc; /* blue-600 */
   --color-primary-emerald: #5ee9b5; /* emerald-300 */
-
+  --color-sub-blue: #2B7FFF; /*blue-500*/  
+  
   /* Text */
   --color-font-black: #09090b; /* zinc-950 */
   --color-font-white: #fafafa; /* zinc-50 */

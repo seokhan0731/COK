@@ -1,5 +1,5 @@
 // src/pages/HomePage.tsx
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import {
   FaAngleRight,
   FaCode,
@@ -23,6 +23,7 @@ import previewImage from '../asset/preview/Preview.png'
 
 /* Util */
 import clsx from 'clsx'
+import CreateProfilePage from './CreateProfile/CreateProfile'
 
 const sectionBase = clsx(
   'relative snap-start h-[calc(100dvh-75px)] overflow-hidden',
@@ -31,6 +32,7 @@ const sectionBase = clsx(
 
 const HomePage = () => {
   const scrollRef = useRef<HTMLDivElement>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false);    // Create profile 모달 관리
 
   return (
     <div className="flex flex-col">
@@ -93,11 +95,17 @@ const HomePage = () => {
                 'hover:scale-105 transition-transform duration-300',
                 'dark:bg-primary-blue',
               )}
+              onClick={() => setIsModalOpen(true)}
             >
+              
               <span className="text-sm font-medium leading-none text-font-white">
                 시작하기
               </span>
+              
             </button>
+            {isModalOpen && (
+                <CreateProfilePage onClose={() => setIsModalOpen(false)} />
+              )}
           </motion.div>
         </section>
 

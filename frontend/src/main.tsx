@@ -12,6 +12,7 @@ import '@fontsource/roboto/800.css'
 
 import './index.css'
 
+import { BrowserRouter } from 'react-router-dom';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <RouterProvider router={router} />
