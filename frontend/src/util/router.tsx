@@ -9,6 +9,7 @@ import ProfilePage from '../page/mypage/ProfilePage';
 import EditProfilePage from '../page/mypage/EditProfilePage';
 import EditSkillPage from '../page/mypage/EditSkillPage';
 import RootLayout from '../layout/RootLayout';
+import InfoPage from '../page/InfoPage';
 
 export const router = createBrowserRouter([
   {
@@ -28,5 +29,9 @@ export const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: '/info',
+    element: <InfoPage />,
   },
 ]);
