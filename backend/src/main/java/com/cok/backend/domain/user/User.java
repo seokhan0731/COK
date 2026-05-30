@@ -28,7 +28,7 @@ public class User {
     private Long userId;
 
     @Column(name = "kakao_id", nullable = false)
-    private Long kakaoId;
+    private String kakaoId;
 
     @Column(name = "name", length = 10)
     private String name;
@@ -68,7 +68,7 @@ public class User {
     private LocalDateTime updatedAt;
 
     @Builder
-    public User(Long kakaoId) {
+    public User(String kakaoId) {
         this.kakaoId = kakaoId;
         //프로필 생성 전이기에 GUEST로 설정
         role = UserRole.GUEST;
