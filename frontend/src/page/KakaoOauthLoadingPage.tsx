@@ -8,7 +8,7 @@ import * as AuthApi from '../api/authApi';
 
 /* Component */
 import KakaoLogo from '../component/logo/KakaoLogo';
-import DefaultHeader from '../component/header/DefaultHeader';
+import Header from '../component/header/Header';
 import LoadingDots from '../component/loading/DotLoading';
 import type { UserType } from '../type';
 import { useAuthStore } from '../store/authStore';
@@ -56,7 +56,7 @@ const KakaoOauthLoadingPage = () => {
   return (
     <>
       <div className="relative flex flex-col">
-        <DefaultHeader />
+        <Header />
 
         <div className="flex flex-col justify-center-safe items-center-safe min-h-[calc(100dvh-75px)]">
           <p className="text-h1 text-primary-blue font-bold">COK</p>
