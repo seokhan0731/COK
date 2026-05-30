@@ -81,7 +81,7 @@ public class AuthService {
         User user = userRepository.findByKakaoId(kakaoId).orElseGet(() -> registerNewUser(kakaoId));
 
 
-        return user.getUserId();
+        return user.getId();
     }
 
 
