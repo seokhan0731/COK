@@ -250,7 +250,7 @@ const ProfilePage = () => {
               title="자격증"
               inputSkillCardDivClassName="lg:flex-row lg:flex-wrap lg:gap-2"
             >
-              {profile.certificates.map((item) => (
+              {profile.certifications?.map((item) => (
                 <CertificateCard key={item} certificate={item} />
               ))}
             </InputSkillLayout>

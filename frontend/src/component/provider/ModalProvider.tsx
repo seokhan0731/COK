@@ -1,46 +1,39 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useState,
-  type ReactNode,
-} from 'react'
-import { createPortal } from 'react-dom'
-import { AnimatePresence, motion } from 'framer-motion'
-import clsx from 'clsx'
+import { createContext, useCallback, useContext, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import clsx from 'clsx';
 
 type ModalOptions = {
-  cardClassName?: string
-  backdrop?: boolean
-}
+  cardClassName?: string;
+  backdrop?: boolean;
+};
 
 type ModalContextValue = {
-  open: (content: ReactNode, options?: ModalOptions) => void
-  close: () => void
-}
+  open: (content: ReactNode, options?: ModalOptions) => void;
+  close: () => void;
+};
 
-const ModalContext = createContext<ModalContextValue | null>(null)
+const ModalContext = createContext<ModalContextValue | null>(null);
 
 export const useModal = () => {
-  const ctx = useContext(ModalContext)
-  if (!ctx) throw new Error('useModal must be used within ModalProvider')
-  return ctx
-}
+  const ctx = useContext(ModalContext);
+  if (!ctx) throw new Error('useModal must be used within ModalProvider');
+  return ctx;
+};
 
-type Props = { children: ReactNode }
+type Props = { children: ReactNode };
 
 const ModalProvider = ({ children }: Props) => {
   const [state, setState] = useState<{
-    content: ReactNode
-    options: ModalOptions
-  } | null>(null)
+    content: ReactNode;
+    options: ModalOptions;
+  } | null>(null);
 
   const open = useCallback(
-    (content: ReactNode, options: ModalOptions = {}) =>
-      setState({ content, options }),
+    (content: ReactNode, options: ModalOptions = {}) => setState({ content, options }),
     [],
-  )
-  const close = useCallback(() => setState(null), [])
+  );
+  const close = useCallback(() => setState(null), []);
 
   return (
     <ModalContext.Provider value={{ open, close }}>
@@ -57,7 +50,7 @@ const ModalProvider = ({ children }: Props) => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
                 onClick={close}
-                className="fixed inset-0 flex justify-center-safe items-center-safe bg-black/50"
+                className="fixed z-20 inset-0 flex justify-center-safe items-center-safe bg-black/50"
               >
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -90,7 +83,7 @@ const ModalProvider = ({ children }: Props) => {
         document.getElementById('modal-root')!,
       )}
     </ModalContext.Provider>
-  )
-}
+  );
+};
 
-export default ModalProvider
+export default ModalProvider;

@@ -17,9 +17,12 @@ import previewImage from '../asset/preview/Preview.png';
 
 /* Util */
 import clsx from 'clsx';
+import { useModal } from '../component/provider/ModalProvider';
+import LoginModal from '../component/modal/LoginModal';
 
 const HomePage = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { open } = useModal();
 
   return (
     <div className="flex flex-col">
@@ -70,6 +73,7 @@ const HomePage = () => {
                 'hover:scale-105 transition-transform duration-300',
                 'dark:bg-primary-blue',
               )}
+              onClick={() => open(<LoginModal />)}
             >
               <span className="text-sm font-medium leading-none text-font-white">시작하기</span>
             </button>
