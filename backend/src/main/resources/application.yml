@@ -14,3 +14,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+
+#카카오 로그인 관련
+kakao:
+  client-id: ${KAKAO_API_KEY}
+  redirect-uri: ${KAKAO_REDIRECT_URI}
+  client-secret: ${KAKAO_SECRET_CODE}
