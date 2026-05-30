@@ -1,44 +1,26 @@
-// src/component/header/Header.tsx
+// src/components/headers/Header.tsx
 
-import { useState } from 'react';
 import LoginModal from '../modal/LoginModal';
-import { AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import { useThemeStore } from '../../store/themeStore';
+import { Link } from 'react-router';
 
 /* Icon */
 import { FaMoon } from 'react-icons/fa6';
 import { FaSun } from 'react-icons/fa6';
-import { cn } from '../../util/cn';
-import { NavLink } from 'react-router';
+import { useModal } from '../provider/ModalProvider';
 
-/* Type */
-type Props = {
-  className?: string;
-};
-
-const Header = ({ className }: Props) => {
-  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
+const Header = () => {
   const isDark = useThemeStore((s) => s.theme === 'Dark');
   const toggleTheme = useThemeStore((s) => s.toggleTheme);
+  const { open } = useModal();
 
   return (
     <>
-      <div
-        className={cn(
-          className,
-          'top-0 sticky flex w-full h-18.75 justify-between items-center-safe px-4 border-b border-b-border',
-        )}
-      >
-        <div className="flex items-center-safe gap-8">
-          <span className="text-3xl font-extrabold text-primary-blue">COK</span>
-
-          <div className="flex gap-2">
-            <NavLink to={'profile'}>나의 프로필</NavLink>
-            <NavLink to={'editprofile'}>프로필 수정</NavLink>
-            <NavLink to={'addskill'}>역량 입력</NavLink>
-          </div>
-        </div>
+      <div className="top-0 z-10 sticky flex w-full h-18.75 justify-between items-center-safe px-4 bg-background border-b border-b-border">
+        <Link className="text-3xl font-extrabold text-primary-blue" to={'/'}>
+          COK
+        </Link>
 
         <div className="flex gap-4">
           <button
@@ -54,18 +36,16 @@ const Header = ({ className }: Props) => {
               'text-sm font-semibold',
               'hover:border-primary-blue hover:text-primary-blue',
             )}
-            onClick={() => setLoginModalOpen(true)}
+            onClick={() =>
+              open(<LoginModal />, {
+                cardClassName: 'items-center-safe justify-center-safe',
+              })
+            }
           >
             로그인
           </button>
         </div>
       </div>
-
-      <AnimatePresence>
-        {isLoginModalOpen && (
-          <LoginModal onClose={() => setLoginModalOpen(false)} />
-        )}
-      </AnimatePresence>
     </>
   );
 };
