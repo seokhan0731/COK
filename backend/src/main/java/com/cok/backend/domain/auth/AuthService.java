@@ -1,5 +1,8 @@
 package com.cok.backend.domain.auth;
 
+import com.cok.backend.domain.auth.client.KakaoAuthClient;
+import com.cok.backend.domain.auth.client.KakaoInformClient;
+import com.cok.backend.domain.auth.dto.KakaoInformResponse;
 import com.cok.backend.domain.auth.dto.KakaoTokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
     private final KakaoAuthClient kakaoAuthClient;
+    private final KakaoInformClient kakaoInformClient;
     private static final String grantType = "authorization_code";
 
     //application.yml
@@ -30,8 +34,23 @@ public class AuthService {
                 codeForToken, clientSecret);
 
         String accessToken = response.kakaoToken();
-        System.out.println("카카오 엑세스 토큰" + accessToken);
+        System.out.println("카카오 엑세스 토큰 " + accessToken);
 
         return accessToken;
+    }
+
+    /**
+     * 카카오에게 고유 id 발급받기
+     *
+     * @param accessToken 엑세스 토큰
+     * @return 사용자 카카오 고유값
+     */
+    public String getKakaoId(String accessToken) {
+        String headerForId = "Bearer " + accessToken;
+        KakaoInformResponse response = kakaoInformClient.getKakaoId(headerForId);
+
+        String kakaoId = response.userKakaoId();
+        System.out.println("유저 카카오 id " + kakaoId);
+        return kakaoId;
     }
 }

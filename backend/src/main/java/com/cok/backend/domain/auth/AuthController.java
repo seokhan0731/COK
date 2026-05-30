@@ -4,10 +4,7 @@ import com.cok.backend.domain.auth.dto.UserLoginRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,5 +16,11 @@ public class AuthController {
     public ResponseEntity<String> testKakaoToken(@Valid @RequestBody UserLoginRequest request) {
         String accessToken = authService.getAccessToken(request.codeForToken());
         return ResponseEntity.ok("success for getting token " + accessToken);
+    }
+
+    @GetMapping("/kakao/test")
+    public ResponseEntity<String> testKakaoId(@RequestParam("token") String accessToken) {
+        String kakaoId = authService.getKakaoId(accessToken);
+        return ResponseEntity.ok("success for getting id " + kakaoId);
     }
 }
