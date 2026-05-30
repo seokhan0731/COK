@@ -89,7 +89,7 @@ const EditProfilePage = () => {
     getValues,
     setValue,
     reset,
-    formState: { errors, isValid },
+    formState: { errors, isDirty, isValid },
   } = useForm<EditProfileFormDataType>({
     mode: 'onChange',
     defaultValues: {
@@ -387,10 +387,11 @@ const EditProfilePage = () => {
                       imageFile: undefined,
                     });
                   }}
+                  disabled={!isDirty}
                 >
                   초기화
                 </OutlineButton>
-                <PrimaryButton type="submit" disabled={!isValid || isUpdating} className="flex-1">
+                <PrimaryButton type="submit" disabled={!isValid || isUpdating || !isDirty} className="flex-1">
                   {isUpdating ? '저장 중...' : '수정하기'}
                 </PrimaryButton>
               </div>
