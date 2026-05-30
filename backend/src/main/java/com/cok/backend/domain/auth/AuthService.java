@@ -29,7 +29,7 @@ public class AuthService {
      * @param codeForToken 프론트로부터 받은 인가코드
      * @return 엑세스 토큰
      */
-    public String getAccessToken(String codeForToken) {
+    private String getAccessToken(String codeForToken) {
         KakaoTokenResponse response = kakaoAuthClient.getAccessToken(grantType, clientId, redirectUri,
                 codeForToken, clientSecret);
 
@@ -45,12 +45,19 @@ public class AuthService {
      * @param accessToken 엑세스 토큰
      * @return 사용자 카카오 고유값
      */
-    public String getKakaoId(String accessToken) {
+    private String getKakaoId(String accessToken) {
         String headerForId = "Bearer " + accessToken;
         KakaoInformResponse response = kakaoInformClient.getKakaoId(headerForId);
 
         String kakaoId = response.userKakaoId();
         System.out.println("유저 카카오 id " + kakaoId);
+        return kakaoId;
+    }
+
+    public String loginWithKakao(String codeForToken) {
+        String accessToken = getAccessToken(codeForToken);
+        String kakaoId = getKakaoId(accessToken);
+
         return kakaoId;
     }
 }
