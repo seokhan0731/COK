@@ -21,3 +21,8 @@ kakao:
   client-id: ${KAKAO_API_KEY}
   redirect-uri: ${KAKAO_REDIRECT_URI}
   client-secret: ${KAKAO_SECRET_CODE}
+
+#jwt 토큰 관련
+jwt:
+  secret: ${JWT_SECRET}
+  duration: ${JWT_VALID_TIME}

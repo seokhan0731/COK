@@ -4,8 +4,10 @@ import com.cok.backend.domain.auth.client.KakaoAuthClient;
 import com.cok.backend.domain.auth.client.KakaoInformClient;
 import com.cok.backend.domain.auth.dto.KakaoInformResponse;
 import com.cok.backend.domain.auth.dto.KakaoTokenResponse;
+import com.cok.backend.domain.auth.dto.UserLoginResponse;
 import com.cok.backend.domain.user.User;
 import com.cok.backend.domain.user.UserRepository;
+import com.cok.backend.global.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ public class AuthService {
     private final KakaoAuthClient kakaoAuthClient;
     private final KakaoInformClient kakaoInformClient;
     private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
     private static final String grantType = "authorization_code";
 
     //application.yml
@@ -72,7 +75,7 @@ public class AuthService {
     }
 
     @Transactional
-    public Long loginWithKakao(String codeForToken) {
+    public UserLoginResponse loginWithKakao(String codeForToken) {
         //카카오 서버 통신
         String accessToken = getAccessToken(codeForToken);
         String kakaoId = getKakaoId(accessToken);
@@ -80,8 +83,10 @@ public class AuthService {
         //유저 조회 후, 가입 또는 로그인
         User user = userRepository.findByKakaoId(kakaoId).orElseGet(() -> registerNewUser(kakaoId));
 
+        //토큰 발급
+        String ourToken = jwtTokenProvider.createToken(user.getId(), user.getRole());
 
-        return user.getId();
+        return new UserLoginResponse(ourToken, user.getRole());
     }
 
 
