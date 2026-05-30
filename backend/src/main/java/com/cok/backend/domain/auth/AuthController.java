@@ -14,7 +14,7 @@ public class AuthController {
 
     @PostMapping("/kakao/test")
     public ResponseEntity<String> loginWithKakao(@Valid @RequestBody UserLoginRequest request) {
-        String kakaoId = authService.loginWithKakao(request.codeForToken());
-        return ResponseEntity.ok("success for getting id " + kakaoId);
+        Long userId = authService.loginWithKakao(request.codeForToken());
+        return ResponseEntity.ok("success for getting user id " + userId);
     }
 }

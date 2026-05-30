@@ -4,15 +4,19 @@ import com.cok.backend.domain.auth.client.KakaoAuthClient;
 import com.cok.backend.domain.auth.client.KakaoInformClient;
 import com.cok.backend.domain.auth.dto.KakaoInformResponse;
 import com.cok.backend.domain.auth.dto.KakaoTokenResponse;
+import com.cok.backend.domain.user.User;
+import com.cok.backend.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final KakaoAuthClient kakaoAuthClient;
     private final KakaoInformClient kakaoInformClient;
+    private final UserRepository userRepository;
     private static final String grantType = "authorization_code";
 
     //application.yml
@@ -54,10 +58,31 @@ public class AuthService {
         return kakaoId;
     }
 
-    public String loginWithKakao(String codeForToken) {
+    /**
+     * 신규 사용자 저장
+     *
+     * @param kakaoId 발급받은 카카오 고유 회원 코드
+     * @return 신규 유저 객체
+     */
+    private User registerNewUser(String kakaoId) {
+        User newUser = User.builder()
+                .kakaoId(kakaoId)
+                .build();
+        return userRepository.save(newUser);
+    }
+
+    @Transactional
+    public Long loginWithKakao(String codeForToken) {
+        //카카오 서버 통신
         String accessToken = getAccessToken(codeForToken);
         String kakaoId = getKakaoId(accessToken);
 
-        return kakaoId;
+        //유저 조회 후, 가입 또는 로그인
+        User user = userRepository.findByKakaoId(kakaoId).orElseGet(() -> registerNewUser(kakaoId));
+
+
+        return user.getUserId();
     }
+
+
 }
