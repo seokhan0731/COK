@@ -22,7 +22,7 @@ export type GetProfileAndSkillResponseType = {
 };
 
 export const getProfileAndSkillApi = async (): Promise<GetProfileAndSkillResponseType> => {
-  const { data } = await authClient.get<GetProfileAndSkillResponseType>('/user/profile/2');
+  const { data } = await authClient.get<GetProfileAndSkillResponseType>('/user/profile');
   return data;
 };
 
