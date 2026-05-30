@@ -18,6 +18,7 @@ import { useProfile, useUpdateSkill } from '../../hook/useProfile';
 import PendingCard from './_component/PendingCard';
 import TextInput from './_component/TextInput';
 import { useNavigate } from 'react-router';
+import FetchingCard from './_component/FetchingCard';
 
 // #region Component
 type EditSkillCardProps = {
@@ -92,6 +93,7 @@ const EditSkillPage = () => {
   // #endregion
   return (
     <div className="flex flex-col">
+      {isUpdating && <FetchingCard />}
       {/* 안내 문구 */}
       <div className="mb-4">
         <p className="text-h3 font-semibold">내 역량 수정</p>

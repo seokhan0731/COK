@@ -6,7 +6,6 @@ import {
   useState,
   type ButtonHTMLAttributes,
   type ChangeEvent,
-  type InputHTMLAttributes,
   type ReactNode,
 } from 'react';
 import { useForm } from 'react-hook-form';
@@ -81,7 +80,7 @@ const EditProfilePage = () => {
 
   const navigate = useNavigate();
   const { data: profile, isPending, isError } = useProfile();
-  const { mutate: updateProfile, isPending: isFetching } = useUpdateProfile();
+  const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
   const {
     register,
     trigger,
@@ -213,7 +212,7 @@ const EditProfilePage = () => {
     <>
       {/* 기본 레이아웃 */}
       <div className="flex-1 flex flex-col justify-center-safe">
-        {isFetching && <FetchingCard />}
+        {isUpdating && <FetchingCard />}
 
         {/* 안내 문구 레이아웃 */}
         <div className="flex flex-col mb-4">
@@ -250,7 +249,7 @@ const EditProfilePage = () => {
               <div className="relative flex size-48 p-2 bg-primary-blue/20 border border-border rounded-full">
                 <button
                   type="button"
-                  disabled={isFetching}
+                  disabled={isUpdating}
                   className={clsx(
                     'absolute right-3 bottom-3 p-2 bg-primary-blue border border-border rounded-full',
                     'disabled:opacity-50 disabled:pointer-events-none',
@@ -281,7 +280,7 @@ const EditProfilePage = () => {
             {/* 필드 영역 */}
             <fieldset
               className={clsx('flex-1 flex flex-col gap-4', 'lg:pl-12')}
-              disabled={isFetching}
+              disabled={isUpdating}
             >
               {/* 이름 & 나이 반응형 wrapper */}
               <div className={clsx('grid grid-cols-1 gap-4', 'lg:grid-cols-2')}>
@@ -391,8 +390,8 @@ const EditProfilePage = () => {
                 >
                   초기화
                 </OutlineButton>
-                <PrimaryButton type="submit" disabled={!isValid || isFetching} className="flex-1">
-                  {isFetching ? '저장 중...' : '수정하기'}
+                <PrimaryButton type="submit" disabled={!isValid || isUpdating} className="flex-1">
+                  {isUpdating ? '저장 중...' : '수정하기'}
                 </PrimaryButton>
               </div>
             </fieldset>
