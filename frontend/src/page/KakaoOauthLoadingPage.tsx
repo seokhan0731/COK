@@ -4,7 +4,6 @@ import { useNavigate, useSearchParams } from 'react-router';
 import { useEffect } from 'react';
 
 /* Api */
-import * as AuthApi from '../api/authApi';
 
 /* Component */
 import KakaoLogo from '../component/logo/KakaoLogo';
