@@ -1,4 +1,4 @@
-package com.cok.backend.domain.auth;
+package com.cok.backend.domain.auth.client;
 
 import com.cok.backend.domain.auth.dto.KakaoTokenResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -6,7 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "kakaoClient", url = "https://kauth.kakao.com/oauth")
+@FeignClient(name = "kakaoAuthClient", url = "https://kauth.kakao.com/oauth")
 public interface KakaoAuthClient {
 
     @PostMapping(value = "/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
