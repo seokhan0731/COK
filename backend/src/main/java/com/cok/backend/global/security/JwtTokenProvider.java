@@ -12,8 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -90,7 +88,8 @@ public class JwtTokenProvider {
 
         Collection<? extends GrantedAuthority> authorities = List.of((new SimpleGrantedAuthority(role)));
 
-        UserDetails principal = new User(userId, "", authorities);
+//        UserDetails principal = new User(userId, "", authorities);
+        Long principal = Long.valueOf(userId);
         //스프링 시큐리티 인증 객체 반환
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
