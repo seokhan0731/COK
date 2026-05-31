@@ -73,4 +73,20 @@ public class User {
         //프로필 생성 전이기에 GUEST로 설정
         role = UserRole.GUEST;
     }
+
+    public void createProfile(String name, Integer birthYear, Grade currentGrade, AttendStatus attendStatus,
+                              String profileImage, BaekjoonTier tier, String githubId) {
+        this.name = name;
+        this.birthYear = birthYear;
+        this.currentGrade = currentGrade;
+        this.attendStatus = attendStatus;
+        this.profileImage = profileImage;
+        this.githubId = githubId;
+        this.algorithmLevel = tier;
+        upgradeToUser();
+    }
+
+    private void upgradeToUser() {
+        this.role = UserRole.USER;
+    }
 }
