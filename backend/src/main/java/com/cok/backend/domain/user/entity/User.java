@@ -1,4 +1,4 @@
-package com.cok.backend.domain.user;
+package com.cok.backend.domain.user.entity;
 
 import com.cok.backend.domain.user.enums.AttendStatus;
 import com.cok.backend.domain.user.enums.BaekjoonTier;
