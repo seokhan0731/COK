@@ -14,7 +14,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
+    # 테이블 생성 이후
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
 
 #카카오 로그인 관련
 kakao:
