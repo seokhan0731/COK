@@ -1,5 +1,5 @@
 package com.cok.backend.domain.user.enums;
 
 public enum AttendStatus {
-    ENROLLMENT, ABSENCE, GRADUATION
+    ENROLLED, ON_LEAVE, GRADUATION
 }
