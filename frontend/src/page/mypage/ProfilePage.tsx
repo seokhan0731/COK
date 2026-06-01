@@ -24,7 +24,7 @@ import { cn } from '../../util/cn';
 import { OutlineButton, PrimaryButton } from './_component/Button';
 import { useProfile } from '../../hook/useProfile';
 import PendingCard from './_component/PendingCard';
-import FetchingCard from './_component/FetchingCard';
+import { ALGORITHM_META } from '../../type/profileType';
 
 // #region TagCard
 
@@ -116,8 +116,10 @@ const AlgorithmCard = ({ algorithmLevel }: AlgorithmCardProps) => {
   return (
     <InputSkillCard
       icon={LucideCpu}
-      iconBgClassName="bg-yellow-500/20"
-      title={<p className="text-base font-semibold break-all">{algorithmLevel}</p>}
+      iconBgClassName={ALGORITHM_META[algorithmLevel].color}
+      title={
+        <p className="text-base font-semibold break-all">{ALGORITHM_META[algorithmLevel].label}</p>
+      }
       subTitle={<p className="text-sm text-font-gray break-all">알고리즘</p>}
       rightSlot={
         <div className="px-2 py-1 bg-background border border-border rounded-xl">
@@ -175,7 +177,7 @@ const GitHubCard = ({ id }: GitHubCardProps) => {
 
 const ProfilePage = () => {
   const navigate = useNavigate();
-  const { data: profile, isPending, isFetching, isError } = useProfile();
+  const { data: profile, isPending, isError } = useProfile();
 
   /* 상태에 따른 화면 분기 */
   if (isPending) return <PendingCard />;
@@ -184,9 +186,6 @@ const ProfilePage = () => {
   return (
     <>
       <div className="flex-1 flex flex-col">
-        {/* Fetching Effect */}
-        {isFetching && <FetchingCard />}
-
         {/* Profile Card */}
         <div
           className={clsx(

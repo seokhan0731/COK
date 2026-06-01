@@ -11,6 +11,7 @@ export {
   GRADE_META,
   ALGORITHM_OPTION,
   CERTIFICATE_OPTION,
+  GRADE_OPTION,
   type AttendStatusType,
   type AlgorithmType,
   type CertificateType,

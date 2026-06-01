@@ -18,8 +18,7 @@ import { useProfile, useUpdateSkill } from '../../hook/useProfile';
 import PendingCard from './_component/PendingCard';
 import TextInput from './_component/TextInput';
 import { useNavigate } from 'react-router';
-import FetchingCard from './_component/FetchingCard';
-
+import LoadingSpinner from './_component/LoadingSpinner';
 // #region Component
 type EditSkillCardProps = {
   icon: LucideIcon;
@@ -93,7 +92,6 @@ const EditSkillPage = () => {
   // #endregion
   return (
     <div className="flex flex-col">
-      {isUpdating && <FetchingCard />}
       {/* 안내 문구 */}
       <div className="mb-4">
         <p className="text-h3 font-semibold">내 역량 수정</p>
@@ -180,9 +178,16 @@ const EditSkillPage = () => {
             type="button"
             disabled={isFetching || isUpdating || !isValid || !isDirty}
             onClick={handleSubmit(onSubmit)}
-            className={clsx('w-full', 'lg:w-auto lg:min-w-30')}
+            className={clsx(
+              'w-full flex justify-center-safe items-center-safe',
+              'lg:w-auto lg:min-w-30',
+            )}
           >
-            수정하기
+            {isUpdating ? (
+              <LoadingSpinner className="size-5 border-[3px] border-t-primary-blue" />
+            ) : (
+              '저장하기'
+            )}
           </PrimaryButton>
         </div>
       </div>

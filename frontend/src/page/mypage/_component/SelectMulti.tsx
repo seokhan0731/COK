@@ -2,13 +2,13 @@ import * as PopoverPrimitive from '@radix-ui/react-popover';
 import clsx from 'clsx';
 import { LucideCheck, LucideChevronDown, LucideX } from 'lucide-react';
 
-type Option<T extends string = string> = {
+type Option<T extends string | number = string> = {
   value: T;
   label: string;
   description?: string;
 };
 
-type SelectMultiProps<T extends string = string> = {
+type SelectMultiProps<T extends string | number = string> = {
   options: Option<T>[];
   value: T[];
   onValueChange: (values: T[]) => void;
@@ -16,7 +16,7 @@ type SelectMultiProps<T extends string = string> = {
   placeholder?: string;
 };
 
-const SelectMulti = <T extends string = string>({
+const SelectMulti = <T extends string | number = string>({
   options,
   value,
   onValueChange,

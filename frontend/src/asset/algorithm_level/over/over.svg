@@ -1,0 +1,15 @@
+<svg id="레이어_1" data-name="레이어 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 512">
+  <defs>
+    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fa9494"/>
+      <stop offset="33%" stop-color="#fbd950"/>
+      <stop offset="66%" stop-color="#77e6a0"/>
+      <stop offset="100%" stop-color="#d0a3fd"/>
+    </linearGradient>
+  </defs>
+  <polygon fill="url(#badgeGrad)" points="0 0 0 419.74 199.77 512 400 419.74 400 0 0 0"/>
+  <polygon fill="#fff" points="0 339.02 0 378.94 199.77 471.2 400 378.94 400 339.02 199.77 431.28 0 339.02"/>
+  <g transform="translate(33 34.5) scale(13.45)" fill="none" stroke="#fff" stroke-width="3.792" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 16c5 0 7-8 12-8a4 4 0 0 1 0 8c-5 0-7-8-12-8a4 4 0 1 0 0 8"/>
+  </g>
+</svg>

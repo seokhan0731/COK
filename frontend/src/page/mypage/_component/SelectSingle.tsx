@@ -5,6 +5,7 @@ import { LucideCheck, LucideChevronDown } from 'lucide-react';
 type Option<T extends string = string> = {
   value: T;
   label: string;
+  icon?: string;
 };
 
 type SelectSingleProps<T extends string = string> = {
@@ -35,7 +36,7 @@ const SelectSingle = <T extends string = string>({
         className={clsx(
           'flex items-center justify-between w-full px-4 py-2',
           'bg-background border border-border rounded-md text-sm',
-          'focus:outline-none data-placeholder:text-muted-foreground',
+          'focus:outline-none disabled:opacity-50 data-placeholder:text-muted-foreground',
         )}
       >
         <SelectPrimitive.Value placeholder={placeholder ?? '선택해주세요'} />
@@ -51,7 +52,7 @@ const SelectSingle = <T extends string = string>({
             'bg-card-background border border-border rounded-md shadow-md',
           )}
         >
-          <SelectPrimitive.Viewport>
+          <SelectPrimitive.Viewport className="max-h-72 overflow-y-auto!">
             {options.map((opt) => (
               <SelectPrimitive.Item
                 key={opt.value}
@@ -62,7 +63,12 @@ const SelectSingle = <T extends string = string>({
                   'select-none cursor-pointer hover:bg-primary-blue/10 data-[state=checked]:**:text-primary-blue focus:outline-none',
                 )}
               >
-                <SelectPrimitive.ItemText>{opt.label}</SelectPrimitive.ItemText>
+                <SelectPrimitive.ItemText>
+                  <span className="flex items-center gap-2">
+                    {opt.icon && <img src={opt.icon} alt="" className="size-5 shrink-0" />}
+                    {opt.label}
+                  </span>
+                </SelectPrimitive.ItemText>
                 <SelectPrimitive.ItemIndicator>
                   <LucideCheck size={14} />
                 </SelectPrimitive.ItemIndicator>

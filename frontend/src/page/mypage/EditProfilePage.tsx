@@ -8,7 +8,7 @@ import {
   type ChangeEvent,
   type ReactNode,
 } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { OutlineButton, PrimaryButton } from './_component/Button';
 import TextInput from './_component/TextInput';
@@ -22,16 +22,17 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 import {
-  GRADE_META,
-  GRADE_TYPE,
   ATTEND_STATUS_META,
   ATTEND_STATUS_TYPE,
   type EditProfileFormDataType,
+  GRADE_OPTION,
+  type GradeType,
 } from '../../type';
 import { cn } from '../../util/cn';
 import { useProfile, useUpdateProfile } from '../../hook/useProfile';
 import PendingCard from './_component/PendingCard';
-import FetchingCard from './_component/FetchingCard';
+import SelectSingle from './_component/SelectSingle';
+import LoadingSpinner from './_component/LoadingSpinner';
 
 // #region Constant
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
@@ -77,13 +78,12 @@ const InputButton = ({
 
 const EditProfilePage = () => {
   // #region hook
-
   const navigate = useNavigate();
   const { data: profile, isPending, isError } = useProfile();
   const { mutate: updateProfile, isPending: isUpdating } = useUpdateProfile();
   const {
     register,
-    trigger,
+    control,
     handleSubmit,
     watch,
     getValues,
@@ -92,12 +92,21 @@ const EditProfilePage = () => {
     formState: { errors, isDirty, isValid },
   } = useForm<EditProfileFormDataType>({
     mode: 'onChange',
+
     defaultValues: {
       name: '',
+      attendStatus: 'ENROLLED',
       birthYear: 2000,
-      attendStatus: undefined,
-      currentGrade: 1,
-      imageFile: undefined,
+      currentGrade: 'FRESHMAN',
+    },
+    values: profile && {
+      name: profile.name,
+      birthYear: profile.birthYear,
+      attendStatus: profile.attendStatus,
+      currentGrade: profile.currentGrade,
+    },
+    resetOptions: {
+      keepDirtyValues: true,
     },
   });
 
@@ -108,7 +117,6 @@ const EditProfilePage = () => {
   const [isImageValid, setIsImageValid] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const currentGrade = watch('currentGrade');
   const attendStatus = watch('attendStatus');
 
   const isGradeDisabled = attendStatus === 'GRADUATED';
@@ -117,16 +125,8 @@ const EditProfilePage = () => {
 
   // #region effect
   useEffect(() => {
-    if (profile) {
-      reset({
-        name: profile.name,
-        birthYear: profile.birthYear,
-        attendStatus: profile.attendStatus,
-        currentGrade: profile.currentGrade,
-      });
-      setImageUrl(profile.imageUrl ?? '');
-    }
-  }, [profile, reset]);
+    if (profile) setImageUrl(profile.imageUrl ?? '');
+  }, [profile]);
 
   useEffect(() => {
     if (!imageUrl) {
@@ -154,16 +154,6 @@ const EditProfilePage = () => {
     };
   }, [imageUrl]);
 
-  useEffect(() => {
-    register('attendStatus', { required: '재학 여부는 필수입니다.' });
-    register('currentGrade', {
-      validate: (value) => {
-        const currentAttendStatus = getValues('attendStatus');
-        return currentAttendStatus === 'GRADUATED' || !!value || '학년은 필수입니다.';
-      },
-    });
-  }, [register]);
-
   // #endregion
 
   // #region handler
@@ -189,6 +179,7 @@ const EditProfilePage = () => {
   };
 
   const onSubmit = (data: EditProfileFormDataType) => {
+    console.log('Form: ', data);
     updateProfile(data, {
       onSuccess: () => {
         reset(data);
@@ -203,7 +194,7 @@ const EditProfilePage = () => {
   };
   //#endregion
 
-  // #region rendering
+  // #region Rendering
   if (isPending) return <PendingCard />;
   if (isError || !profile) return <div>에러 발생</div>;
   // #endregion
@@ -212,8 +203,6 @@ const EditProfilePage = () => {
     <>
       {/* 기본 레이아웃 */}
       <div className="flex-1 flex flex-col justify-center-safe">
-        {isUpdating && <FetchingCard />}
-
         {/* 안내 문구 레이아웃 */}
         <div className="flex flex-col mb-4">
           <p className="text-h3 font-semibold">기본 정보 수정</p>
@@ -231,8 +220,7 @@ const EditProfilePage = () => {
           )}
         >
           {/* 데이터 폼 */}
-          <form
-            onSubmit={handleSubmit(onSubmit)}
+          <div
             className={clsx(
               'flex flex-col gap-12',
               'lg:flex-row lg:gap-0 lg:divide-x lg:divide-border',
@@ -297,7 +285,7 @@ const EditProfilePage = () => {
                 </InputFieldBase>
 
                 {/* 출생연도 필드 */}
-                <InputFieldBase icon={LucideCake} label="나이">
+                <InputFieldBase icon={LucideCake} label="출생연도">
                   <TextInput
                     type="text"
                     inputMode="numeric"
@@ -321,60 +309,61 @@ const EditProfilePage = () => {
 
               {/* 재학 여부 필드 */}
               <InputFieldBase icon={LucideGraduationCap} label="재학 여부">
-                <div className="flex gap-2">
-                  {ATTEND_STATUS_TYPE.map((item) => (
-                    <InputButton
-                      key={item}
-                      isSelected={attendStatus === item}
-                      onClick={() => {
-                        if (item === 'GRADUATED') {
-                          setValue('currentGrade', undefined, {
-                            shouldValidate: true,
-                            shouldDirty: true,
-                          });
-                        } else {
-                          setValue('currentGrade', profile.currentGrade ?? 1, {
-                            shouldValidate: true,
-                            shouldDirty: true,
-                          });
-                        }
-                        setValue('attendStatus', item, {
-                          shouldValidate: true,
-                          shouldDirty: true,
-                        });
-                        trigger('currentGrade');
-                      }}
-                    >
-                      {ATTEND_STATUS_META[item].label}
-                    </InputButton>
-                  ))}
-                </div>
+                <Controller
+                  name="attendStatus"
+                  control={control}
+                  rules={{ required: '재학 여부는 필수입니다.' }}
+                  render={({ field }) => (
+                    <div className="flex gap-2">
+                      {ATTEND_STATUS_TYPE.map((item) => (
+                        <InputButton
+                          key={item}
+                          isSelected={field.value === item}
+                          onClick={() => {
+                            field.onChange(item);
+
+                            if (item === 'GRADUATED')
+                              setValue('currentGrade', 'OTHER', { shouldDirty: true });
+                          }}
+                        >
+                          {ATTEND_STATUS_META[item].label}
+                        </InputButton>
+                      ))}
+                    </div>
+                  )}
+                />
               </InputFieldBase>
 
               {/* 학년 필드 */}
               <InputFieldBase icon={LucideLayers} label="학년">
-                <div className="flex gap-2">
-                  {GRADE_TYPE.map((item) => (
-                    <InputButton
-                      key={item}
-                      isSelected={currentGrade === item}
-                      onClick={() => setValue('currentGrade', item, { shouldDirty: true })}
-                      disabled={isGradeDisabled}
-                    >
-                      {GRADE_META[item].label}
-                    </InputButton>
-                  ))}
-                </div>
-                {errors.currentGrade && (
-                  <span className="text-sm text-red-500">{errors.currentGrade.message}</span>
-                )}
+                <Controller
+                  name="currentGrade"
+                  control={control}
+                  rules={{
+                    validate: (value) =>
+                      getValues('attendStatus') === 'GRADUATED' || !!value || '학년은 필수입니다.',
+                  }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <SelectSingle<GradeType>
+                        options={GRADE_OPTION}
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={isGradeDisabled}
+                      />
+                      {fieldState.error && (
+                        <span className="text-sm text-red-500">{fieldState.error.message}</span>
+                      )}
+                    </>
+                  )}
+                />
               </InputFieldBase>
 
               {/* 저장 및 초기화 버튼 레이아웃 */}
               <div className={clsx('flex flex-row gap-2 mt-12', 'lg:mt-4')}>
                 <OutlineButton
                   type="button"
-                  className="flex-1"
+                  className="w-full"
                   onClick={() => {
                     setImageUrl(profile.imageUrl ?? '');
 
@@ -391,12 +380,21 @@ const EditProfilePage = () => {
                 >
                   초기화
                 </OutlineButton>
-                <PrimaryButton type="submit" disabled={!isValid || isUpdating || !isDirty} className="flex-1">
-                  {isUpdating ? '저장 중...' : '수정하기'}
+                <PrimaryButton
+                  type="button"
+                  onClick={handleSubmit(onSubmit)}
+                  disabled={!isValid || isUpdating || !isDirty}
+                  className="w-full flex justify-center-safe items-center-safe"
+                >
+                  {isUpdating ? (
+                    <LoadingSpinner className="size-5 border-[3px] border-t-primary-blue" />
+                  ) : (
+                    '저장하기'
+                  )}
                 </PrimaryButton>
               </div>
             </fieldset>
-          </form>
+          </div>
         </div>
       </div>
     </>
