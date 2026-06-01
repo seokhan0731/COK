@@ -48,7 +48,7 @@ public class UserService {
                 request.currentGrade(), request.attendStatus(), mockImageUrl,
                 request.algorithmLevel(), request.githubId());
 
-        saveUserCertifications(request, userWhoRequest);
+        saveUserCertifications(request.certifications(), userWhoRequest);
 
         String newAccessToken = jwtTokenProvider.createToken(userWhoRequest.getId(), userWhoRequest.getRole());
         return new ProfileCreateResponse(newAccessToken, userWhoRequest.getRole());
@@ -113,10 +113,10 @@ public class UserService {
     }
 
 
-    private void saveUserCertifications(ProfileCreateRequest request, User userWhoRequest) {
-        if (request.certifications() != null && !request.certifications().isEmpty()) {
+    private void saveUserCertifications(List<Long> certificationNumbers, User userWhoRequest) {
+        if (certificationNumbers != null && !certificationNumbers.isEmpty()) {
             List<MasterCertification> masterCertifications =
-                    masterCertificationRepository.findAllById(request.certifications());
+                    masterCertificationRepository.findAllById(certificationNumbers);
 
             List<UserCertification> userCertifications = new ArrayList<>();
             for (MasterCertification certification : masterCertifications) {
