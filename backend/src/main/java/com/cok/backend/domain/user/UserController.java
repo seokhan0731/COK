@@ -1,8 +1,6 @@
 package com.cok.backend.domain.user;
 
-import com.cok.backend.domain.user.dto.ProfileCreateRequest;
-import com.cok.backend.domain.user.dto.ProfileCreateResponse;
-import com.cok.backend.domain.user.dto.ProfileDetailResponse;
+import com.cok.backend.domain.user.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +26,14 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ProfileDetailResponse> getProfile(@AuthenticationPrincipal Long userId) {
         ProfileDetailResponse response = userService.getUserProfile(userId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/profile")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<BasicInformEditResponse> editBasicInform(@Valid @ModelAttribute BasicInformEditRequest request,
+                                                                   @AuthenticationPrincipal Long userId) {
+        BasicInformEditResponse response = userService.editBasicInform(request, userId);
         return ResponseEntity.ok(response);
     }
 }

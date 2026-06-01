@@ -82,6 +82,26 @@ public class UserService {
                 userCertifications);
     }
 
+    @Transactional
+    public BasicInformEditResponse editBasicInform(BasicInformEditRequest request, Long userId) {
+        User userWhoRequest = findUserOrThrow(userId);
+
+        String finalImageUrl = convertImageToUrl(request.imageFile());
+
+        userWhoRequest.editBasicInform(request.name(),
+                request.birthYear(),
+                request.currentGrade(),
+                request.attendStatus(),
+                finalImageUrl);
+
+        return new BasicInformEditResponse(userWhoRequest.getName(),
+                userWhoRequest.getBirthYear(),
+                userWhoRequest.getAttendStatus(),
+                userWhoRequest.getCurrentGrade(),
+                userWhoRequest.getProfileImage()
+        );
+    }
+
     private String convertImageToUrl(MultipartFile imageFile) {
         String imageUrl = "http://localhost:8080";
         if (imageFile != null && !imageFile.isEmpty()) {
