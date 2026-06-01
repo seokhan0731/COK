@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import type { Grade, EnrollmentStatus } from "../../util/type/profile";
-import NextButton from "../../component/buttons";
+import NextButton from "../../component/button/NextButton";
 
 export default function FinalModal ({ onNext, onPrev } : StepProps) {
     const [info, setInfo] = useState({
