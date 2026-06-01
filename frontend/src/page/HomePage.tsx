@@ -1,12 +1,12 @@
 // src/pages/HomePage.tsx
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import {
   FaAngleRight,
   FaCode,
   FaQuoteLeft,
   FaQuoteRight,
 } from 'react-icons/fa6'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 
 /* Component */
 import AnimatedDiv from '../component/div/AnimatedDiv'
@@ -23,6 +23,7 @@ import previewImage from '../asset/preview/Preview.png'
 
 /* Util */
 import clsx from 'clsx'
+import SurveyModal from '../component/modal/SurveyModal'
 
 const sectionBase = clsx(
   'relative snap-start h-[calc(100dvh-75px)] overflow-hidden',
@@ -31,6 +32,7 @@ const sectionBase = clsx(
 
 const HomePage = () => {
   const scrollRef = useRef<HTMLDivElement>(null)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="flex flex-col">
@@ -93,6 +95,7 @@ const HomePage = () => {
                 'hover:scale-105 transition-transform duration-300',
                 'dark:bg-primary-blue',
               )}
+              onClick={() => setIsOpen(true)}
             >
               <span className="text-sm font-medium leading-none text-font-white">
                 시작하기
@@ -425,6 +428,11 @@ const HomePage = () => {
             </AnimatedDiv>
           </div>
         </section>
+        <AnimatePresence>
+            {isOpen &&
+              <SurveyModal onClose={() => setIsOpen(false)} />
+            }
+        </AnimatePresence>
       </div>
     </div>
   )
