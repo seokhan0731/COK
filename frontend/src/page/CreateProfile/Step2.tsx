@@ -4,7 +4,7 @@ import bgImage from "../../asset/bg-image.png";
 //icons
 import { GoArrowRight } from "react-icons/go";
 import { LuCake } from "react-icons/lu";
-import NextButton from "../../component/buttons";
+import NextButton from "../../component/button/NextButton";
 
 export default function BirthModal({ onNext, onPrev } : StepProps) {
     const [inputValue, setInputValue] = useState("");

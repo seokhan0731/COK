@@ -5,7 +5,7 @@ import bgImage from "../../asset/bg-image.png";
 //icons
 import { FiUser } from "react-icons/fi";
 import { GoArrowRight } from "react-icons/go";
-import NextButton from "../../component/buttons";
+import NextButton from "../../component/button/NextButton";
 
 
 

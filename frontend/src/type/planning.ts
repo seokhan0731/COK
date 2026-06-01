@@ -3,10 +3,12 @@ export interface MonthlyDetail {
   content: string;
   is_completed: boolean;
   category: string;
+  overview_id: number;
 }
 
 export interface MonthlyOverview {
   overview_id: number;
+  roadmap_id: number;
   month_num: number;
   comment: string;
   details: MonthlyDetail[];
@@ -29,6 +31,8 @@ export interface RoadmapCardProps {
 export interface ProgressCardProps {
   completed: number;
   remaining: number;
-  comment?: string;
 }
 
+export interface CommentCardProps {
+  comment?: string;
+}
