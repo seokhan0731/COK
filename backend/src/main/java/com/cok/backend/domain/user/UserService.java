@@ -66,11 +66,7 @@ public class UserService {
         User userWhoRequest = findUserOrThrow(userId);
 
         //사용자 자격증, 자격증 고유번호로 포장
-        List<Long> userCertifications = new ArrayList<>();
-        for (UserCertification certification :
-                userCertificationRepository.findAllByUserId(userWhoRequest.getId())) {
-            userCertifications.add(certification.getCertification().getId());
-        }
+        List<Long> userCertifications = getUserCertifications(userId);
 
         return new ProfileDetailResponse(userWhoRequest.getName(),
                 userWhoRequest.getBirthYear(),
@@ -120,11 +116,7 @@ public class UserService {
         saveUserCertifications(request.certifications(), userWhoRequest);
         userWhoRequest.editSkillInform(request.algorithmLevel(), request.githubId());
 
-        List<Long> userCertifications = new ArrayList<>();
-        for (UserCertification certification :
-                userCertificationRepository.findAllByUserId(userWhoRequest.getId())) {
-            userCertifications.add(certification.getCertification().getId());
-        }
+        List<Long> userCertifications = getUserCertifications(userWhoRequest.getId());
 
         return new SkillInformEditResponse(userWhoRequest.getAlgorithmLevel(),
                 userCertifications,
@@ -162,6 +154,21 @@ public class UserService {
     private User findUserOrThrow(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    }
+
+    /**
+     * 사용자 소유 자격증 고유 번호로 포장
+     *
+     * @param userId 조회할 사용자 id
+     * @return 사용자가 소유한 자격증 리스트(고유 번호)
+     */
+    private List<Long> getUserCertifications(Long userId) {
+        List<Long> userCertifications = new ArrayList<>();
+        for (UserCertification certification :
+                userCertificationRepository.findAllByUserId(userId)) {
+            userCertifications.add(certification.getCertification().getId());
+        }
+        return userCertifications;
     }
 
 }
