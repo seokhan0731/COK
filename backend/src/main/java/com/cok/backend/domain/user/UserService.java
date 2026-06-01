@@ -40,8 +40,7 @@ public class UserService {
      */
     @Transactional
     public ProfileCreateResponse createProfile(ProfileCreateRequest request, Long userId) {
-        User userWhoRequest = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User userWhoRequest = findUserOrThrow(userId);
 
         //TODO: 추후 스토리지 업로드 로직 필요
         String mockImageUrl = convertImageToUrl(request);
@@ -54,6 +53,34 @@ public class UserService {
 
         String newAccessToken = jwtTokenProvider.createToken(userWhoRequest.getId(), userWhoRequest.getRole());
         return new ProfileCreateResponse(newAccessToken, userWhoRequest.getRole());
+    }
+
+    /**
+     * 프로필 조회
+     * 자격증이 없다면, 빈 List 반환
+     *
+     * @param userId 조회할 사용자 id
+     * @return 사용자 프로필값
+     * @throws IllegalArgumentException 요청한 유저가 DB에 없는 경우
+     */
+    public ProfileDetailResponse getUserProfile(Long userId) {
+        User userWhoRequest = findUserOrThrow(userId);
+
+        //사용자 자격증, 자격증 고유번호로 포장
+        List<Long> userCertifications = new ArrayList<>();
+        for (UserCertification certification :
+                userCertificationRepository.findAllByUserId(userWhoRequest.getId())) {
+            userCertifications.add(certification.getCertification().getId());
+        }
+
+        return new ProfileDetailResponse(userWhoRequest.getName(),
+                userWhoRequest.getBirthYear(),
+                userWhoRequest.getCurrentGrade(),
+                userWhoRequest.getAttendStatus(),
+                userWhoRequest.getAlgorithmLevel(),
+                userWhoRequest.getGithubId(),
+                userWhoRequest.getProfileImage(),
+                userCertifications);
     }
 
     private String convertImageToUrl(ProfileCreateRequest request) {
@@ -84,32 +111,9 @@ public class UserService {
         }
     }
 
-    /**
-     * 프로필 조회
-     * 자격증이 없다면, 빈 List 반환
-     *
-     * @param userId 조회할 사용자 id
-     * @return 사용자 프로필값
-     * @throws IllegalArgumentException 요청한 유저가 DB에 없는 경우
-     */
-    public ProfileDetailResponse getUserProfile(Long userId) {
-        User userWhoRequest = userRepository.findById(userId)
+    private User findUserOrThrow(Long userId) {
+        return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-
-        //사용자 자격증, 자격증 고유번호로 포장
-        List<Long> userCertifications = new ArrayList<>();
-        for (UserCertification certification :
-                userCertificationRepository.findAllByUserId(userWhoRequest.getId())) {
-            userCertifications.add(certification.getCertification().getId());
-        }
-
-        return new ProfileDetailResponse(userWhoRequest.getName(),
-                userWhoRequest.getBirthYear(),
-                userWhoRequest.getCurrentGrade(),
-                userWhoRequest.getAttendStatus(),
-                userWhoRequest.getAlgorithmLevel(),
-                userWhoRequest.getGithubId(),
-                userWhoRequest.getProfileImage(),
-                userCertifications);
     }
+
 }
