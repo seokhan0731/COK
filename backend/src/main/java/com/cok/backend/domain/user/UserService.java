@@ -27,23 +27,45 @@ public class UserService {
     private final MasterCertificationRepository masterCertificationRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
+    /**
+     * 프로필 생성 및 Role_USER jwt 토큰 발급
+     * 프로필 생성 전/후로 jwt의 ROLE이 바뀌기에, 해당 메소드에서 jwt 토큰 재발급까지 진행
+     *
+     * @param request 사용자 입력 프로필 정보(인적+역량)
+     * @param userId  어떤 사용자의 요청인지 확인하기 위함
+     * @return 재발급된 jwt 토큰과 해당 ROLE
+     * @throws IllegalArgumentException 요청한 유저가 DB에 없는 경우
+     */
     @Transactional
     public ProfileCreateResponse createProfile(ProfileCreateRequest request, Long userId) {
         User userWhoRequest = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
-        String mockImageUrl = "http://localhost:8080";
-        if (request.imageFile() != null && !request.imageFile().isEmpty()) {
-            String imageName = request.imageFile().getOriginalFilename();
-            log.info("프론트가 보낸 프로필 이미지 파일명: {}", imageName);
-            mockImageUrl = "https://images." + imageName;
-        }
+        //TODO: 추후 스토리지 업로드 로직 필요
+        String mockImageUrl = convertImageToUrl(request);
 
         userWhoRequest.createProfile(request.name(), request.birthYear(),
                 request.currentGrade(), request.attendStatus(), mockImageUrl,
                 request.algorithmLevel(), request.githubId());
 
+        saveUserCertifications(request, userWhoRequest);
 
+        String newAccessToken = jwtTokenProvider.createToken(userWhoRequest.getId(), userWhoRequest.getRole());
+        return new ProfileCreateResponse(newAccessToken, userWhoRequest.getRole());
+    }
+
+    private String convertImageToUrl(ProfileCreateRequest request) {
+        String imageUrl = "http://localhost:8080";
+        if (request.imageFile() != null && !request.imageFile().isEmpty()) {
+            String imageName = request.imageFile().getOriginalFilename();
+            log.info("프론트가 보낸 프로필 이미지 파일명: {}", imageName);
+            imageUrl = "https://images." + imageName;
+        }
+        return imageUrl;
+    }
+
+
+    private void saveUserCertifications(ProfileCreateRequest request, User userWhoRequest) {
         if (request.certifications() != null && !request.certifications().isEmpty()) {
             List<MasterCertification> masterCertifications =
                     masterCertificationRepository.findAllById(request.certifications());
@@ -58,9 +80,5 @@ public class UserService {
             }
             userCertificationRepository.saveAll(userCertifications);
         }
-
-        String newAccessToken = jwtTokenProvider.createToken(userWhoRequest.getId(), userWhoRequest.getRole());
-
-        return new ProfileCreateResponse(newAccessToken, userWhoRequest.getRole());
     }
 }
