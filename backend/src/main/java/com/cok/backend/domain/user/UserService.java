@@ -2,9 +2,7 @@ package com.cok.backend.domain.user;
 
 import com.cok.backend.domain.certification.MasterCertification;
 import com.cok.backend.domain.certification.MasterCertificationRepository;
-import com.cok.backend.domain.user.dto.ProfileCreateRequest;
-import com.cok.backend.domain.user.dto.ProfileCreateResponse;
-import com.cok.backend.domain.user.dto.ProfileDetailResponse;
+import com.cok.backend.domain.user.dto.*;
 import com.cok.backend.domain.user.entity.User;
 import com.cok.backend.domain.user.entity.UserCertification;
 import com.cok.backend.domain.user.repository.UserCertificationRepository;
@@ -14,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,7 @@ public class UserService {
         User userWhoRequest = findUserOrThrow(userId);
 
         //TODO: 추후 스토리지 업로드 로직 필요
-        String mockImageUrl = convertImageToUrl(request);
+        String mockImageUrl = convertImageToUrl(request.imageFile());
 
         userWhoRequest.createProfile(request.name(), request.birthYear(),
                 request.currentGrade(), request.attendStatus(), mockImageUrl,
@@ -83,10 +82,10 @@ public class UserService {
                 userCertifications);
     }
 
-    private String convertImageToUrl(ProfileCreateRequest request) {
+    private String convertImageToUrl(MultipartFile imageFile) {
         String imageUrl = "http://localhost:8080";
-        if (request.imageFile() != null && !request.imageFile().isEmpty()) {
-            String imageName = request.imageFile().getOriginalFilename();
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String imageName = imageFile.getOriginalFilename();
             log.info("프론트가 보낸 프로필 이미지 파일명: {}", imageName);
             imageUrl = "https://images." + imageName;
         }
