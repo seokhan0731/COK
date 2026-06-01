@@ -102,6 +102,35 @@ public class UserService {
         );
     }
 
+    /**
+     * 사용자 기술 관련 프로필 정보값 수정
+     * 소유 자격증의 경우, 한 사용자가 갖는 필드값이 15개가 최대이기에,
+     * 기존 데이터 제거 후, 입력 데이터 삽입하는 방식으로 구현
+     *
+     * @param request 알고리즘 레벨, Github id, 소유 자격증
+     * @param userId  조회할 사용자 id
+     * @return 수정된 정보
+     */
+    @Transactional
+    public SkillInformEditResponse editSkillInform(SkillInformEditRequest request, Long userId) {
+        User userWhoRequest = findUserOrThrow(userId);
+        //기존 사용자 소유 자격증 정보 제거
+        userCertificationRepository.deleteAllByUserId(userWhoRequest.getId());
+
+        saveUserCertifications(request.certifications(), userWhoRequest);
+        userWhoRequest.editSkillInform(request.algorithmLevel(), request.githubId());
+
+        List<Long> userCertifications = new ArrayList<>();
+        for (UserCertification certification :
+                userCertificationRepository.findAllByUserId(userWhoRequest.getId())) {
+            userCertifications.add(certification.getCertification().getId());
+        }
+
+        return new SkillInformEditResponse(userWhoRequest.getAlgorithmLevel(),
+                userCertifications,
+                userWhoRequest.getGithubId());
+    }
+
     private String convertImageToUrl(MultipartFile imageFile) {
         String imageUrl = "http://localhost:8080";
         if (imageFile != null && !imageFile.isEmpty()) {

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface UserCertificationRepository extends JpaRepository<UserCertification, Long> {
     List<UserCertification> findAllByUserId(Long userId);
+
+    void deleteAllByUserId(Long userId);
 }

@@ -36,4 +36,12 @@ public class UserController {
         BasicInformEditResponse response = userService.editBasicInform(request, userId);
         return ResponseEntity.ok(response);
     }
+
+    @PatchMapping("/profile/skill")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<SkillInformEditResponse> editSkillInform(@Valid @RequestBody SkillInformEditRequest request,
+                                                                   @AuthenticationPrincipal Long userId) {
+        SkillInformEditResponse response = userService.editSkillInform(request, userId);
+        return ResponseEntity.ok(response);
+    }
 }

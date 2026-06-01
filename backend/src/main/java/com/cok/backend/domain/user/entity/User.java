@@ -95,6 +95,11 @@ public class User {
         this.profileImage = profileImage;
     }
 
+    public void editSkillInform(BaekjoonTier algorithmLevel, String githubId) {
+        this.algorithmLevel = algorithmLevel;
+        this.githubId = githubId;
+    }
+
     private void upgradeToUser() {
         this.role = UserRole.USER;
     }
