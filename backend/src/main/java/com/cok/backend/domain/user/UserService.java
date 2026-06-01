@@ -4,6 +4,7 @@ import com.cok.backend.domain.certification.MasterCertification;
 import com.cok.backend.domain.certification.MasterCertificationRepository;
 import com.cok.backend.domain.user.dto.ProfileCreateRequest;
 import com.cok.backend.domain.user.dto.ProfileCreateResponse;
+import com.cok.backend.domain.user.dto.ProfileDetailResponse;
 import com.cok.backend.domain.user.entity.User;
 import com.cok.backend.domain.user.entity.UserCertification;
 import com.cok.backend.domain.user.repository.UserCertificationRepository;
@@ -20,6 +21,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
@@ -80,5 +82,34 @@ public class UserService {
             }
             userCertificationRepository.saveAll(userCertifications);
         }
+    }
+
+    /**
+     * 프로필 조회
+     * 자격증이 없다면, 빈 List 반환
+     *
+     * @param userId 조회할 사용자 id
+     * @return 사용자 프로필값
+     * @throws IllegalArgumentException 요청한 유저가 DB에 없는 경우
+     */
+    public ProfileDetailResponse getUserProfile(Long userId) {
+        User userWhoRequest = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        //사용자 자격증, 자격증 고유번호로 포장
+        List<Long> userCertifications = new ArrayList<>();
+        for (UserCertification certification :
+                userCertificationRepository.findAllByUserId(userWhoRequest.getId())) {
+            userCertifications.add(certification.getCertification().getId());
+        }
+
+        return new ProfileDetailResponse(userWhoRequest.getName(),
+                userWhoRequest.getBirthYear(),
+                userWhoRequest.getCurrentGrade(),
+                userWhoRequest.getAttendStatus(),
+                userWhoRequest.getAlgorithmLevel(),
+                userWhoRequest.getGithubId(),
+                userWhoRequest.getProfileImage(),
+                userCertifications);
     }
 }
