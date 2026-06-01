@@ -278,3 +278,16 @@ export const SURVEY_DATA: Survey[] = [
     ],
   },
 ]
+
+
+// POST /api/survey/submit
+// Request Body
+
+// {
+//   "answers": [
+//     { "question_id": 1, "option_id": 3 },
+//     { "question_id": 2, "option_id": 7 },
+//     ..
+//   ]
+// }    20개 문항에 대한 배열
+//      qeustion_id : 문항 ID (Number) , option_id: 선택한 보기 ID (Number)
