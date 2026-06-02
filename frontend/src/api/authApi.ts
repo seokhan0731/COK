@@ -10,15 +10,19 @@ type KakaoAuthRequestType = {
 
 type KakaoAuthResponseType = {
   accessToken: string;
-  role: UserRoleType;
+  currentRole: UserRoleType;
 };
 
 export const KakaoAuthApi = async ({
   code,
 }: KakaoAuthRequestType): Promise<KakaoAuthResponseType> => {
-  const { data } = await publicClient.post<KakaoAuthResponseType>(`/auth/kakao`, {
-    code,
-  });
+  const { data } = await publicClient.post<KakaoAuthResponseType>(
+    `/auth/kakao`,
+    {
+      code,
+    },
+    { params: { type: 'user' } }, // Debug 용도임 추후 삭제 예정
+  );
   return data;
 };
 // #endregion

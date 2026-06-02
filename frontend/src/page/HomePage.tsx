@@ -1,7 +1,13 @@
 // src/pages/HomePage.tsx
+
+/* React */
 import { useRef } from 'react';
-import { FaAngleRight, FaCode, FaQuoteLeft, FaQuoteRight } from 'react-icons/fa6';
+
+/* Library */
 import { motion } from 'framer-motion';
+
+/* Icon */
+import { FaAngleRight, FaCode, FaQuoteLeft, FaQuoteRight } from 'react-icons/fa6';
 
 /* Component */
 import AnimatedDiv from '../component/div/AnimatedDiv';

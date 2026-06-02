@@ -1,19 +1,22 @@
 // src/page/KakaoOauthLoadingPage.tsx
 
-import { useNavigate, useSearchParams } from 'react-router';
+/* React */
 import { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router';
+
+/* Library */
 
 /* Api */
+import * as AuthApi from '../api/authApi';
 
 /* Component */
 import KakaoLogo from '../component/logo/KakaoLogo';
 import LoadingDots from '../component/loading/DotLoading';
-// import type { UserType } from '../type';
-// import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from '../store/authStore';
 
 const KakaoOauthLoadingPage = () => {
   const navigate = useNavigate();
-  // const setAuth = useAuthStore((s) => s.setAuth);
+  const setAuth = useAuthStore((s) => s.setAuth);
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
@@ -26,18 +29,15 @@ const KakaoOauthLoadingPage = () => {
 
     const exchangeToken = async () => {
       try {
-        // const { accessToken, userState } = await AuthApi.KakaoAuthApi({ code });
-        // useAuthStore.setState({ accessToken });
-        // console.log(`accessToken: ${accessToken}\nuserState: ${userState}`);
+        const { accessToken, currentRole } = await AuthApi.KakaoAuthApi({ code });
+        setAuth(accessToken, currentRole);
+        console.log(`accessToken: ${accessToken}\nuserState: ${currentRole}`);
 
         /* 기존 사용자의 경우 로그인 */
-        // if (userState === 'USER') {
-        //   const user: UserType = await AuthApi.fetchMeApi();
-        //   console.log('user: ', user);
-        //   setAuth(accessToken, user);
-        //   navigate('/', { replace: true });
-        //   return;
-        // }
+        if (currentRole === 'USER') {
+          navigate('/my/profile', { replace: true });
+          return;
+        }
 
         /* 로그인을 처음 하거나 로그인을 했지만 프로필 생성을 안한 경우 프로필 생성 페이지 이동*/
         navigate('/', { replace: true });
@@ -47,7 +47,7 @@ const KakaoOauthLoadingPage = () => {
       }
     };
 
-    const timer = setTimeout(() => exchangeToken(), 3000);
+    const timer = setTimeout(() => exchangeToken(), 5000);
     return () => clearTimeout(timer);
   }, []);
 

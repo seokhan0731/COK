@@ -18,6 +18,15 @@ export const useProfile = () => {
   });
 };
 
+export const useProfileImage = () => {
+  return useQuery({
+    queryKey: ['profile'],
+    queryFn: getProfileAndSkillApi,
+    staleTime: 1000 * 60 * 5,
+    select: (data) => data.imageUrl,
+  });
+};
+
 export const useUpdateProfile = () => {
   const queryClient = useQueryClient();
 
