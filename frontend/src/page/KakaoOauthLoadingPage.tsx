@@ -29,12 +29,12 @@ const KakaoOauthLoadingPage = () => {
 
     const exchangeToken = async () => {
       try {
-        const { accessToken, currentRole } = await AuthApi.KakaoAuthApi({ code });
-        setAuth(accessToken, currentRole);
-        console.log(`accessToken: ${accessToken}\nuserState: ${currentRole}`);
+        const { accessToken, role } = await AuthApi.KakaoAuthApi({ code });
+        setAuth(accessToken, role);
+        console.log(`accessToken: ${accessToken}\nrole: ${role}`);
 
         /* 기존 사용자의 경우 로그인 */
-        if (currentRole === 'USER') {
+        if (role === 'USER') {
           navigate('/my/profile', { replace: true });
           return;
         }
@@ -47,7 +47,7 @@ const KakaoOauthLoadingPage = () => {
       }
     };
 
-    const timer = setTimeout(() => exchangeToken(), 5000);
+    const timer = setTimeout(() => exchangeToken(), 3000);
     return () => clearTimeout(timer);
   }, []);
 

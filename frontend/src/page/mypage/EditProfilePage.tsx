@@ -119,7 +119,7 @@ const EditProfilePage = () => {
 
   const attendStatus = watch('attendStatus');
 
-  const isGradeDisabled = attendStatus === 'GRADUATED';
+  const isGradeDisabled = attendStatus === 'GRADUATION';
 
   // #endregion
 
@@ -322,7 +322,7 @@ const EditProfilePage = () => {
                           onClick={() => {
                             field.onChange(item);
 
-                            if (item === 'GRADUATED')
+                            if (item === 'GRADUATION')
                               setValue('currentGrade', 'OTHER', { shouldDirty: true });
                           }}
                         >
@@ -341,7 +341,7 @@ const EditProfilePage = () => {
                   control={control}
                   rules={{
                     validate: (value) =>
-                      getValues('attendStatus') === 'GRADUATED' || !!value || '학년은 필수입니다.',
+                      getValues('attendStatus') === 'GRADUATION' || !!value || '학년은 필수입니다.',
                   }}
                   render={({ field, fieldState }) => (
                     <>
