@@ -22,9 +22,6 @@ import { useModal } from '../provider/ModalProvider';
 import { useAuthStore, useIsLoggedIn } from '../../store/authStore';
 import { useProfileImage } from '../../hook/useProfile';
 
-/* Util */
-import clsx from 'clsx';
-
 const Header = () => {
   const navigate = useNavigate();
   const isDark = useThemeStore((s) => s.theme === 'Dark');
@@ -34,10 +31,6 @@ const Header = () => {
   const { data: imageUrl } = useProfileImage();
   const { open } = useModal();
 
-  /* Effect */
-  useEffect(() => {
-    console.log(imageUrl);
-  }, []);
   return (
     <>
       <div className="top-0 z-10 sticky flex w-full h-18.75 justify-between items-center-safe px-4 bg-background border-b border-b-border">

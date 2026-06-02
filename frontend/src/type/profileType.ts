@@ -190,7 +190,7 @@ export const ALGORITHM_OPTION = (
 // #endregion Algorithm
 
 // #region AttendStatus
-export const ATTEND_STATUS_TYPE = ['ENROLLED', 'ON_LEAVE', 'GRADUATED'] as const;
+export const ATTEND_STATUS_TYPE = ['ENROLLED', 'ON_LEAVE', 'GRADUATION'] as const;
 
 export type AttendStatusType = (typeof ATTEND_STATUS_TYPE)[number];
 type AttendMetaType = {
@@ -201,7 +201,7 @@ type AttendMetaType = {
 export const ATTEND_STATUS_META: Record<AttendStatusType, AttendMetaType> = {
   ENROLLED: { icon: LucideBookOpen, label: '재학' },
   ON_LEAVE: { icon: LucidePause, label: '휴학' },
-  GRADUATED: { icon: LucideGraduationCap, label: '졸업' },
+  GRADUATION: { icon: LucideGraduationCap, label: '졸업' },
 };
 // #endregion
 

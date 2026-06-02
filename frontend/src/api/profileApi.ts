@@ -58,6 +58,8 @@ export const updateProfileApi = async (
     formData.append('imageFile', payload.imageFile);
   }
 
+  console.log(formData.values);
+
   const { data } = await authClient.patch<UpdateProfileResponseType>('/user/profile', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });

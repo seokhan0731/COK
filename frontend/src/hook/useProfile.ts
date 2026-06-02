@@ -9,21 +9,28 @@ import {
   type UpdateProfileRequestType,
   type UpdateSkillRequest,
 } from '../api/profileApi';
+import { useIsLoggedIn } from '../store/authStore';
 
 export const useProfile = () => {
+  const isLoggedIn = useIsLoggedIn();
+
   return useQuery<GetProfileAndSkillResponseType>({
     queryKey: ['profile'],
     queryFn: getProfileAndSkillApi,
     staleTime: 1000 * 60 * 5,
+    enabled: isLoggedIn,
   });
 };
 
 export const useProfileImage = () => {
+  const isLoggedIn = useIsLoggedIn();
+
   return useQuery({
     queryKey: ['profile'],
     queryFn: getProfileAndSkillApi,
     staleTime: 1000 * 60 * 5,
     select: (data) => data.imageUrl,
+    enabled: isLoggedIn,
   });
 };
 
