@@ -86,6 +86,20 @@ public class User {
         upgradeToUser();
     }
 
+    public void editBasicInform(String name, Integer birthYear, Grade currentGrade, AttendStatus attendStatus,
+                                String profileImage) {
+        this.name = name;
+        this.birthYear = birthYear;
+        this.currentGrade = currentGrade;
+        this.attendStatus = attendStatus;
+        this.profileImage = profileImage;
+    }
+
+    public void editSkillInform(BaekjoonTier algorithmLevel, String githubId) {
+        this.algorithmLevel = algorithmLevel;
+        this.githubId = githubId;
+    }
+
     private void upgradeToUser() {
         this.role = UserRole.USER;
     }
