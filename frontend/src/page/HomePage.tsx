@@ -49,13 +49,13 @@ const HomePage = () => {
           {/* background effect */}
           <div
             className={clsx(
-              'absolute top-20 left-px -z-10 w-48 h-48 rounded-full opacity-20 blur-3xl bg-primary-blue',
+              'absolute top-20 left-px w-48 h-48 rounded-full opacity-20 blur-3xl bg-primary-blue',
               'lg:w-96 lg:h-96',
             )}
           />
           <div
             className={clsx(
-              'absolute bottom-20 right-px -z-10 w-48 h-48 rounded-full opacity-20 blur-3xl bg-primary-emerald',
+              'absolute bottom-20 right-px w-48 h-48 rounded-full opacity-20 blur-3xl bg-primary-emerald',
               'lg:w-96 lg:h-96',
             )}
           />
