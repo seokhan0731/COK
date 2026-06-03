@@ -11,7 +11,7 @@ import {
   type CertificateType,
   type EditSkillFormDataType,
 } from '../../type';
-import { type ReactNode } from 'react';
+import { useRef, type ReactNode } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { OutlineButton, PrimaryButton } from './_component/Button';
 import { useProfile, useUpdateSkill } from '../../hook/useProfile';
@@ -19,6 +19,8 @@ import PendingCard from './_component/PendingCard';
 import TextInput from './_component/TextInput';
 import { useNavigate } from 'react-router';
 import LoadingSpinner from './_component/LoadingSpinner';
+import AsyncDebounce from '../../util/AsyncDebounce';
+import { checkGithubIDApi } from '../../api/profileApi';
 // #region Component
 type EditSkillCardProps = {
   icon: LucideIcon;
@@ -52,7 +54,7 @@ const EditSkillPage = () => {
     register,
     reset,
     handleSubmit,
-    formState: { isValid, isDirty, errors },
+    formState: { isValid, isDirty, errors, isValidating },
   } = useForm<EditSkillFormDataType>({
     mode: 'onChange',
     defaultValues: {
@@ -65,6 +67,7 @@ const EditSkillPage = () => {
       githubId: profile.githubId,
     },
   });
+  const checkGithubRef = useRef(AsyncDebounce(checkGithubIDApi, 500));
 
   // #region Effect
 
@@ -157,10 +160,24 @@ const EditSkillPage = () => {
                   value: /^[a-zA-Z0-9-]+$/,
                   message: '영문, 숫자, 하이픈만 사용할 수 있습니다.',
                 },
+                validate: async (value) => {
+                  if (!value || !/^[a-zA-Z0-9-]+$/.test(value)) return true;
+                  try {
+                    const exists = await checkGithubRef.current({ githubID: value });
+                    return exists || '존재하지 않는 GitHub ID 입니다.';
+                  } catch {
+                    return true;
+                  }
+                },
               })}
             />
-            {errors.githubId && (
-              <span className="pt-2 text-sm text-red-500">{errors.githubId.message}</span>
+
+            {isValidating ? (
+              <span className="pt-2 text-sm text-font-gray">GitHub ID 확인 중...</span>
+            ) : (
+              errors.githubId && (
+                <span className="pt-2 text-sm text-red-500">{errors.githubId.message}</span>
+              )
             )}
           </EditSkillCard>
         </div>
@@ -169,14 +186,14 @@ const EditSkillPage = () => {
           <OutlineButton
             type="button"
             onClick={() => reset()}
-            disabled={!isDirty}
+            disabled={isUpdating || !isDirty || isValidating}
             className={clsx('w-full', 'lg:w-auto lg:min-w-30')}
           >
             초기화
           </OutlineButton>
           <PrimaryButton
             type="button"
-            disabled={isFetching || isUpdating || !isValid || !isDirty}
+            disabled={isUpdating || !isValid || !isDirty || isValidating}
             onClick={handleSubmit(onSubmit)}
             className={clsx(
               'w-full flex justify-center-safe items-center-safe',
