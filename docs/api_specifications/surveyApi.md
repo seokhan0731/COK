@@ -22,7 +22,7 @@ COK 프로젝트 · 설문 모달 (SurveyModal)
 | 항목 | 값 |
 |------|----|
 | Method | GET |
-| URL | `/get/survey` |
+| URL | `/survey` |
 
 ### Response Body
 
@@ -30,11 +30,18 @@ COK 프로젝트 · 설문 모달 (SurveyModal)
 |------|------|------|------|
 | `survey` | `Survey[]` | O | 카테고리별 설문 목록 |
 
+### Request Headers
+
+| 헤더 | 값 | 필수 | 설명 |
+|------|----|------|------|
+| `Authorization` | `Bearer {accessToken}` | O | 로그인 사용자 인증 토큰 |
+
 ### Example
 
 Request
 ```
-GET /get/survey
+GET /survey
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 Response Body
@@ -72,12 +79,13 @@ Response Body
 | 항목 | 값 |
 |------|----|
 | Method | POST |
-| URL | `/api/survey/submit` |
+| URL | `/survey/submit` |
 
 ### Request Headers
 
 | 헤더 | 값 | 필수 | 설명 |
 |------|----|------|------|
+| `Authorization` | `Bearer {accessToken}` | O | 로그인 사용자 인증 토큰 |
 | `Content-Type` | `application/json` | O | 요청 바디 형식 |
 
 ### Request Body
@@ -88,7 +96,21 @@ Response Body
 | `answers[].question_id` | `number` | O | 질문 ID |
 | `answers[].option_id` | `number` | O | 선택한 선택지 ID |
 
+### Response Body
+
+| 필드 | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `result_id` | `number` | O | 생성된 진단 결과 ID |
+| `message` | `string` | O | 처리 결과 메시지 |
+
 ### Example
+
+Request
+```
+POST /survey/submit
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+```
 
 Request Body
 ```json
@@ -97,6 +119,14 @@ Request Body
     { "question_id": 1, "option_id": 2 },
     { "question_id": 2, "option_id": 5 }
   ]
+}
+```
+
+Response Body
+```json
+{
+  "result_id": 1,
+  "message": "설문이 정상적으로 제출되었습니다."
 }
 ```
 

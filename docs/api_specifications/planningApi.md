@@ -21,13 +21,13 @@ COK 프로젝트 · 플래닝 페이지 (PlanningPage)
 | 항목 | 값 |
 |------|----|
 | Method | GET |
-| URL | `/get/planning` |
+| URL | `/planning` |
 
 ### Request Headers
 
 | 헤더 | 값 | 필수 | 설명 |
 |------|----|------|------|
-| `Authorization` | `Bearer {accessToken}` | O | 로그인 사용자 인증 토큰 |
+| `Authorization` | `Bearer {token}` | O | 로그인 사용자 인증 토큰 |
 
 ### Response Body
 
@@ -43,7 +43,7 @@ COK 프로젝트 · 플래닝 페이지 (PlanningPage)
 
 Request
 ```
-GET /get/planning
+GET /planning
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
@@ -83,7 +83,70 @@ Response Body
 
 ---
 
-## 2. Type 정의
+## 2. 미션 완료 처리
+
+세부 목표(미션)의 완료 여부를 변경한다. 사용자가 미션을 체크/해제할 때 호출한다.
+
+### Metadata
+
+| 항목 | 값 |
+|------|----|
+| Method | PATCH |
+| URL | `/planning/details/{detail_id}` |
+
+### Path Parameters
+
+| 파라미터 | 타입 | 필수 | 설명 |
+|----------|------|------|------|
+| `detail_id` | `number` | O | 변경할 세부 목표 ID |
+
+### Request Headers
+
+| 헤더 | 값 | 필수 | 설명 |
+|------|----|------|------|
+| `Authorization` | `Bearer {token}` | O | 로그인 사용자 인증 토큰 |
+| `Content-Type` | `application/json` | O | 요청 바디 형식 |
+
+### Request Body
+
+| 필드 | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `is_completed` | `boolean` | O | 변경할 완료 여부 |
+
+### Response Body
+
+| 필드 | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `detail_id` | `number` | O | 세부 목표 ID |
+| `is_completed` | `boolean` | O | 변경된 완료 여부 |
+
+### Example
+
+Request
+```
+PATCH /planning/details/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+```
+
+Request Body
+```json
+{
+  "is_completed": true
+}
+```
+
+Response Body
+```json
+{
+  "detail_id": 1,
+  "is_completed": true
+}
+```
+
+---
+
+## 3. Type 정의
 
 ### RoadmapData
 
@@ -117,7 +180,7 @@ Response Body
 
 ---
 
-## 3. 클라이언트 파생 데이터
+## 4. 클라이언트 파생 데이터
 
 서버 응답을 바탕으로 클라이언트에서 계산하는 값들이다.
 
