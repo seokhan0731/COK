@@ -47,7 +47,7 @@ const EditSkillCard = ({ icon: Icon, title, children }: EditSkillCardProps) => (
 
 const EditSkillPage = () => {
   const navigate = useNavigate();
-  const { data: profile, isPending, isFetching, isError } = useProfile();
+  const { data: profile, isPending, isError } = useProfile();
   const { mutate: updateSkill, isPending: isUpdating } = useUpdateSkill();
   const {
     control,
@@ -139,7 +139,6 @@ const EditSkillPage = () => {
                     options={CERTIFICATE_OPTION}
                     value={field.value ?? []}
                     onValueChange={field.onChange}
-                    max={3}
                     placeholder="자격증을 선택하세요"
                   />
                   {fieldState.error && (
@@ -172,12 +171,8 @@ const EditSkillPage = () => {
               })}
             />
 
-            {isValidating ? (
-              <span className="pt-2 text-sm text-font-gray">GitHub ID 확인 중...</span>
-            ) : (
-              errors.githubId && (
-                <span className="pt-2 text-sm text-red-500">{errors.githubId.message}</span>
-              )
+            {errors.githubId && (
+              <span className="pt-2 text-sm text-red-500">{errors.githubId.message}</span>
             )}
           </EditSkillCard>
         </div>
