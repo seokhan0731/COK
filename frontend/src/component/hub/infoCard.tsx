@@ -32,9 +32,9 @@ const HubCard = ({ item, onClick }: Props) => {
             {item.subItems && item.subItems.length > 0 && (
                 <div className="flex flex-wrap gap-3 mt-2  justify-start items-center">
                     {item.subItems.map((sub) => (
-                        <div key={sub.name} className="flex relative">
+                        <div key={sub} className="flex relative">
                             <span className="px-2 py-1.5 rounded-md bg-indigo-100 dark:bg-indigo-900/40 text-blue-950 dark:text-indigo-200 text-xs font-medium ">
-                                {sub.name}
+                                {sub}
                             </span>
                         </div>
                     ))}
