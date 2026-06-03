@@ -1,9 +1,30 @@
-import type { KakaoAuthRequest } from '../type'
-import client from '../util/client'
-import { env } from '../util/env'
-import.meta.env.VITE_API_BASE_URL
+import { type UserRoleType } from '../type';
+import { publicClient } from '../util/client';
 
-export const KakaoAuthApi = async ({ code }: KakaoAuthRequest) => {
-  const { data } = await client.post(`${env.API_BASE_URL}/auth/kakao`, { code })
-  return data
-}
+// #region Kakao Auth API
+
+/* 카카오 인가 코드를 백엔드로 보내 자체 accessToken으로 교환. */
+type KakaoAuthRequestType = {
+  code: string;
+};
+
+type KakaoAuthResponseType = {
+  accessToken: string;
+  role: UserRoleType;
+};
+
+export const KakaoAuthApi = async ({
+  code,
+}: KakaoAuthRequestType): Promise<KakaoAuthResponseType> => {
+  const { data } = await publicClient.post<KakaoAuthResponseType>(
+    `/auth/kakao`,
+    {
+      code,
+    },
+    // { params: { type: 'user' } }, // Debug 용도임 추후 삭제 예정
+  );
+
+  console.log(data);
+  return data;
+};
+// #endregion
