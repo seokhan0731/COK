@@ -1,12 +1,18 @@
 /* src/api/profileApi.ts */
 
+/* Library */
+import axios from 'axios';
+
+/* Type */
 import {
   type AlgorithmType,
   type AttendStatusType,
   type CertificateType,
   type GradeType,
 } from '../type';
-import { authClient } from '../util/client';
+
+/* util */
+import { authClient, githubClient } from '../util/client';
 
 // #region GetProfileApi
 
@@ -87,5 +93,35 @@ export const updateSkillApi = async (
 ): Promise<UpdateSkillResponseType> => {
   const { data } = await authClient.patch<UpdateSkillResponseType>('/user/profile/skill', payload);
   return data;
+};
+// #endregion
+
+// #region Check GitHub ID
+export type checkGithubIDRequestType = {
+  githubID: string;
+};
+
+export type checkGithubIDResponseType = boolean;
+
+const cache = new Map<string, boolean>();
+
+export const checkGithubIDApi = async ({
+  githubID,
+}: checkGithubIDRequestType): Promise<checkGithubIDResponseType> => {
+  const key = githubID.toLowerCase();
+  const cached = cache.get(key);
+  if (cached !== undefined) return cached;
+
+  try {
+    await githubClient.get(`/users/${encodeURIComponent(githubID)}`);
+    cache.set(key, true);
+    return true;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      cache.set(key, false);
+      return false;
+    }
+    throw error;
+  }
 };
 // #endregion
