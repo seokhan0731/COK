@@ -8,6 +8,9 @@ export const getHubApi = async (
     const { data } = await authClient.get<GetHubResponseType>('/hub', {
         params: type ? { type } : undefined,
         signal,
+
+        
     });
+    console.log(" ");
     return data;
 };
