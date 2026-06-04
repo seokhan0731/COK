@@ -37,6 +37,7 @@ const getInitialTab = (search: string) => {
 
 const InfoPage = () => {
     const isLoggedIn = useIsLoggedIn();
+    console.log('[InfoPage] 렌더됨, isLoggedIn:', isLoggedIn, '| token:', localStorage.getItem('ACCESS_TOKEN'));
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -47,6 +48,8 @@ const InfoPage = () => {
 
     useEffect(() => {
         setTab(getInitialTab(location.search));
+
+        
     }, [location.search]);
 
     const type = TAB_TO_TYPE[tab];
@@ -66,32 +69,6 @@ const InfoPage = () => {
     const filteredItems = sortedItems.filter((item) => 
         item.name.toUpperCase().includes(search.toUpperCase())
     );
-
-    if (!isLoggedIn) {
-        return (
-            <div className="flex flex-col">
-                <HomeHeader />
-                <div
-                    className={clsx(
-                        'absolute bottom-10 left-px -z-10 w-48 h-48 rounded-full opacity-10 blur-3xl bg-primary-blue',
-                        'lg:w-96 lg:h-96',
-                    )}
-                    />
-                    <div
-                    className={clsx(
-                        'absolute top-5 right-px w-48 h-48  -z-10 lg:w-100 lg:h-100 rounded-full opacity-15 blur-3xl bg-primary-emerald',
-                        'lg:w-96 lg:h-96',
-                    )}
-                    />
-                    
-                <div className="flex items-center justify-center h-[80dvh]">
-                    <p className="text-lg font-bold text-slate-500">
-                        로그인 후 이용해주세요.
-                    </p>
-                </div>
-            </div>
-        );
-    }
     
     return (
         <div className="flex flex-col">
