@@ -8,7 +8,6 @@ type Props = {
   option: {
     option_id: number
     content: string
-    score: number
   }
   isSelected: boolean
   onClick: () => void

@@ -1,13 +1,13 @@
 import { createPortal } from "react-dom";
 import { motion } from 'framer-motion'
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-import type { Survey } from "../../type/surveyType";
+import type { Answer } from "../../type/surveyType";
+import { getSurveyApi, submitSurveyApi } from "../../api/surveyApi";
 import SurveyCard from "../card/survey_card/SurveyCard";
-
-//MOCK DATA
-import { SURVEY_DATA } from "../card/survey_card/SurveyMock";
+import { useIsLoggedIn } from "../../store/authStore";
 
 type Props = {
   onClose: () => void;
@@ -20,81 +20,84 @@ type NextButtonProps = {
 }
 
 const SurveyModal = ({ onClose }: Props) => {
-    const [survey, setSurvey] = useState<Survey[]>(SURVEY_DATA);
-    const [isLoading, setIsLoading] = useState(true);
-    const [currentIndex, setCurrentIndex] = useState(0)
+    const { data: questions, isLoading } = useQuery({
+        queryKey: ["survey"],
+        queryFn: ({ signal }) => getSurveyApi(signal),
+    });
+
+    const isLoggedIn = useIsLoggedIn();
+
+    const [currentIndex, setCurrentIndex] = useState(0);
     const [selected, setSelected] = useState<number | null>(null);
-    const [answer, setAnswer] = useState<{ question_id: number; option_id: number }[]>([]);
+    const [subjective, setSubjective] = useState("");
+    const [answers, setAnswers] = useState<Answer[]>([]);
     const [errorMsg, setErrorMsg] = useState("");
 
-    useEffect(() => {
-        fetch('https://e6dc9715-49ed-46a8-b462-6adcd5d9d470.mock.pstmn.io/get/survey')
-        .then(res => {
-            if (!res.ok) throw new Error('mock fetch failed')
-            return res.json()
-        })
-        .then(data => {
-            console.log("Postman 응답");
-            setSurvey(data.survey)})
-        .catch(() => {
-            console.log("임시 데이터 응답");
-            setSurvey(SURVEY_DATA)})
-        .finally(() => setIsLoading(false))
-    }, [])
+    const currentQuestion = questions?.[currentIndex];
+    const isSubjective = currentQuestion?.type === "subjective";
+    const isLast = !!questions && currentIndex === questions.length - 1;
 
-    const allQuestions = survey.flatMap(s => s.questions)
-    const currentQuestion = allQuestions[currentIndex]
+    const handleNextClick = async () => {
+        if (!currentQuestion) return;
 
-    const currentCategory = survey.find(s =>
-        s.questions.some(q => q.question_id === currentQuestion.question_id)
-    )?.category
-
-
-    const handleNextClick = async() => {
-        if (selected === null) {
-            setErrorMsg("답변을 선택해주세요");
-            return; 
+        let currentAnswer: Answer;
+        if (isSubjective) {
+            if (subjective.trim() === "") {
+                setErrorMsg("답변을 입력해주세요");
+                return;
+            }
+            currentAnswer = {
+                question_id: currentQuestion.question_id,
+                subjective_answer: subjective.trim(),
+            };
+        } else {
+            if (selected === null) {
+                setErrorMsg("답변을 선택해주세요");
+                return;
+            }
+            currentAnswer = {
+                question_id: currentQuestion.question_id,
+                option_id: selected,
+            };
         }
 
         const finalAnswers = [
-            ...answer.filter(a => a.question_id !== currentQuestion.question_id),
-            { question_id: currentQuestion.question_id, option_id: selected }
-        ]
-        setAnswer(finalAnswers)
-        setErrorMsg("")
+            ...answers.filter(a => a.question_id !== currentQuestion.question_id),
+            currentAnswer,
+        ];
+        setAnswers(finalAnswers);
+        setErrorMsg("");
 
-        if (currentIndex < allQuestions.length - 1) {
-            setCurrentIndex(prev => prev + 1)
-            setSelected(null)
+        if (!isLast) {
+            setCurrentIndex(prev => prev + 1);
+            setSelected(null);
+            setSubjective("");
         } else {
-            try {
-                await fetch('/api/survey/submit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ answers: finalAnswers }),
-                })
-                console.log('제출 완료:', finalAnswers)
 
-                onClose()
+            try {
+                await submitSurveyApi({ answers: finalAnswers, selected_repos: [] });
+                console.log('제출 완료:', finalAnswers);
+                onClose();
             } catch (e) {
-                console.error('제출 실패:', e)
-                setErrorMsg("제출 중 오류가 발생했습니다. 다시 시도해주세요.")
+                console.error('제출 실패:', e);
+                setErrorMsg("제출 중 오류 발생.");
             }
         }
-    }
+    };
 
     const handlePrevClick = () => {
-        if (currentIndex === 0) return
+        if (currentIndex === 0 || !questions) return;
         setErrorMsg("");
-        setCurrentIndex(prev => prev - 1)
-        const prevQuestion = allQuestions[currentIndex - 1]
-        const prevAnswer = answer.find(a => a.question_id === prevQuestion.question_id)
-        setSelected(prevAnswer?.option_id ?? null)
-    }
+        const prevIndex = currentIndex - 1;
+        setCurrentIndex(prevIndex);
 
+        const prevQuestion = questions[prevIndex];
+        const prevAnswer = answers.find(a => a.question_id === prevQuestion.question_id);
+        setSelected(prevAnswer?.option_id ?? null);
+        setSubjective(prevAnswer?.subjective_answer ?? "");
+    };
 
-
-    if (isLoading || !currentQuestion) return createPortal(
+    if (isLoading) return createPortal(
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -107,6 +110,12 @@ const SurveyModal = ({ onClose }: Props) => {
         </motion.div>,
         document.getElementById('modal-root')!,
     )
+    if (!isLoggedIn || !currentQuestion) {
+        alert("로그인 후 이용해주세요");
+        onClose();
+        return null;
+    }
+
     return createPortal(
         <motion.div
             initial={{ opacity: 0 }}
@@ -138,35 +147,52 @@ const SurveyModal = ({ onClose }: Props) => {
                     className={clsx(
                         'absolute bottom-0 right-px  w-48 h-48 rounded-full opacity-30 blur-3xl bg-primary-emerald',
                     )}
-                />  
+                />
 
                 <section className="z-10 relative flex flex-col gap-4 w-full">
                     <div className="flex items-center justify-between">
                         <span className="text-xl lg:text-2xl font-semibold text-primary-blue">COK</span>
                         <span className="text-sm text-zinc-400 font-medium">
-                            {currentIndex + 1} / {allQuestions.length}
+                            {currentIndex + 1} / {questions.length}
                         </span>
                     </div>
 
                     <div className="flex flex-col items-center gap-3 py-2">
+                        {/* TODO: 카테고리 뱃지 - competency_id로 프론트에서 매핑 후 복구 예정
                         <span className="text-xs lg:text-sm font-medium text-primary-blue bg-primary-blue/10 px-3 py-1 rounded-full">
                             {currentCategory}
                         </span>
+                        */}
                         <span className="text-lg lg:text-2xl font-semibold text-center mb-2">
                             {currentQuestion.content}
                         </span>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                        {currentQuestion.options.map(option => (
-                            <SurveyCard
-                                key={option.option_id}
-                                option={option}
-                                isSelected={selected === option.option_id}
-                                onClick={() => setSelected(option.option_id)}
-                            />
-                        ))}
-                    </div>
+                    {isSubjective ? (
+                        <textarea
+                            value={subjective}
+                            onChange={(e) => setSubjective(e.target.value)}
+                            maxLength={1000}
+                            rows={6}
+                            placeholder="자유롭게 작성해주세요"
+                            className={clsx(
+                                'w-full p-4 rounded-2xl border-2 border-border resize-none',
+                                'bg-background dark:bg-neutral-700/60 text-font-black',
+                                'outline-none focus:border-primary-blue transition-colors',
+                            )}
+                        />
+                    ) : (
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                            {currentQuestion.options.map(option => (
+                                <SurveyCard
+                                    key={option.option_id}
+                                    option={option}
+                                    isSelected={selected === option.option_id}
+                                    onClick={() => setSelected(option.option_id)}
+                                />
+                            ))}
+                        </div>
+                    )}
 
                     {errorMsg && (
                         <span className="text-red-400 text-sm font-medium text-center w-full">
@@ -187,7 +213,7 @@ const SurveyModal = ({ onClose }: Props) => {
                         </button>
 
                         <NextButton
-                            label={allQuestions.length > 0 && currentIndex === allQuestions.length - 1 ? '제출' : '다음'}
+                            label={isLast ? '제출' : '다음'}
                             onClick={handleNextClick}
                         />
                     </div>
@@ -208,11 +234,11 @@ const NextButton = ({ onClick, label = "다음", disabled }: NextButtonProps) =>
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="w-28 h-10 lg:w-31 lg:h-12 p-3 bg-black rounded-full 
-                inline-flex justify-center items-center text-center 
+      className="w-28 h-10 lg:w-31 lg:h-12 p-3 bg-black rounded-full
+                inline-flex justify-center items-center text-center
                 text-zinc-100 text-sm lg:text-lg font-semibold hover:bg-zinc-800
                 z-50
-                dark:bg-sub-blue dark:hover:bg-primary-blue" 
+                dark:bg-sub-blue dark:hover:bg-primary-blue"
     >
       {label}
     </button>
