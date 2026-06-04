@@ -71,7 +71,7 @@ const CreateProfileFrame = ({
         </OutlineButton>
 
         <PrimaryButton type="button" onClick={isLast ? onSubmit : onNext} disabled={disableNext}>
-          다음
+          {isLast ? '시작하기' : '다음'}
         </PrimaryButton>
       </div>
     </div>

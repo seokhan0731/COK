@@ -1,10 +1,13 @@
 /* src/compoent/modal/create_profile/CreateProfileModal.tsx */
 
 /* React */
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 /* Library */
 import { Controller, useForm } from 'react-hook-form';
+
+/* API */
+import { checkGithubIDApi } from '../../../api/profileApi';
 
 /* Type */
 import {
@@ -26,7 +29,13 @@ import SelectMulti from '../../../page/mypage/_component/SelectMulti';
 
 /* Util */
 import { cn } from '../../../util/cn';
+import { router } from '../../../util/router';
+import AsyncDebounce from '../../../util/AsyncDebounce';
 import CreateProfileFrame from './_component/CreateProfileFrame';
+import clsx from 'clsx';
+import { useCreateProfile } from '../../../hook/useProfile';
+import { useModal } from '../../provider/ModalProvider';
+import { useAuthStore } from '../../../store/authStore';
 
 const STEP_FIELDS: Record<number, (keyof CreateProfileFormDataType)[]> = {
   1: ['name'],
@@ -47,7 +56,7 @@ const CreateProfileModal = () => {
     watch,
     setValue,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValidating },
   } = useForm<CreateProfileFormDataType>({
     mode: 'onChange',
     defaultValues: {
@@ -61,6 +70,9 @@ const CreateProfileModal = () => {
       imageFile: undefined,
     },
   });
+  const { mutate: createProfile } = useCreateProfile();
+  const { close } = useModal();
+  const setAuth = useAuthStore((s) => s.setAuth);
 
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(0); // 1: 다음, -1: 이전
@@ -89,6 +101,22 @@ const CreateProfileModal = () => {
     setDirection(-1);
     setStep((prev) => Math.max(prev - 1, 1));
   };
+
+  const onSubmit = handleSubmit((data) => {
+    createProfile(data, {
+      onSuccess: (response) => {
+        setAuth(response.accessToken, response.currentRole);
+        close();
+        router.navigate('/my/profile');
+      },
+      onError: () => {
+        alert('프로필 생성에 실패했습니다. 다시 시도해 주세요');
+      },
+    });
+  });
+
+  // GitHub ID 존재 확인: 디바운스 후 GitHub API로 실제 존재 여부 검사
+  const checkGithubRef = useRef(AsyncDebounce(checkGithubIDApi, 500));
 
   const renderStepContent = () => {
     const inputClass = cn(
@@ -256,13 +284,22 @@ const CreateProfileModal = () => {
               <input
                 type="text"
                 placeholder="GitHub ID를 입력해주세요"
-                className={inputClass}
+                className={clsx(inputClass, 'mt-4')}
                 {...register('githubId', {
                   required: 'GitHub ID는 필수입니다.',
                   maxLength: { value: 39, message: '39자 이하로 입력해주세요' },
                   pattern: {
                     value: /^[a-zA-Z0-9-]+$/,
                     message: '영문, 숫자, 하이픈만 사용할 수 있습니다.',
+                  },
+                  validate: async (value) => {
+                    if (!value || !/^[a-zA-Z0-9-]+$/.test(value)) return true;
+                    try {
+                      const exists = await checkGithubRef.current({ githubID: value });
+                      return exists || '존재하지 않는 GitHub ID 입니다.';
+                    } catch {
+                      return true;
+                    }
                   },
                 })}
               />
@@ -300,9 +337,10 @@ const CreateProfileModal = () => {
         isFirst={step === 1}
         isLast={step === TOTAL_STEPS}
         displayImage={displayImage}
-        disableNext={!isStepValid}
+        disableNext={!isStepValid || isValidating}
         onNext={handleNext}
         onPrev={handlePrev}
+        onSubmit={onSubmit}
       />
     </div>
   );

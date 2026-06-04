@@ -25,7 +25,7 @@ const KakaoOauthLoadingPage = () => {
   const { setAuth, clearAuth } = useAuthStore(
     useShallow((s) => ({ setAuth: s.setAuth, clearAuth: s.clearAuth })),
   );
-  const { open, close } = useModal();
+  const { open } = useModal();
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
@@ -58,8 +58,8 @@ const KakaoOauthLoadingPage = () => {
           },
         });
         navigate('/', { replace: true });
-      } catch (error) {
-        console.error('카카오 로그인 실패: ', error);
+      } catch (error: any) {
+        console.error('카카오 로그인 실패: ', error.message);
         navigate('/', { replace: true });
       }
     };
