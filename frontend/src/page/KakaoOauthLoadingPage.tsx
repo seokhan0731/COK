@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 
 /* Library */
+import { useShallow } from 'zustand/react/shallow';
 
 /* Api */
 import * as AuthApi from '../api/authApi';
@@ -12,11 +13,19 @@ import * as AuthApi from '../api/authApi';
 /* Component */
 import KakaoLogo from '../component/logo/KakaoLogo';
 import LoadingDots from '../component/loading/DotLoading';
+import CreateProfileModal from '../component/modal/create_profile/CreateProfileModal';
+
+/* Util & Store */
 import { useAuthStore } from '../store/authStore';
+import { useModal } from '../component/provider/ModalProvider';
 
 const KakaoOauthLoadingPage = () => {
+  /* Hook */
   const navigate = useNavigate();
-  const setAuth = useAuthStore((s) => s.setAuth);
+  const { setAuth, clearAuth } = useAuthStore(
+    useShallow((s) => ({ setAuth: s.setAuth, clearAuth: s.clearAuth })),
+  );
+  const { open, close } = useModal();
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
@@ -40,6 +49,14 @@ const KakaoOauthLoadingPage = () => {
         }
 
         /* 로그인을 처음 하거나 로그인을 했지만 프로필 생성을 안한 경우 프로필 생성 페이지 이동*/
+        open(<CreateProfileModal />, {
+          closeConfirm:
+            '프로필 생성은 서비스 이용에 필수입니다.\n지금 나가면 작성하신 내용이 모두 사라집니다. 나가시겠습니까?',
+          onClose: () => {
+            clearAuth();
+            navigate('/');
+          },
+        });
         navigate('/', { replace: true });
       } catch (error) {
         console.error('카카오 로그인 실패: ', error);

@@ -56,15 +56,7 @@ const Header = () => {
               <ProfileIcon imageUrl={imageUrl} onClick={() => navigate('/my/profile')} />
             </>
           ) : (
-            <PrimaryButton
-              onClick={() =>
-                open(<LoginModal />, {
-                  cardClassName: 'items-center-safe justify-center-safe',
-                })
-              }
-            >
-              로그인
-            </PrimaryButton>
+            <PrimaryButton onClick={() => open(<LoginModal />)}>로그인</PrimaryButton>
           )}
         </div>
       </div>
