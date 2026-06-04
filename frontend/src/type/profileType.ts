@@ -25,6 +25,8 @@ import algoPlatinum1 from '../asset/algorithm_level/platinum/1.svg';
 import algoDiamond from '../asset/algorithm_level/over/over.svg';
 
 // #region Form Type
+export type CreateProfileFormDataType = EditProfileFormDataType & EditSkillFormDataType;
+
 export type EditProfileFormDataType = {
   name: string;
   birthYear: number;

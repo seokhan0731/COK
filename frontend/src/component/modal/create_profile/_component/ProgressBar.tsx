@@ -6,7 +6,7 @@ type ProgressBarType = {
 };
 
 const ProgressBar = ({ step, totalSteps = 3 }: ProgressBarType) => (
-  <div className="absolute inset-x-0 top-0 flex h-1 divide-x-2 divide-background">
+  <div className="absolute inset-x-0 top-0 flex h-1">
     {Array.from({ length: totalSteps }).map((_, i) => (
       <div
         key={i}
