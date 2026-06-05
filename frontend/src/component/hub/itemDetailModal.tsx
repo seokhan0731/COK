@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import type { DetailModalProps } from "../../type/HubType";
 
@@ -5,6 +6,18 @@ import { X } from "lucide-react";
 
 
 const DetailModal = ({ onClose, item }: DetailModalProps) => {
+  useEffect(() => {
+  const sbw = window.innerWidth - document.documentElement.clientWidth;
+  document.body.style.overflow = "hidden";
+  document.body.style.paddingRight = `${sbw}px`;
+  
+  return () => {
+    document.body.style.overflow = "";
+    document.body.style.paddingRight = "";
+  };
+  
+}, []);
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 "
