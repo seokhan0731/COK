@@ -1,5 +1,5 @@
 import { FaLightbulb } from "react-icons/fa6"
-import type { CommentCardProps } from "../../type/planning"
+import type { CommentCardProps } from "../../type/planningType"
 
 const CommentCard = ({comment}:  CommentCardProps) =>  {
     return (

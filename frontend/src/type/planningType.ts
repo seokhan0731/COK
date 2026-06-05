@@ -2,7 +2,7 @@ export interface MonthlyDetail {
   detail_id: number;
   content: string;
   is_completed: boolean;
-  category: string;
+  category: Category;
   overview_id: number;
 }
 
@@ -25,7 +25,10 @@ export interface RoadmapData {
 export interface RoadmapCardProps {
   month: MonthlyOverview | undefined;
   createdAt: string;
-  // onMonthChange: (month: number) => void;
+  onPrev: () => void;
+  onNext: () => void;
+  isFirst: boolean;
+  isLast: boolean;
 }
 
 export interface ProgressCardProps {
@@ -36,3 +39,5 @@ export interface ProgressCardProps {
 export interface CommentCardProps {
   comment?: string;
 }
+
+export type Category = "TECH_STACK" | "ALGORITHM" | "KNOWLEDGE" | "CERTIFICATE";
