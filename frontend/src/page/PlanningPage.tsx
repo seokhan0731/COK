@@ -133,7 +133,7 @@ const PlanningPage = () => {
                         성장을 향한 여정
                     </h1>
                     <p className="text-slate-600 text-base lg:text-2xl font-medium dark:text-neutral-400 whitespace-nowrap">
-                        AI멘토가 분석한 이번 학기의 핵심 목표들입니다.
+                        AI멘토가 분석한 4개월 핵심 목표들입니다.
                         <br />
                         하나씩 실천하며 역량을 키워보세요
                     </p>
@@ -159,23 +159,22 @@ const PlanningPage = () => {
                     {/* 오른쪽 */}
                     <div className="flex flex-row lg:flex-col gap-3 lg:gap-6 lg:-mt-25 w-full lg:w-auto">
                         <div className={clsx(
-
-                            `${!roadmap ? `hidden `: `hidden lg:flex justify-end`}`
-                        )}>
-                            <button className="text-sm text-slate-500 hover:text-slate-700 transition-colors">
-                                전체 진행도 보러가기 →
-                            </button>
-                        </div>
-
-                        <div className={clsx(
-                            'relative flex-1 min-w-0 lg:w-fit h-fit',
+                            'flex flex-col lg:flex-col-reverse flex-1 min-w-0 lg:w-fit gap-2',
                             !roadmap && 'lg:mt-10',
                         )}>
-                            <ProgressCard
-                                completed={completed}
-                                remaining={remaining}
-                            />
-                            {!roadmap && <LockOverlay onClickSurvey={() => setIsSurveyModalOpen(true)} />}
+                            <div className="relative w-full lg:w-fit h-fit">
+                                <ProgressCard
+                                    completed={completed}
+                                    remaining={remaining}
+                                />
+                                {!roadmap && <LockOverlay onClickSurvey={() => setIsSurveyModalOpen(true)} />}
+                            </div>
+
+                            {roadmap && (
+                                <button className="self-end text-sm text-slate-500 hover:text-slate-700 transition-colors">
+                                    전체 진행도 보러가기 →
+                                </button>
+                            )}
                         </div>
 
                         <div className="relative flex-1 min-w-0 lg:w-fit h-fit">

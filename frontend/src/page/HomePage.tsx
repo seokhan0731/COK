@@ -70,7 +70,7 @@ const HomePage = () => {
               취업을 <span className={clsx('text-5xl text-primary-blue', 'lg:text-6xl')}>콕</span>
             </span>
             <span className="text-h1 font-bold">
-              진로를 <span className={clsx('text-5xl text-primary-blue', 'lg:text-6xl')}>COK</span>
+              진로를 <span className={clsx('text-5xl text-primary-blue ', 'lg:text-6xl ')}>COK</span>
             </span>
 
             <button
