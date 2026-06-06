@@ -30,3 +30,11 @@ authClient.interceptors.request.use((config) => {
   }
   return config;
 });
+
+/* Mock Server */
+export const mockClient = axios.create({
+  baseURL: env.VITE_MOCK_API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
