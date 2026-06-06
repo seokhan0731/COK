@@ -105,7 +105,7 @@ const EditProfilePage = () => {
       birthYear: profile.birthYear,
       attendStatus: profile.attendStatus,
       currentGrade: profile.currentGrade,
-      imageState: profile.imageUrl ? 'KEEP' : 'INIT',
+      imageState: 'KEEP',
     },
     resetOptions: {
       keepDirtyValues: true,
@@ -387,7 +387,7 @@ const EditProfilePage = () => {
                       attendStatus: profile.attendStatus,
                       currentGrade: profile.currentGrade,
                       imageFile: undefined,
-                      imageState: profile.imageUrl ? 'KEEP' : 'INIT',
+                      imageState: 'KEEP',
                     });
                   }}
                   disabled={!isDirty}
