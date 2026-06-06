@@ -84,25 +84,7 @@ public class UserService {
     public BasicInformEditResponse editBasicInform(BasicInformEditRequest request, Long userId) {
         User userWhoRequest = findUserOrThrow(userId);
 
-        String imageUrl = null;
-
-        if (request.imageState() == ImageEditStatus.INIT) {
-            s3Service.delete(userWhoRequest.getProfileImage());
-        }
-        else if (request.imageState() == ImageEditStatus.CHANGE) {
-            if (userWhoRequest.getProfileImage() != null) {
-                s3Service.delete(userWhoRequest.getProfileImage());
-            }
-            imageUrl = convertImageToUrl(request.imageFile());
-        }
-        else {
-            imageUrl = userWhoRequest.getProfileImage();
-        }
-        userWhoRequest.editBasicInform(request.name(),
-                request.birthYear(),
-                request.currentGrade(),
-                request.attendStatus(),
-                imageUrl);
+        String imageUrl = controlImmageEdition(request, userWhoRequest);
 
         return new BasicInformEditResponse(userWhoRequest.getName(),
                 userWhoRequest.getBirthYear(),
@@ -185,4 +167,23 @@ public class UserService {
         return userCertifications;
     }
 
+    private String controlImmageEdition(BasicInformEditRequest request, User userWhoRequest) {
+        String imageUrl = null;
+        //디폴트 이미지
+        if (request.imageState() == ImageEditStatus.INIT) {
+            s3Service.delete(userWhoRequest.getProfileImage());
+        }
+        //이미지 추가 및 수정
+        else if (request.imageState() == ImageEditStatus.CHANGE) {
+            if (userWhoRequest.getProfileImage() != null) {
+                s3Service.delete(userWhoRequest.getProfileImage());
+            }
+            imageUrl = convertImageToUrl(request.imageFile());
+        }
+        //유지
+        else {
+            imageUrl = userWhoRequest.getProfileImage();
+        }
+        return imageUrl;
+    }
 }
