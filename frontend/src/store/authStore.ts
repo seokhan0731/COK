@@ -44,3 +44,5 @@ export const useAuthStore = create<AuthStateType>((set) => ({
 }));
 
 export const useIsLoggedIn = (): boolean => useAuthStore((s) => s.accessToken !== null);
+
+export const useUserRole = (): UserRoleType | null => useAuthStore((s) => s.userRole);

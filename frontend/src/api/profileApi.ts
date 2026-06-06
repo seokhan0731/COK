@@ -9,10 +9,55 @@ import {
   type AttendStatusType,
   type CertificateType,
   type GradeType,
+  type ImageStateType,
+  type UserRoleType,
 } from '../type';
 
 /* util */
 import { authClient, githubClient } from '../util/client';
+
+// #region CreateProfileApi
+export type CreateProfileRequestType = {
+  name: string;
+  birthYear: number;
+  attendStatus: AttendStatusType;
+  currentGrade: GradeType;
+  algorithmLevel: AlgorithmType;
+  certifications?: CertificateType[];
+  githubId: string;
+  imageFile?: File;
+};
+
+export type CreateProfileResponseType = {
+  accessToken: string;
+  currentRole: UserRoleType;
+};
+
+export const createProfileApi = async (
+  payload: CreateProfileRequestType,
+): Promise<CreateProfileResponseType> => {
+  const formData = new FormData();
+  formData.append('name', payload.name);
+  formData.append('birthYear', payload.birthYear.toString());
+  formData.append('attendStatus', payload.attendStatus);
+  formData.append('currentGrade', payload.currentGrade);
+  formData.append('algorithmLevel', payload.algorithmLevel);
+  formData.append('githubId', payload.githubId);
+
+  payload.certifications?.forEach((cert) => {
+    formData.append('certifications', cert.toString());
+  });
+
+  if (payload.imageFile) {
+    formData.append('imageFile', payload.imageFile);
+  }
+
+  const { data } = await authClient.post<CreateProfileResponseType>('/user/profile', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return data;
+};
+// #endregion
 
 // #region GetProfileApi
 
@@ -29,6 +74,7 @@ export type GetProfileAndSkillResponseType = {
 
 export const getProfileAndSkillApi = async (): Promise<GetProfileAndSkillResponseType> => {
   const { data } = await authClient.get<GetProfileAndSkillResponseType>('/user/profile');
+  console.log(data);
   return data;
 };
 
@@ -41,6 +87,7 @@ export type UpdateProfileRequestType = {
   attendStatus: AttendStatusType;
   currentGrade?: GradeType;
   imageFile?: File;
+  imageState?: ImageStateType;
 };
 
 export type UpdateProfileResponseType = {
@@ -60,11 +107,8 @@ export const updateProfileApi = async (
   formData.append('attendStatus', payload.attendStatus);
   formData.append('currentGrade', payload.currentGrade?.toString() ?? '');
 
-  if (payload.imageFile) {
-    formData.append('imageFile', payload.imageFile);
-  }
-
-  console.log(formData.values);
+  if (payload.imageState) formData.append('imageState', payload.imageState);
+  if (payload.imageFile) formData.append('imageFile', payload.imageFile);
 
   const { data } = await authClient.patch<UpdateProfileResponseType>('/user/profile', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },

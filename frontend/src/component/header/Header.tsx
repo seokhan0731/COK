@@ -1,8 +1,6 @@
 // src/components/headers/Header.tsx
 
 /* React */
-
-import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 
 /* Library */
@@ -10,7 +8,7 @@ import LoginModal from '../modal/LoginModal';
 
 /* Component */
 import ProfileIcon from './_component/ProfileIcon';
-import { OutlineButton, PrimaryButton } from '../../page/mypage/_component/Button'; // 나중에 지줘야 함
+import { OutlineButton, PrimaryButton } from '../button/Button';
 
 /* Icon */
 import { FaMoon } from 'react-icons/fa6';
@@ -53,18 +51,14 @@ const Header = () => {
               >
                 로그아웃
               </OutlineButton>
-              <ProfileIcon imageUrl={imageUrl} onClick={() => navigate('/my/profile')} />
+              <ProfileIcon
+                imageUrl={imageUrl}
+                onClick={() => navigate('/my/profile')}
+                className="size-10"
+              />
             </>
           ) : (
-            <PrimaryButton
-              onClick={() =>
-                open(<LoginModal />, {
-                  cardClassName: 'items-center-safe justify-center-safe',
-                })
-              }
-            >
-              로그인
-            </PrimaryButton>
+            <PrimaryButton onClick={() => open(<LoginModal />)}>로그인</PrimaryButton>
           )}
         </div>
       </div>

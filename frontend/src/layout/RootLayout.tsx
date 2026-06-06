@@ -5,7 +5,7 @@ import Header from '../component/header/Header';
 
 const RootLayout = () => {
   return (
-    <div className="min-h-dvh flex flex-col mx-auto bg-background text-font-black">
+    <div className="min-h-dvh flex flex-col mx-auto text-font-black">
       <Header />
       <main className="flex-1 flex flex-col">
         <Outlet />

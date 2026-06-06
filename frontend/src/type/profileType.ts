@@ -25,11 +25,14 @@ import algoPlatinum1 from '../asset/algorithm_level/platinum/1.svg';
 import algoDiamond from '../asset/algorithm_level/over/over.svg';
 
 // #region Form Type
+export type CreateProfileFormDataType = EditProfileFormDataType & EditSkillFormDataType;
+
 export type EditProfileFormDataType = {
   name: string;
   birthYear: number;
   attendStatus: AttendStatusType;
   currentGrade: GradeType;
+  imageState: ImageStateType;
   imageFile?: File;
 };
 
@@ -226,3 +229,8 @@ export const GRADE_OPTION = (Object.entries(GRADE_META) as [GradeType, GradeMeta
 );
 
 // #endregion
+
+// #region ImageState
+const IMAGESTATE_TYPE = ['INIT', 'KEEP', 'CHANGE'] as const;
+export type ImageStateType = (typeof IMAGESTATE_TYPE)[number];
+//#endregion
