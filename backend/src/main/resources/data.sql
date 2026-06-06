@@ -1,3 +1,40 @@
+-- ProjectRoles
+INSERT INTO our_roles(id, role)
+VALUES (1, 'Frontend') ON CONFLICT (id) DO NOTHING;
+INSERT INTO our_roles(id, role)
+VALUES (2, 'Backend') ON CONFLICT (id) DO NOTHING;
+INSERT INTO our_roles(id, role)
+VALUES (3, 'UI/UX') ON CONFLICT (id) DO NOTHING;
+INSERT INTO our_roles(id, role)
+VALUES (4, 'AI') ON CONFLICT (id) DO NOTHING;
+INSERT INTO our_roles(id, role)
+VALUES (5, 'Animation') ON CONFLICT (id) DO NOTHING;
+
+-- Developers
+INSERT INTO our_developers(id, name, image_url)
+VALUES (1, '김석환',
+        'https://cok-mvp-bucket.s3.ap-northeast-2.amazonaws.com/landing/kimseokhwan.jpeg') ON CONFLICT (id) DO NOTHING;
+INSERT INTO our_developers(id, name, image_url)
+VALUES (2, '오주노',
+        'https://cok-mvp-bucket.s3.ap-northeast-2.amazonaws.com/landing/ojuno.jpg') ON CONFLICT (id) DO NOTHING;
+INSERT INTO our_developers(id, name, image_url)
+VALUES (3, '조인흠',
+        'https://cok-mvp-bucket.s3.ap-northeast-2.amazonaws.com/landing/choiinheum.jpg') ON CONFLICT (id) DO NOTHING;
+
+-- DeveloperRoleMapping
+INSERT INTO developer_role_mapping(id, developer_id, role_id)
+VALUES (1, 1, 2) ON CONFLICT (id) DO NOTHING;
+INSERT INTO developer_role_mapping(id, developer_id, role_id)
+VALUES (2, 1, 4) ON CONFLICT (id) DO NOTHING;
+INSERT INTO developer_role_mapping(id, developer_id, role_id)
+VALUES (3, 2, 1) ON CONFLICT (id) DO NOTHING;
+INSERT INTO developer_role_mapping(id, developer_id, role_id)
+VALUES (4, 2, 5) ON CONFLICT (id) DO NOTHING;
+INSERT INTO developer_role_mapping(id, developer_id, role_id)
+VALUES (5, 3, 1) ON CONFLICT (id) DO NOTHING;
+INSERT INTO developer_role_mapping(id, developer_id, role_id)
+VALUES (6, 3, 3) ON CONFLICT (id) DO NOTHING;
+
 -- MasterCertification
 INSERT
 INTO master_certification(id, name, issuer, description)
