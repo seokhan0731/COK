@@ -13,5 +13,6 @@ type GetUserSkillResponseType = {
 
 export const getUserSkill = async (): Promise<GetUserSkillResponseType> => {
   const { data } = await publicClient.get<GetUserSkillResponseType>('/user/skill');
+  console.log(data);
   return data;
 };

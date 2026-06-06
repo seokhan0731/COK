@@ -14,7 +14,8 @@ import PostingCard from './_component/PostingCard';
 import SkillProgressDonutChart from './_component/SkillProgressDonutChart';
 
 /* Hook */
-import { useGetUserName, useProfile } from '../../hook/useProfile';
+import { useUserSkill } from '../../hook/useUserSkill';
+import { useGetUserName } from '../../hook/useProfile';
 
 /* Util */
 import clsx from 'clsx';
@@ -49,10 +50,11 @@ const blockLoadMapProgress = true;
 
 const DashboardPage = () => {
   /* Hook */
-  const { data: name, isPending } = useGetUserName();
+  const { data: name, isPending: isNamePending } = useGetUserName();
+  const { data: userSkillData, isPending: isSkillPending } = useUserSkill();
 
   /* Constant */
-  const isLoading = isPending;
+  const isLoading = isNamePending || isSkillPending;
 
   if (isLoading)
     return (
@@ -117,14 +119,15 @@ const DashboardPage = () => {
             <div
               className={clsx('w-full max-w-75 flex-1 flex items-center-safe p-4', 'lg:max-w-100')}
             >
-              <SkillRadarChart data={data} />
+              <SkillRadarChart data={userSkillData ? userSkillData.competencies : data} />
             </div>
 
             <div className={clsx('p-4', 'bg-primary-blue/5 rounded-xl')}>
               <span className="text-sm text-font-gray font-semibold">
-                "오주노님은 6가지 역량 중 [CS 지식]과 [구현력]이 특히 돋보입니다. 탄탄한 컴퓨터 구조
+                {userSkillData?.comment}
+                {/* "오주노님은 6가지 역량 중 [CS 지식]과 [구현력]이 특히 돋보입니다. 탄탄한 컴퓨터 구조
                 이해도를 바탕으로 코드를 직접 설계하고 구현하는 능력이 뛰어나므로, 대용량 트래픽과
-                서버 아키텍처를 다루는 [백엔드 엔지니어] 직무에 가장 완벽하게 부합합니다."
+                서버 아키텍처를 다루는 [백엔드 엔지니어] 직무에 가장 완벽하게 부합합니다." */}
               </span>
             </div>
           </section>
