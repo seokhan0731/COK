@@ -320,3 +320,208 @@ VALUES (41, 1027, 10) ON CONFLICT (id) DO NOTHING;
 -- 영상/음성 엔지니어
 INSERT INTO job_tag_mapping(id, tag_id, master_job_id)
 VALUES (42, 896, 11) ON CONFLICT (id) DO NOTHING;
+
+-- MasterCompetency
+INSERT INTO master_competency(id, name, description)
+VALUES (1, '구현력',
+        '단순한 코딩을 넘어 실제 시스템 설계, 디버깅, 예외 처리 등을 수행하는 종합적인 개발 능력을 의미합니다. 단편적인 자격증보다는 실제 경험과 문제 해결 과정이 중요하므로, 상세 설문 진단을 바탕으로 역량을 측정합니다.') ON CONFLICT (id) DO NOTHING;
+INSERT INTO master_competency(id, name, description)
+VALUES (2, '협업',
+        '동료와의 원활한 의사소통, 상호 발전적인 코드 리뷰, 갈등 해결 등 프로젝트를 성공으로 이끄는 핵심적인 소프트 스킬입니다. 객관적 스펙보다는 실제 협업 상황에서의 행동 양식을 파악하기 위해 설문 진단을 통해 평가합니다.') ON CONFLICT (id) DO NOTHING;
+INSERT INTO master_competency(id, name, description)
+VALUES (3, '트렌드',
+        '끊임없이 변화하는 기술 생태계 속에서 새로운 기술에 호기심을 가지고 학습하는 능동적인 태도입니다. 학습 열의를 확인하는 진단 설문을 중심으로 평가하며, 최신 기술 관련 자격증 보유 여부를 보조 지표로 반영합니다.') ON CONFLICT (id) DO NOTHING;
+INSERT INTO master_competency(id, name, description)
+VALUES (4, 'CS 지식',
+        '튼튼한 소프트웨어 아키텍처를 설계하기 위해 필수적인 운영체제, 네트워크, 데이터베이스 등의 전공 기초 지식입니다. 가장 객관적인 역량 검증이 가능한 영역이므로, 관련 국가공인 자격증 취득 여부를 핵심 지표로 삼아 평가합니다.') ON CONFLICT (id) DO NOTHING;
+INSERT INTO master_competency(id, name, description)
+VALUES (5, '알고리즘',
+        '복잡한 문제를 논리적이고 효율적으로 해결하는 실제적인 문제 해결 능력입니다. 백준(Baekjoon) 티어 등 실제 알고리즘 풀이 성과를 주 지표로 활용하여 역량을 증명하며, 관련 자격증은 이론 학습의 보조 지표로 참고합니다.') ON CONFLICT (id) DO NOTHING;
+INSERT INTO master_competency(id, name, description)
+VALUES (6, '인프라',
+        '클라우드 컴퓨팅 및 시스템 운영 환경을 이해하고 관리할 수 있는 역량입니다. 실무에서의 배포 및 운영 경험을 직접적으로 증명하기는 어려우나, 관련 자격증을 통해 탄탄한 시스템 운영 기초 지식을 갖추었는지 보조적으로 검증합니다.') ON CONFLICT (id) DO NOTHING;
+
+-- AssessmentQuestion
+-- 구현력
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (1, '새로운 기능 개발을 시작할 때 가장 먼저 하는 행동은?', 1, 'MULTI') ON CONFLICT (id) DO NOTHING;
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (2, '예상치 못한 버그가 발생했을 때 주로 어떻게 해결하는가?', 1, 'MULTI') ON CONFLICT (id) DO NOTHING;
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (3, '외부 API를 연동하는 기능을 구현할 때 가장 중요하게 생각하는 것은?', 1, 'MULTI') ON CONFLICT (id) DO NOTHING;
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (4, '기존 기능은 동작하지만 코드가 매우 복잡합니다. 어떻게 하시겠습니까?', 1, 'MULTI') ON CONFLICT (id) DO NOTHING;
+
+-- 협업
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (5, '기술적 의견이 충돌했을 때 어떻게 행동하는가?', 2, 'MULTI') ON CONFLICT (id) DO NOTHING;
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (6, '팀원의 코드를 리뷰할 때 가장 자주 하는 행동은?', 2, 'MULTI') ON CONFLICT (id) DO NOTHING;
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (7, '프로젝트 진행 내용을 공유해야 한다면?', 2, 'MULTI') ON CONFLICT (id) DO NOTHING;
+
+-- 트렌드
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (8, '새로운 기술을 접했을 때 일반적으로 어떻게 학습하는가?', 3, 'MULTI') ON CONFLICT (id) DO NOTHING;
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (9, '해결 방법이 잘 나오지 않는 문제를 만났을 때 어떻게 정보를 찾는가?', 3, 'MULTI') ON CONFLICT (id) DO NOTHING;
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (10, '새로운 프레임워크를 도입하자는 의견이 나왔다. 어떻게 판단하는가?', 3, 'MULTI') ON CONFLICT (id) DO NOTHING;
+
+-- CS 지식
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (11, '데이터 조회 속도가 급격히 느려졌을 때 가장 먼저 확인할 것은?', 4, 'MULTI') ON CONFLICT (id) DO NOTHING;
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (12, '많은 사용자가 동시에 접속하는 서비스 설계 시 가장 중요하게 생각하는 것은?', 4, 'MULTI') ON CONFLICT (id) DO NOTHING;
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (13, '여러 사용자가 동시에 동일 데이터를 수정할 수 있는 상황에서 가장 우선적으로 고려할 것은?', 4, 'MULTI') ON CONFLICT (id) DO NOTHING;
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (14, '웹 서비스 응답 속도를 개선하기 위한 방법으로 가장 적절한 접근은?', 4, 'MULTI') ON CONFLICT (id) DO NOTHING;
+
+-- 알고리즘
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (15, '대량 데이터에서 중복 제거와 빠른 탐색이 필요할 때 어떻게 접근하는가?', 5, 'MULTI') ON CONFLICT (id) DO NOTHING;
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (16, '복잡한 요구사항을 구현해야 할 때 주로 어떤 방식으로 접근하는가?', 5, 'MULTI') ON CONFLICT (id) DO NOTHING;
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (17, '정렬된 데이터에서 특정 값을 반복적으로 찾아야 한다면?', 5, 'MULTI') ON CONFLICT (id) DO NOTHING;
+
+-- 인프라
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (18, '프로젝트를 실제 서비스 환경에 배포할 때 가장 이상적인 방식은?', 6, 'MULTI') ON CONFLICT (id) DO NOTHING;
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (19, '서비스 운영 중 장애를 가장 효과적으로 감지하는 방법은?', 6, 'MULTI') ON CONFLICT (id) DO NOTHING;
+INSERT INTO assessment_question(id, content, competency_id, type)
+VALUES (20, '개발 환경과 운영 환경 차이로 문제가 발생했다. 어떻게 해결하는가?', 6, 'MULTI') ON CONFLICT (id) DO NOTHING;
+
+-- 주관식
+INSERT INTO assessment_question(id, content, type)
+VALUES (21, '지금까지 직접 개발하고 구현해본 경험을 기술 스택 중심으로 자유롭게 작성해주세요.
+사용한 언어와 프레임워크, 직접 구현한 기능, 운영하거나 배포해본 경험이 있다면 함께 작성해주시면 좋습니다.
+
+예시)
+React와 TypeScript로 상태 관리를 적용한 웹 서비스를 구현했습니다.
+TanStack Query로 데이터 패칭을 처리하고 성능 최적화를 위해 코드 스플리팅을 적용했습니다. GitHub Actions로 CI/CD를 구축하고 배포까지 직접 경험해봤습니다.',
+        'ESSAY') ON CONFLICT (id) DO NOTHING;
+-- QuestionOption
+INSERT INTO question_option (id, question_id, content, score)
+VALUES
+-- [1. 구현력] Q1
+(1, 1, '요구사항을 보면서 바로 코드를 작성하기 시작한다.', 25),
+(2, 1, '구현 순서를 간단히 정리한 뒤 개발한다.', 50),
+(3, 1, '필요한 기능과 데이터 흐름을 먼저 설계한 후 구현한다.', 75),
+(4, 1, '향후 확장과 변경 가능성까지 고려하여 구조를 설계한 뒤 구현한다.', 100),
+
+-- [1. 구현력] Q2
+(5, 2, '검색을 통해 비슷한 사례를 찾아 적용한다.', 25),
+(6, 2, '로그를 출력하며 문제가 발생한 위치를 추적한다.', 50),
+(7, 2, '로그와 실행 흐름을 분석하여 근본 원인을 찾는다.', 75),
+(8, 2, '원인뿐 아니라 동일 유형의 문제가 재발하지 않도록 구조를 개선한다.', 100),
+
+-- [1. 구현력] Q3
+(9, 3, '정상적으로 데이터를 받아오는 기능 구현', 25),
+(10, 3, '비정상 데이터에 대한 기본 예외 처리', 50),
+(11, 3, '네트워크 장애·응답 지연 등 다양한 실패 상황 대응', 75),
+(12, 3, '장애 발생 시에도 서비스 영향이 최소화되도록 복구 전략까지 고려', 100),
+
+-- [1. 구현력] Q4
+(13, 4, '동작하므로 그대로 둔다.', 25),
+(14, 4, '필요한 부분만 수정한다.', 50),
+(15, 4, '리팩토링하여 구조를 개선한다.', 75),
+(16, 4, '현재 요구사항뿐 아니라 향후 기능 확장을 고려하여 구조를 개선한다.', 100),
+
+-- [2. 협업] Q5
+(17, 5, '경험이 많은 사람이나 다수 의견을 따른다.', 25),
+(18, 5, '자신의 의견을 근거와 함께 설명한다.', 50),
+(19, 5, '각 방안의 장단점을 비교하여 논의한다.', 75),
+(20, 5, '객관적 자료나 간단한 검증 결과를 기반으로 팀 합의를 이끈다.', 100),
+
+-- [2. 협업] Q6
+(21, 6, '오류나 오타를 확인한다.', 25),
+(22, 6, '개선 가능한 부분을 제안한다.', 50),
+(23, 6, '왜 개선이 필요한지 기술적 이유를 설명한다.', 75),
+(24, 6, '팀 전체 코드 품질 향상 관점에서 대안과 개선 방향을 제시한다.', 100),
+
+-- [2. 협업] Q7
+(25, 7, '구두로 설명', 25),
+(26, 7, '채팅으로 전달', 50),
+(27, 7, '문서 정리', 75),
+(28, 7, '문서화 + 의사결정 근거 기록', 100),
+
+-- [3. 트렌드] Q8
+(29, 8, '개념만 확인한다.', 25),
+(30, 8, '블로그·영상 등을 통해 사용 사례를 찾아본다.', 50),
+(31, 8, '공식 문서를 기반으로 직접 사용해본다.', 75),
+(32, 8, '실제 프로젝트 또는 토이 프로젝트에 적용하여 검증한다.', 100),
+
+-- [3. 트렌드] Q9
+(33, 9, 'AI 또는 검색 결과를 그대로 적용한다.', 25),
+(34, 9, '커뮤니티와 Stack Overflow 사례를 참고한다.', 50),
+(35, 9, '공식 문서와 기술 문서를 확인한다.', 75),
+(36, 9, '오픈소스 이슈나 소스코드까지 분석하여 원인을 파악한다.', 100),
+
+-- [3. 트렌드] Q10
+(37, 10, '최신 기술이므로 도입', 25),
+(38, 10, '사용 사례 확인', 50),
+(39, 10, '장단점 비교', 75),
+(40, 10, '프로젝트 상황과 유지보수 비용까지 고려', 100),
+
+-- [4. CS 지식] Q11
+(41, 11, '서버 자원을 확인한다.', 25),
+(42, 11, '쿼리 자체를 점검한다.', 50),
+(43, 11, '인덱스 및 실행 계획을 확인한다.', 75),
+(44, 11, 'DB 구조, 락, 커넥션 상태까지 종합적으로 분석한다.', 100),
+
+-- [4. CS 지식] Q12
+(45, 12, '서버 성능 향상', 25),
+(46, 12, '서버 분산', 50),
+(47, 12, '캐싱 전략 활용', 75),
+(48, 12, '비동기 처리와 시스템 확장성 고려', 100),
+
+-- [4. CS 지식] Q13
+(49, 13, '중복 요청 방지', 25),
+(50, 13, '예외 처리', 50),
+(51, 13, '동기화 및 경쟁 상태 방지', 75),
+(52, 13, '분산 환경까지 고려한 데이터 정합성 보장', 100),
+
+-- [4. CS 지식] Q14
+(53, 14, '전송 데이터 크기 감소', 25),
+(54, 14, 'API 호출 횟수 감소', 50),
+(55, 14, '캐싱 및 CDN 활용', 75),
+(56, 14, '서비스 구조와 통신 방식까지 최적화', 100),
+
+-- [5. 알고리즘] Q15
+(57, 15, '단순 반복문 활용', 25),
+(58, 15, '내장 함수 활용', 50),
+(59, 15, '적절한 자료구조(Hash 등) 선택', 75),
+(60, 15, '시간·공간 복잡도를 모두 고려하여 설계', 100),
+
+-- [5. 알고리즘] Q16
+(61, 16, '구현하면서 해결한다.', 25),
+(62, 16, '유사 사례를 참고한다.', 50),
+(63, 16, '문제를 작은 단위로 분해한다.', 75),
+(64, 16, '전체 구조와 예외 상황을 먼저 설계한다.', 100),
+
+-- [5. 알고리즘] Q17
+(65, 17, '처음부터 순차 탐색한다.', 25),
+(66, 17, '제공되는 검색 함수를 활용한다.', 50),
+(67, 17, '이진 탐색과 같은 효율적인 방법을 고려한다.', 75),
+(68, 17, '데이터 규모와 사용 패턴을 분석해 자료구조 자체를 재설계한다.', 100),
+
+-- [6. 인프라] Q18
+(69, 18, '서버에 직접 업로드 후 실행', 25),
+(70, 18, '원격 서버에서 수동 배포', 50),
+(71, 18, '컨테이너 기반으로 배포', 75),
+(72, 18, '빌드·테스트·배포가 자동화된 파이프라인 구축', 100),
+
+-- [6. 인프라] Q19
+(73, 19, '사용자 제보 확인', 25),
+(74, 19, '서버 로그 수동 확인', 50),
+(75, 19, '모니터링 대시보드 활용', 75),
+(76, 19, '자동 알림 및 관측 시스템 구축', 100),
+
+-- [6. 인프라] Q20
+(77, 20, '환경을 수동으로 맞춘다.', 25),
+(78, 20, '설정 문서를 만든다.', 50),
+(79, 20, '컨테이너 기반으로 통일한다.', 75),
+(80, 20, '환경 구성을 코드로 관리한다.', 100) ON CONFLICT (id) DO NOTHING;
