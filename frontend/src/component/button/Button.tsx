@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes } from 'react';
-import { cn } from '../../../util/cn';
+import { cn } from '../../util/cn';
 
 const BASE_STYLES = [
   'px-4 py-2 border border-border rounded-xl font-bold transition duration-200',

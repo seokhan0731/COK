@@ -21,7 +21,7 @@ export const KakaoAuthApi = async ({
     {
       code,
     },
-    // { params: { type: 'user' } }, // Debug 용도임 추후 삭제 예정
+    // { params: { type: 'guest' } }, // Debug 용도임 추후 삭제 예정
   );
 
   console.log(data);
