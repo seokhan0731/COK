@@ -1,17 +1,25 @@
 /* src/page/dashboard_page/DashboardPage.tsx */
 
 /* Library */
+import { NavLink } from 'react-router';
 
 /* Type & constant */
 import { type SkillDataType } from './_component/chartType';
+import type { JobType } from '../../type/dashboardType';
 
-/* Util */
-import clsx from 'clsx';
+/* Component */
 import SkillRadarChart from './_component/SkillRadarChart';
 import JobCard from './_component/JobCard';
 import PostingCard from './_component/PostingCard';
-import type { JobType } from '../../type/DashboardType';
 import SkillProgressDonutChart from './_component/SkillProgressDonutChart';
+
+/* Hook */
+import { useGetUserName, useProfile } from '../../hook/useProfile';
+
+/* Util */
+import clsx from 'clsx';
+import PendingCard from '../mypage/_component/PendingCard';
+import LoadingSpinner from '../mypage/_component/LoadingSpinner';
 
 /* Data */
 const data: SkillDataType[] = [
@@ -40,6 +48,33 @@ const hasDiagnosis = true;
 const blockLoadMapProgress = true;
 
 const DashboardPage = () => {
+  /* Hook */
+  const { data: name, isPending } = useGetUserName();
+
+  /* Constant */
+  const isLoading = isPending;
+
+  if (isLoading)
+    return (
+      <div className="relative flex-1 flex justify-center-safe items-center-safe">
+        <LoadingSpinner />
+
+        {/* Background Effect */}
+        <div
+          className={clsx(
+            'absolute top-20 right-px -z-10 w-48 h-48 rounded-full opacity-20 blur-3xl bg-primary-emerald',
+            'lg:w-96 lg:h-96',
+          )}
+        />
+        <div
+          className={clsx(
+            'absolute bottom-20 left-px -z-10 w-48 h-48 rounded-full opacity-20 blur-3xl bg-primary-blue',
+            'lg:w-96 lg:h-96',
+          )}
+        />
+      </div>
+    );
+
   return (
     <div className="relative flex-1 flex">
       {/* Background Effect */}
@@ -63,9 +98,9 @@ const DashboardPage = () => {
         {/* Greeting Section */}
         <section className={clsx('flex flex-col p-6 gap-1')}>
           <div className="flex flex-row">
-            <span className="text-h3 font-semibold">
-              안녕하세요, <span className="text-h3 text-primary-blue">조인흠님</span>
-            </span>{' '}
+            <span className="text-h3 font-bold">
+              안녕하세요, <span className="text-h3 text-primary-blue">{name}님</span>
+            </span>
             <span className="text-h3">👋</span>
           </div>
           <span>현재 분석된 조인흠님의 역량 지표 및 직무 공고입니다.</span>
@@ -145,7 +180,13 @@ const DashboardPage = () => {
                       'bg-linear-to-br from-blue-300/30 to-emerald-300/10 backdrop-blur-md border border-white/20 rounded-xl shadow-lg',
                     )}
                   >
-                    <span className="font-semibold">아직 로드맵을 생성하지 않았어요</span>
+                    <span className="font-semibold mb-1">아직 로드맵을 생성하지 않았어요 </span>
+                    <NavLink
+                      to={'/'} // TODO: 나중에 페이지 완성 되면 경로 수정
+                      className="text-sm underline whitespace-nowrap"
+                    >
+                      로드맵 생성하러 가기
+                    </NavLink>
                   </div>
                 )}
               </section>
@@ -178,6 +219,7 @@ const DashboardPage = () => {
         </div>
 
         {/* 진단 검사 미완료 시: 블러 + 안내 오버레이 */}
+
         {!hasDiagnosis && (
           <div
             className={clsx(

@@ -1,19 +1,10 @@
 /* src/page/dashboard_page/_component/SkillRadarChart.tsx */
 
 /* Library */
-import {
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  Radar,
-  ResponsiveContainer,
-  type TooltipContentProps,
-  Tooltip,
-} from 'recharts';
+import { RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer } from 'recharts';
 
 /* Type */
-import { SKILL_META, type SkillDataType } from './chartType';
-import clsx from 'clsx';
+import { SKILL_META, type SkillDataType } from '../../../type';
 
 type SkillRadarChartProps = {
   data: SkillDataType[];

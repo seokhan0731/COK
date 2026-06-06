@@ -19,3 +19,5 @@ export {
   type EditSkillFormDataType,
   type GradeType,
 } from './profileType';
+
+export { SKILL_META, type SkillType, type SkillDataType } from './dashboardType';
