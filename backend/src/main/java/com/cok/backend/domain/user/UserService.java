@@ -86,6 +86,12 @@ public class UserService {
 
         String imageUrl = controlImmageEdition(request, userWhoRequest);
 
+        userWhoRequest.editBasicInform(request.name(),
+                request.birthYear(),
+                request.currentGrade(),
+                request.attendStatus(),
+                imageUrl);
+
         return new BasicInformEditResponse(userWhoRequest.getName(),
                 userWhoRequest.getBirthYear(),
                 userWhoRequest.getAttendStatus(),
