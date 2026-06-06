@@ -21,7 +21,7 @@ import { NavLink, useNavigate } from 'react-router';
 import DefaultProfile from '../../component/profile/DefaultProfile';
 import { type ReactNode } from 'react';
 import { cn } from '../../util/cn';
-import { OutlineButton, PrimaryButton } from '../../../component/button/Button';
+import { OutlineButton, PrimaryButton } from '../../component/button/Button';
 import { useProfile } from '../../hook/useProfile';
 import PendingCard from './_component/PendingCard';
 import { ALGORITHM_META } from '../../type/profileType';

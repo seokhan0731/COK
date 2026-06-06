@@ -138,14 +138,16 @@ const DashboardPage = () => {
                 </div>
 
                 {/* block */}
-                <div
-                  className={clsx(
-                    'absolute inset-0 flex flex-col justify-center-safe items-center-safe',
-                    'bg-linear-to-br from-blue-300/30 to-emerald-300/10 backdrop-blur-md border border-white/20 rounded-xl shadow-lg',
-                  )}
-                >
-                  <span className="font-semibold">아직 로드맵을 생성하지 않았어요</span>
-                </div>
+                {blockLoadMapProgress && (
+                  <div
+                    className={clsx(
+                      'absolute inset-0 flex flex-col justify-center-safe items-center-safe',
+                      'bg-linear-to-br from-blue-300/30 to-emerald-300/10 backdrop-blur-md border border-white/20 rounded-xl shadow-lg',
+                    )}
+                  >
+                    <span className="font-semibold">아직 로드맵을 생성하지 않았어요</span>
+                  </div>
+                )}
               </section>
             </div>
             <section
