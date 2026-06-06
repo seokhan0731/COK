@@ -10,7 +10,7 @@ import {
 } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
-import { OutlineButton, PrimaryButton } from './_component/Button';
+import { OutlineButton, PrimaryButton } from '../../../component/button/Button';
 import TextInput from './_component/TextInput';
 import {
   LucideCake,

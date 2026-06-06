@@ -10,7 +10,7 @@ import LoginModal from '../modal/LoginModal';
 
 /* Component */
 import ProfileIcon from './_component/ProfileIcon';
-import { OutlineButton, PrimaryButton } from '../../page/mypage/_component/Button'; // 나중에 지줘야 함
+import { OutlineButton, PrimaryButton } from '../button/Button';
 
 /* Icon */
 import { FaMoon } from 'react-icons/fa6';

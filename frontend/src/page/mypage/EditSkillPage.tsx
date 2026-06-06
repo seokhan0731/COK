@@ -13,7 +13,7 @@ import {
 } from '../../type';
 import { useRef, type ReactNode } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { OutlineButton, PrimaryButton } from './_component/Button';
+import { OutlineButton, PrimaryButton } from '../../../component/button/Button';
 import { useProfile, useUpdateSkill } from '../../hook/useProfile';
 import PendingCard from './_component/PendingCard';
 import TextInput from './_component/TextInput';

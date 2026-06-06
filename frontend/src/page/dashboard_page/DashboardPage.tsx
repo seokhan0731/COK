@@ -36,7 +36,8 @@ const posting: { companyName: string; title: string; match: number }[] = [
 ];
 
 // 진단 검사 완료 여부 (임의값 — 실제로는 API/상태에서 받아옴)
-const hasDiagnosis = false;
+const hasDiagnosis = true;
+const blockLoadMapProgress = true;
 
 const DashboardPage = () => {
   return (
@@ -54,9 +55,12 @@ const DashboardPage = () => {
           'lg:w-96 lg:h-96',
         )}
       />
+
+      {/* 가로 제한 레이아웃 */}
       <div
         className={clsx('relative max-w-300 w-full flex flex-col p-6 gap-5 mx-auto', 'lg:px-12')}
       >
+        {/* Greeting Section */}
         <section className={clsx('flex flex-col p-6 gap-1')}>
           <div className="flex flex-row">
             <span className="text-h3 font-semibold">
@@ -116,7 +120,7 @@ const DashboardPage = () => {
 
               <section
                 className={clsx(
-                  'flex-1 flex flex-col items-center-safe p-6',
+                  'relative flex-1 flex flex-col items-center-safe p-6',
                   'bg-card-background border border-border rounded-xl shadow-sm',
                 )}
               >
@@ -131,6 +135,16 @@ const DashboardPage = () => {
                   )}
                 >
                   <SkillProgressDonutChart percent={70} />
+                </div>
+
+                {/* block */}
+                <div
+                  className={clsx(
+                    'absolute inset-0 flex flex-col justify-center-safe items-center-safe',
+                    'bg-linear-to-br from-blue-300/30 to-emerald-300/10 backdrop-blur-md border border-white/20 rounded-xl shadow-lg',
+                  )}
+                >
+                  <span className="font-semibold">아직 로드맵을 생성하지 않았어요</span>
                 </div>
               </section>
             </div>
