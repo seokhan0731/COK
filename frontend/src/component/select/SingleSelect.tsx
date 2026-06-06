@@ -27,7 +27,7 @@ const SingleSelect = <T extends string = string>({
 }: SingleSelectProps<T>) => {
   return (
     <SelectPrimitive.Root
-      value={value}
+      value={value ?? ''}
       onValueChange={onValueChange as ((value: string) => void) | undefined}
       defaultValue={defaultValue}
       disabled={disabled}

@@ -43,6 +43,8 @@ export const useAuthStore = create<AuthStateType>((set) => ({
   },
 }));
 
-export const useIsLoggedIn = (): boolean => useAuthStore((s) => s.accessToken !== null);
+// 프로필 생성을 마쳐 userRole이 'USER'가 된 경우에만 로그인으로 간주 (GUEST는 제외)
+export const useIsLoggedIn = (): boolean =>
+  useAuthStore((s) => s.accessToken !== null && s.userRole === 'USER');
 
 export const useUserRole = (): UserRoleType | null => useAuthStore((s) => s.userRole);

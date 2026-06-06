@@ -13,18 +13,30 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 /* React */
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 
 /* Type */
 import { type CreateProfileFormDataType } from '../../type/profileType';
 
+/* Hook & Store */
+import { useCreateProfile } from '../../hook/useProfile';
+import { useModal } from '../../component/provider/ModalProvider';
+import { useAuthStore } from '../../store/authStore';
+
 /* Util */
 import clsx from 'clsx';
 import BirthYearStep from './_component/BirthYearStep';
+import AttendStatusAndGradeStep from './_component/AttendStatusAndGradeStep';
+import SkillStep from './_component/SkillStep';
+import ProfileImageStep from './_component/ProfileImageStep';
 
 /* Constant */
 const STEPS: { Component: React.ComponentType; fields: Path<CreateProfileFormDataType>[] }[] = [
   { Component: NameStep, fields: ['name'] },
   { Component: BirthYearStep, fields: ['birthYear'] },
+  { Component: AttendStatusAndGradeStep, fields: ['attendStatus', 'currentGrade'] },
+  { Component: SkillStep, fields: ['algorithmLevel', 'githubId'] },
+  { Component: ProfileImageStep, fields: [] },
 ];
 
 const CreateProfileModal = () => {
@@ -40,13 +52,17 @@ const CreateProfileModal = () => {
   const isLastStep = step === STEPS.length - 1;
 
   // Hook
+  const navigate = useNavigate();
+  const { close } = useModal();
+  const setAuth = useAuthStore((s) => s.setAuth);
+  const { mutate: createProfile, isPending } = useCreateProfile();
   const methods = useForm<CreateProfileFormDataType>({
     mode: 'onChange',
     defaultValues: {
       name: '',
+      certifications: [],
     },
   });
-  const { errors } = methods.formState;
   const currentFields = STEPS[step].fields;
   const watched = methods.watch(currentFields);
   const isStepInvalid =
@@ -55,8 +71,16 @@ const CreateProfileModal = () => {
 
   // Handler
   const handleSubmit = (data: CreateProfileFormDataType) => {
-    console.log('Form: ', data);
-    // TODO: API 연결
+    createProfile(data, {
+      onSuccess: (response) => {
+        setAuth(response.accessToken, response.currentRole);
+        close();
+        navigate('/my/profile', { replace: true });
+      },
+      onError: () => {
+        alert('프로필 생성에 실패했습니다. 다시 시도해 주세요');
+      },
+    });
   };
 
   const handleNext = async () => {
@@ -130,8 +154,12 @@ const CreateProfileModal = () => {
         </p>
 
         <FormProvider {...methods}>
-          <div className="relative overflow-hidden">
-            <AnimatePresence mode="wait" custom={direction}>
+          <motion.div
+            layout
+            className="relative overflow-hidden"
+            transition={{ duration: 0.3, ease: 'easeInOut', type: 'spring' }}
+          >
+            <AnimatePresence mode="popLayout" custom={direction}>
               <motion.div
                 key={step}
                 custom={direction}
@@ -144,7 +172,7 @@ const CreateProfileModal = () => {
                 <StepComponent />
               </motion.div>
             </AnimatePresence>
-          </div>
+          </motion.div>
         </FormProvider>
 
         <div className="flex justify-between mt-6">
@@ -160,10 +188,10 @@ const CreateProfileModal = () => {
 
           <PrimaryButton
             onClick={handleNext}
-            disabled={isStepInvalid}
+            disabled={isStepInvalid || isPending}
             className="py-2 rounded-full lg:text-base"
           >
-            {isLastStep ? '시작하기' : '다음으로'}
+            {isLastStep ? (isPending ? '생성 중...' : '시작하기') : '다음으로'}
           </PrimaryButton>
         </div>
       </div>
