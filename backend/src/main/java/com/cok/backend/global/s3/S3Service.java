@@ -3,6 +3,7 @@ package com.cok.backend.global.s3;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class S3Service {
     private final AmazonS3 s3;
@@ -51,7 +53,9 @@ public class S3Service {
      * @param fileUrl db에 저장된 절대 경로
      */
     public void delete(String fileUrl) {
-        String fileName = fileUrl.substring(fileUrl.indexOf(bucket) + bucket.length() + 1);
+        String fileName = fileUrl.substring(fileUrl.indexOf(bucket) + bucket.length() + 33);
+        log.info("추출된 파일경로: {}", fileName);
         s3.deleteObject(bucket, fileName);
+        log.info("s3 삭제 완료: {}", fileName);
     }
 }
