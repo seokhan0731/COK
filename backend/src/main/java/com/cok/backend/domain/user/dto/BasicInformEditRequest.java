@@ -13,7 +13,7 @@ public record BasicInformEditRequest(
         @NotNull(message = "생년이 누락됐습니다.") Integer birthYear,
         @NotNull(message = "재학정보가 누락됐습니다.") AttendStatus attendStatus,
         Grade currentGrade,
-        ImageEditStatus imageState,
+        @NotNull(message = "이미지 변경 분기가 누락됐습니다.") ImageEditStatus imageState,
         MultipartFile imageFile
 ) {
 }
