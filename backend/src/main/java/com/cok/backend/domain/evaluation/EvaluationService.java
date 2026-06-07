@@ -53,28 +53,9 @@ public class EvaluationService {
         for (AnswerItem answer : request.answers()) {
             Question questionProxy = questionRepository.getReferenceById(answer.questionId());
 
-            UserResponse newResponse = null;
-            if (answer.isMulti()) {
-                Option optionProxy = optionRepository.getReferenceById(answer.optionId());
-                newResponse = UserResponse.builder()
-                        .session(newSession)
-                        .question(questionProxy)
-                        .option(optionProxy).build();
-            }
-            //주관식인 경우
-            else if (answer.isEssay()) {
-                newResponse = UserResponse.builder()
-                        .session(newSession)
-                        .question(questionProxy)
-                        .essayAnswer(answer.essayAnswer())
-                        .build();
-            }
-            else {
-                throw new IllegalArgumentException("객관식/주관식 값이 모두 없음 questionId" + answer.questionId());
-            }
+            UserResponse newResponse = buildUserResponse(answer, newSession, questionProxy);
             allResponses.add(newResponse);
         }
-
 
         sessionRepository.save(newSession);
         responseRepository.saveAll(allResponses);
@@ -83,5 +64,33 @@ public class EvaluationService {
     private User findUserOrThrow(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    }
+
+    private UserResponse buildUserResponse(AnswerItem answer, SurveySession newSession, Question questionProxy) {
+        if (answer.isMulti()) {
+            return buildWhenMulti(answer, newSession, questionProxy);
+        }
+        //주관식인 경우
+        else if (answer.isEssay()) {
+            return buildWhenEssay(answer, newSession, questionProxy);
+        }
+        log.error("응답값 null {}", answer.questionId());
+        throw new IllegalArgumentException("객관식/주관식 값이 모두 없음 questionId " + answer.questionId());
+    }
+
+    private UserResponse buildWhenMulti(AnswerItem answer, SurveySession newSession, Question questionProxy) {
+        Option optionProxy = optionRepository.getReferenceById(answer.optionId());
+        return UserResponse.builder()
+                .session(newSession)
+                .question(questionProxy)
+                .option(optionProxy).build();
+    }
+
+    private UserResponse buildWhenEssay(AnswerItem answer, SurveySession newSession, Question questionProxy) {
+        return UserResponse.builder()
+                .session(newSession)
+                .question(questionProxy)
+                .essayAnswer(answer.essayAnswer())
+                .build();
     }
 }
