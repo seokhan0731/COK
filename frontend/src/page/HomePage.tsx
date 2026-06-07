@@ -23,7 +23,7 @@ import previewImage from '../asset/preview/Preview.png';
 
 /* Util */
 import clsx from 'clsx'
-import SurveyModal from '../component/modal/SurveyModal'
+import SurveyModal from '../component/modal/survey/SurveyModal'
 
 const sectionBase = clsx(
   'relative snap-start h-[calc(100dvh-75px)] overflow-hidden',

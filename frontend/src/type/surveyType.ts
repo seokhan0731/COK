@@ -1,4 +1,4 @@
-export type QuestionType = 'single' | 'subjective';
+export type QuestionType = 'MULTI' | 'ESSAY';
 
 export type Option = {
   option_id: number;
@@ -8,7 +8,7 @@ export type Option = {
 
 export type Question = {
   question_id: number;
-  competency_id: number;
+  competency_id?: number | null;
   content: string;
   type: QuestionType;
   options: Option[];
@@ -17,16 +17,27 @@ export type Question = {
 export type Repo = {
   name: string;
   description: string | null;
-  html_url: string;
+};
+
+export type Stack = {
+  keyword: string;
+  name: string;
 };
 
 export type Answer = {
   question_id: number;
   option_id?: number;
-  subjective_answer?: string;
+  essay_answer?: string;
 };
 
 export type SubmitSurveyRequest = {
   answers: Answer[];
+};
+
+export type SubmitReposRequest = {
   selected_repos: string[];
+};
+
+export type SubmitStacksRequest = {
+  selected_stacks: string[];
 };

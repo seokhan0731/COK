@@ -4,10 +4,12 @@ import clsx from "clsx";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import type { Answer } from "../../type/surveyType";
-import { getSurveyApi, submitSurveyApi } from "../../api/surveyApi";
-import SurveyCard from "../card/survey_card/SurveyCard";
-import { useIsLoggedIn } from "../../store/authStore";
+import type { Answer } from "../../../type/surveyType";
+import { getSurveyApi, submitSurveyApi, submitReposApi } from "../../../api/surveyApi";
+import SurveyCard from "../../card/survey_card/SurveyCard";
+import RepoSelectModal from "./RepoSelectModal";
+import StackSelectModal from "./StackSelectModal";
+import { useIsLoggedIn } from "../../../store/authStore";
 
 type Props = {
   onClose: () => void;
@@ -27,28 +29,35 @@ const SurveyModal = ({ onClose }: Props) => {
 
     const isLoggedIn = useIsLoggedIn();
 
+    const [step, setStep] = useState<"survey" | "repo" | "stack">("survey");
+    const [selectedRepos, setSelectedRepos] = useState<string[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [selected, setSelected] = useState<number | null>(null);
-    const [subjective, setSubjective] = useState("");
+    const [essay, setEssay] = useState("");
     const [answers, setAnswers] = useState<Answer[]>([]);
     const [errorMsg, setErrorMsg] = useState("");
 
     const currentQuestion = questions?.[currentIndex];
-    const isSubjective = currentQuestion?.type === "subjective";
+    const isEssay = currentQuestion?.type === "ESSAY";
     const isLast = !!questions && currentIndex === questions.length - 1;
 
     const handleNextClick = async () => {
         if (!currentQuestion) return;
 
         let currentAnswer: Answer;
-        if (isSubjective) {
-            if (subjective.trim() === "") {
+
+        if (isEssay) {
+            if (essay.trim() === "") {
                 setErrorMsg("답변을 입력해주세요");
+                return;
+            }
+            if (essay.trim().length < 5) {
+                setErrorMsg("답변은 5자 이상 입력해주세요.");
                 return;
             }
             currentAnswer = {
                 question_id: currentQuestion.question_id,
-                subjective_answer: subjective.trim(),
+                essay_answer: essay.trim(),
             };
         } else {
             if (selected === null) {
@@ -61,27 +70,24 @@ const SurveyModal = ({ onClose }: Props) => {
             };
         }
 
-        const finalAnswers = [
-            ...answers.filter(a => a.question_id !== currentQuestion.question_id),
+        const newAnswers = [
+            ...answers.filter((a) => a.question_id !== currentQuestion.question_id),
             currentAnswer,
         ];
-        setAnswers(finalAnswers);
+        setAnswers(newAnswers);
         setErrorMsg("");
 
         if (!isLast) {
-            setCurrentIndex(prev => prev + 1);
+            setCurrentIndex(currentIndex + 1);
             setSelected(null);
-            setSubjective("");
-        } else {
-
-            try {
-                await submitSurveyApi({ answers: finalAnswers, selected_repos: [] });
-                console.log('제출 완료:', finalAnswers);
-                onClose();
-            } catch (e) {
-                console.error('제출 실패:', e);
-                setErrorMsg("제출 중 오류 발생.");
-            }
+            setEssay("");
+            return;
+        }
+        try {
+            await submitSurveyApi({ answers: newAnswers });
+            setStep("repo");
+        } catch {
+            setErrorMsg("제출 중 오류가 발생했어요.");
         }
     };
 
@@ -94,8 +100,37 @@ const SurveyModal = ({ onClose }: Props) => {
         const prevQuestion = questions[prevIndex];
         const prevAnswer = answers.find(a => a.question_id === prevQuestion.question_id);
         setSelected(prevAnswer?.option_id ?? null);
-        setSubjective(prevAnswer?.subjective_answer ?? "");
+        setEssay(prevAnswer?.essay_answer ?? "");
     };
+
+    const handleRepoComplete = async (repos: string[]) => {
+        try {
+            await submitReposApi({ selected_repos: repos });
+            setSelectedRepos(repos);
+            setStep("stack");
+        } catch {
+            alert("레포 제출 중 오류가 발생했습니다.");
+        }
+    };
+
+    if (step === "repo") {
+        return (
+            <RepoSelectModal
+                onClose={onClose}
+                onComplete={handleRepoComplete}
+            />
+        );
+    }
+
+    if (step === "stack") {
+        return (
+            <StackSelectModal
+                selectedRepos={selectedRepos}
+                onClose={onClose}
+                onComplete={onClose}
+            />
+        );
+    }
 
     if (isLoading) return createPortal(
         <motion.div
@@ -110,7 +145,7 @@ const SurveyModal = ({ onClose }: Props) => {
         </motion.div>,
         document.getElementById('modal-root')!,
     )
-    if (!isLoggedIn || !currentQuestion) {
+    if (!currentQuestion) {
         alert("로그인 후 이용해주세요");
         onClose();
         return null;
@@ -168,17 +203,17 @@ const SurveyModal = ({ onClose }: Props) => {
                         </span>
                     </div>
 
-                    {isSubjective ? (
+                    {isEssay ? (
                         <textarea
-                            value={subjective}
-                            onChange={(e) => setSubjective(e.target.value)}
+                            value={essay}
+                            onChange={(e) => setEssay(e.target.value)}
                             maxLength={1000}
-                            rows={6}
+                            rows={4}
                             placeholder="자유롭게 작성해주세요"
                             className={clsx(
                                 'w-full p-4 rounded-2xl border-2 border-border resize-none',
                                 'bg-background dark:bg-neutral-700/60 text-font-black',
-                                'outline-none focus:border-primary-blue transition-colors',
+                                'outline-none focus:border-primary-blue transition-colors ',
                             )}
                         />
                     ) : (
@@ -213,7 +248,7 @@ const SurveyModal = ({ onClose }: Props) => {
                         </button>
 
                         <NextButton
-                            label={isLast ? '제출' : '다음'}
+                            label='다음'
                             onClick={handleNextClick}
                         />
                     </div>
