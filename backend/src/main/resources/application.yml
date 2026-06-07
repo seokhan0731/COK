@@ -6,6 +6,10 @@ spring:
     url: ${POSTGRES_URL}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
 
   jpa:
     hibernate:
@@ -14,3 +18,32 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    # 테이블 생성 이후
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+
+#카카오 로그인 관련
+kakao:
+  client-id: ${KAKAO_API_KEY}
+  redirect-uri: ${KAKAO_REDIRECT_URI}
+  client-secret: ${KAKAO_SECRET_CODE}
+
+#jwt 토큰 관련
+jwt:
+  secret: ${JWT_SECRET}
+  duration: ${JWT_VALID_TIME}
+
+# aws 설정관련
+cloud:
+  aws:
+    s3:
+      bucket: ${AWS_BUCKET_NAME}
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false

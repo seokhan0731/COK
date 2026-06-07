@@ -1,31 +1,34 @@
-// frontend/scr/utils/router.tsx
+/* src/utils/router.tsx */
 
-import { createBrowserRouter } from 'react-router'
-import HomePage from '../page/HomePage'
-import TestPage from '../page/TestPage'
-import KakaoOauthLoadingPage from '../page/KakaoOauthLoadingPage'
-import HistoryPageResult from '../page/history/HIstoryResultPage'
-import HistoryListPage from '../page/history/HistoryListPage'
+import { createBrowserRouter } from 'react-router';
+import HomePage from '../page/HomePage';
+import TestPage from '../page/TestPage';
+import KakaoOauthLoadingPage from '../page/KakaoOauthLoadingPage';
+import MypageLayout from '../layout/MypageLayout';
+import ProfilePage from '../page/mypage/ProfilePage';
+import EditProfilePage from '../page/mypage/EditProfilePage';
+import EditSkillPage from '../page/mypage/EditSkillPage';
+import RootLayout from '../layout/RootLayout';
+import DashboardPage from '../page/dashboard_page/DashboardPage';
 
 export const router = createBrowserRouter([
   {
-    path: '/',
-    element: <HomePage />,
+    element: <RootLayout />,
+    children: [
+      { path: '/', element: <HomePage /> },
+      { path: '/test', element: <TestPage /> },
+      { path: '/kakao/oauth/loading', element: <KakaoOauthLoadingPage /> },
+      { path: 'dashboard', element: <DashboardPage /> },
+      {
+        path: '/my',
+        element: <MypageLayout />,
+        children: [
+          { index: true, element: <ProfilePage /> },
+          { path: 'profile', element: <ProfilePage /> },
+          { path: 'edit-profile', element: <EditProfilePage /> },
+          { path: 'edit-skill', element: <EditSkillPage /> },
+        ],
+      },
+    ],
   },
-  {
-    path: '/test',
-    element: <TestPage />,
-  },
-  {
-    path: '/kakao/oauth/loading',
-    element: <KakaoOauthLoadingPage />,
-  },
-  {
-    path: '/history-result',
-    element: <HistoryPageResult />,
-  },
-  {
-    path: '/hisory-list',
-    element: <HistoryListPage />,
-  }
-])
+]);
