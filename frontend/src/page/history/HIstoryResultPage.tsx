@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-import client from "../../util/client";
-import type { SessionResultResponse } from "../../type/historyType";
+import { getSessionResultApi } from "../../api/historyApi";
 
 import { FaCheck } from "react-icons/fa";
 
@@ -9,13 +9,11 @@ type TabType = "result" | "history";
 
 const HistoryPageResult = () => {
     const [activeTab, setActiveTab] = useState<TabType>("result");
-    const [data, setData] = useState<SessionResultResponse | null>(null);
 
-    useEffect(() => {
-        client
-            .get("https://e6dc9715-49ed-46a8-b462-6adcd5d9d470.mock.pstmn.io/get/result")
-            .then((res) => setData(res.data));
-    }, []);
+    const { data } = useQuery({
+        queryKey: ["session-result"],
+        queryFn: ({ signal }) => getSessionResultApi(signal),
+    });
 
     return (
         <div className="flex flex-col px-80">
