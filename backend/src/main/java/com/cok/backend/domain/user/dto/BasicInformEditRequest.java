@@ -2,6 +2,7 @@ package com.cok.backend.domain.user.dto;
 
 import com.cok.backend.domain.user.enums.AttendStatus;
 import com.cok.backend.domain.user.enums.Grade;
+import com.cok.backend.domain.user.enums.ImageEditStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +13,7 @@ public record BasicInformEditRequest(
         @NotNull(message = "생년이 누락됐습니다.") Integer birthYear,
         @NotNull(message = "재학정보가 누락됐습니다.") AttendStatus attendStatus,
         Grade currentGrade,
+        @NotNull(message = "이미지 변경 분기가 누락됐습니다.") ImageEditStatus imageState,
         MultipartFile imageFile
 ) {
 }

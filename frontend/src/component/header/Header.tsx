@@ -1,8 +1,6 @@
 // src/components/headers/Header.tsx
 
 /* React */
-
-import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 
 /* Library */
@@ -53,18 +51,14 @@ const Header = () => {
               >
                 로그아웃
               </OutlineButton>
-              <ProfileIcon imageUrl={imageUrl} onClick={() => navigate('/my/profile')} />
+              <ProfileIcon
+                imageUrl={imageUrl}
+                onClick={() => navigate('/my/profile')}
+                className="size-10"
+              />
             </>
           ) : (
-            <PrimaryButton
-              onClick={() =>
-                open(<LoginModal />, {
-                  cardClassName: 'items-center-safe justify-center-safe',
-                })
-              }
-            >
-              로그인
-            </PrimaryButton>
+            <PrimaryButton onClick={() => open(<LoginModal />)}>로그인</PrimaryButton>
           )}
         </div>
       </div>

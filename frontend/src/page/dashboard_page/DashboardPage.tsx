@@ -14,13 +14,12 @@ import PostingCard from './_component/PostingCard';
 import SkillProgressDonutChart from './_component/SkillProgressDonutChart';
 
 /* Hook */
-import { useUserSkill } from '../../hook/useUserSkill';
 import { useGetUserName } from '../../hook/useProfile';
 
 /* Util */
 import clsx from 'clsx';
-import PendingCard from '../mypage/_component/PendingCard';
 import LoadingSpinner from '../mypage/_component/LoadingSpinner';
+import { useUserSkill } from '../../hook/useUserSkill';
 
 /* Data */
 const data: SkillDataType[] = [
@@ -119,7 +118,7 @@ const DashboardPage = () => {
             <div
               className={clsx('w-full max-w-75 flex-1 flex items-center-safe p-4', 'lg:max-w-100')}
             >
-              <SkillRadarChart data={userSkillData ? userSkillData.competencies : data} />
+              <SkillRadarChart data={data} />
             </div>
 
             <div className={clsx('p-4', 'bg-primary-blue/5 rounded-xl')}>

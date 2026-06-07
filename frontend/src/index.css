@@ -38,6 +38,10 @@
     @apply text-sm text-font-black cursor-pointer;
   }
 
+  input {
+    @apply outline-none;
+  }
+
   .url {
     @apply text-font-gray cursor-pointer underline;
   }

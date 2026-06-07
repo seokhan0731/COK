@@ -25,6 +25,7 @@ import { OutlineButton, PrimaryButton } from '../../component/button/Button';
 import { useProfile } from '../../hook/useProfile';
 import PendingCard from './_component/PendingCard';
 import { ALGORITHM_META } from '../../type/profileType';
+import ProfileIcon from '../../component/header/_component/ProfileIcon';
 
 // #region TagCard
 
@@ -194,7 +195,7 @@ const ProfilePage = () => {
           )}
         >
           <div className="flex flex-row gap-4">
-            <DefaultProfile blueAreaClassName="lg:p-6" />
+            <ProfileIcon imageUrl={profile.imageUrl} className="size-20 cursor-auto lg:size-25" />
 
             <div className="flex flex-col justify-center-safe gap-2">
               <p className="text-h5 font-bold">{profile.name}</p>

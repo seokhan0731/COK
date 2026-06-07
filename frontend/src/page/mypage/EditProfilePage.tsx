@@ -98,12 +98,14 @@ const EditProfilePage = () => {
       attendStatus: 'ENROLLED',
       birthYear: 2000,
       currentGrade: 'FRESHMAN',
+      imageState: 'INIT',
     },
     values: profile && {
       name: profile.name,
       birthYear: profile.birthYear,
       attendStatus: profile.attendStatus,
       currentGrade: profile.currentGrade,
+      imageState: 'KEEP',
     },
     resetOptions: {
       keepDirtyValues: true,
@@ -133,7 +135,6 @@ const EditProfilePage = () => {
       setIsImageValid(false);
       return;
     }
-
     let cancelled = false;
     const img = new Image();
     img.onload = () => {
@@ -174,6 +175,7 @@ const EditProfilePage = () => {
     }
 
     setValue('imageFile', file, { shouldDirty: true });
+    setValue('imageState', 'CHANGE', { shouldDirty: true });
     setImageUrl(URL.createObjectURL(file));
     e.target.value = '';
   };
@@ -246,7 +248,7 @@ const EditProfilePage = () => {
                 >
                   <LucidePen className="text-font-white" size={20} />
                 </button>
-                {isImageValid ? (
+                {imageUrl && isImageValid ? (
                   <div className="size-full rounded-full overflow-hidden">
                     <img src={imageUrl} className="size-full object-cover" />
                   </div>
@@ -263,6 +265,17 @@ const EditProfilePage = () => {
                 className="hidden"
                 onChange={handleProfileImageChange}
               />
+
+              <OutlineButton
+                onClick={() => {
+                  setImageUrl('');
+                  setValue('imageFile', undefined, { shouldDirty: true });
+                  setValue('imageState', 'INIT', { shouldDirty: true });
+                  if (inputRef.current) inputRef.current.value = '';
+                }}
+              >
+                초기화
+              </OutlineButton>
             </section>
 
             {/* 필드 영역 */}
@@ -374,11 +387,12 @@ const EditProfilePage = () => {
                       attendStatus: profile.attendStatus,
                       currentGrade: profile.currentGrade,
                       imageFile: undefined,
+                      imageState: 'KEEP',
                     });
                   }}
                   disabled={!isDirty}
                 >
-                  초기화
+                  기본값
                 </OutlineButton>
                 <PrimaryButton
                   type="button"
