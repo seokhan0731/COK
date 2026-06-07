@@ -34,6 +34,18 @@ export const JOB_META: Record<JobType, JobMetaType> = {
   10: { label: '블록체인 엔지니어' },
   11: { label: '영상/음성 엔지니어' },
 };
+
+export type JobDataType = {
+  jobId: JobType;
+  match: number;
+};
+
+export type PostingDataType = {
+  companyName: string;
+  title: string;
+  match: number;
+  postingUrl: string;
+};
 // #endregion
 
 // #region Skill

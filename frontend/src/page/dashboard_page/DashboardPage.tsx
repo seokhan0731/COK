@@ -3,10 +3,6 @@
 /* Library */
 import { NavLink } from 'react-router';
 
-/* Type & constant */
-import { type SkillDataType } from './_component/chartType';
-import type { JobType } from '../../type/dashboardType';
-
 /* Component */
 import SkillRadarChart from './_component/SkillRadarChart';
 import JobCard from './_component/JobCard';
@@ -19,41 +15,31 @@ import { useGetUserName } from '../../hook/useProfile';
 /* Util */
 import clsx from 'clsx';
 import LoadingSpinner from '../mypage/_component/LoadingSpinner';
-import { useUserSkill } from '../../hook/useUserSkill';
-
-/* Data */
-const data: SkillDataType[] = [
-  { skill: 'collaboration', value: 80 },
-  { skill: 'csKnowledge', value: 65 },
-  { skill: 'implementation', value: 90 },
-  { skill: 'algorithm', value: 70 },
-  { skill: 'trend', value: 55 },
-  { skill: 'infrastructure', value: 60 },
-];
-
-const job: { jobId: JobType; match: number }[] = [
-  { jobId: 1, match: 96 },
-  { jobId: 8, match: 87 },
-  { jobId: 3, match: 58 },
-];
-
-const posting: { companyName: string; title: string; match: number }[] = [
-  { companyName: '토스', title: 'Data Engineer', match: 98 },
-  { companyName: '당근', title: 'Backend Engineer', match: 98 },
-  { companyName: '우아한형제들', title: 'Java Backend Developer', match: 98 },
-];
+import {
+  useUserSkill,
+  useRecommendJob,
+  useRecommendPosting,
+  useAllLoadMapProgress,
+} from '../../hook/useDashboard';
 
 // 진단 검사 완료 여부 (임의값 — 실제로는 API/상태에서 받아옴)
 const hasDiagnosis = true;
-const blockLoadMapProgress = true;
 
 const DashboardPage = () => {
   /* Hook */
   const { data: name, isPending: isNamePending } = useGetUserName();
   const { data: userSkillData, isPending: isSkillPending } = useUserSkill();
+  const { data: recommendJobs, isPending: isRecommendJobPending } = useRecommendJob();
+  const { data: recommendPostings, isPending: isRecommendPostingPending } = useRecommendPosting();
+  const { data: loadMapProgress, isPending: isLoadMapProgressPending } = useAllLoadMapProgress();
 
   /* Constant */
-  const isLoading = isNamePending || isSkillPending;
+  const isLoading =
+    isNamePending ||
+    isSkillPending ||
+    isRecommendJobPending ||
+    isRecommendPostingPending ||
+    isLoadMapProgressPending;
 
   if (isLoading)
     return (
@@ -115,10 +101,8 @@ const DashboardPage = () => {
             )}
           >
             <span className="self-start mb-6 text-h5 font-semibold">역량 분석 결과</span>
-            <div
-              className={clsx('w-full max-w-75 flex-1 flex items-center-safe p-4', 'lg:max-w-100')}
-            >
-              <SkillRadarChart data={data} />
+            <div className={clsx('w-full max-w-75 aspect-square p-4', 'lg:max-w-100')}>
+              <SkillRadarChart data={userSkillData?.competencies ?? []} />
             </div>
 
             <div className={clsx('p-4', 'bg-primary-blue/5 rounded-xl')}>
@@ -144,7 +128,7 @@ const DashboardPage = () => {
                 </span>
 
                 <div className="w-full flex flex-col gap-2">
-                  {job.map((item, index) => (
+                  {recommendJobs?.jobs.map((item, index) => (
                     <JobCard
                       key={item.jobId}
                       jobId={item.jobId}
@@ -171,11 +155,11 @@ const DashboardPage = () => {
                     'lg:max-w-100',
                   )}
                 >
-                  <SkillProgressDonutChart percent={70} />
+                  <SkillProgressDonutChart percent={loadMapProgress?.progress ?? 0} />
                 </div>
 
                 {/* block */}
-                {blockLoadMapProgress && (
+                {!loadMapProgress?.hasRoadmap && (
                   <div
                     className={clsx(
                       'absolute inset-0 flex flex-col justify-center-safe items-center-safe',
@@ -206,7 +190,7 @@ const DashboardPage = () => {
               </div>
 
               <div className={clsx('w-full grid grid-cols-1 gap-3', 'lg:grid-cols-3')}>
-                {posting.map((item, index) => (
+                {recommendPostings?.postings.map((item, index) => (
                   <PostingCard
                     key={index}
                     rank={index + 1}

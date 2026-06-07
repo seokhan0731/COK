@@ -13,8 +13,8 @@ const SkillProgressDonutChart = ({ percent }: SkillProgressDonutChartProps) => {
   ];
 
   return (
-    <div className="relative w-full">
-      <ResponsiveContainer width="100%" aspect={1}>
+    <div className="relative w-full aspect-square">
+      <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 300, height: 300 }}>
         <PieChart>
           <Pie
             data={chartData}
