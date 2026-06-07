@@ -1,5 +1,7 @@
 package com.cok.backend.domain.evaluation;
 
+import com.cok.backend.domain.competency.CompetencyPolicy;
+import com.cok.backend.domain.competency.MasterCompetency;
 import com.cok.backend.domain.evaluation.dto.AnswerItem;
 import com.cok.backend.domain.evaluation.dto.AnswersRequest;
 import com.cok.backend.domain.evaluation.entity.SurveySession;
@@ -18,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -92,5 +96,44 @@ public class EvaluationService {
                 .question(questionProxy)
                 .essayAnswer(answer.essayAnswer())
                 .build();
+    }
+
+    public Map<Long, Double> calculateSurveyScore(AnswersRequest request) {
+        List<Long> optionsId = new ArrayList<>();
+        for (AnswerItem answer : request.answers()) {
+            if (answer.isMulti()) {
+                optionsId.add(answer.optionId());
+            }
+        }
+
+        List<Option> options = optionRepository.findOptionsWithQuestionAndCompetencyByIds(optionsId);
+
+        Map<Long, Double> competencyScores = new HashMap<>();
+
+        for (Option option : options) {
+            Long competencyId = option.getQuestion().getCompetency().getId();
+            double score = option.getScore();
+
+            double currentScore = competencyScores.getOrDefault(competencyId, 0.0);
+            competencyScores.put(competencyId, currentScore + score);
+        }
+
+        //여기엔 map으로 역량에 대한 최종 산출값이 나와있는 상황
+        return normalizeScore(competencyScores);
+    }
+
+    private Map<Long, Double> normalizeScore(Map<Long, Double> originScores) {
+        Map<Long, Double> normalizedScores = new HashMap<>();
+        for (Map.Entry<Long, Double> entry : originScores.entrySet()) {
+            Long competencyId = entry.getKey();
+            Double originScore = entry.getValue();
+
+            int maxScore = CompetencyPolicy.from(competencyId).getMaxSurveyScore();
+
+            double normalizedScore = originScore / maxScore;
+
+            normalizedScores.put(competencyId, normalizedScore);
+        }
+        return normalizedScores;
     }
 }
