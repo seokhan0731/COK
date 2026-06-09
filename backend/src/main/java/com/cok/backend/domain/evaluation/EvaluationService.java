@@ -43,6 +43,8 @@ public class EvaluationService {
     private final CompetencyRepository competencyRepository;
     private final CompetencyResultRepository competencyResultRepository;
 
+    private static final double MAX_BAEKJOON_SCORE = 100.0;
+
     /**
      * 응답값 제출과 동시에, 해당 응답값과 사용자의 서비스 이용전 입력값을 통한 역량 계산 및 저장 지휘
      * 설문 및 자격증 점수 저장이 역량 Id: 점수값의 형태이기에, 최종 점수도 이와 같은 형태로 구현 후,
@@ -63,11 +65,17 @@ public class EvaluationService {
 
         //newSession에서 이미 유저를 불러왔기 떄문에, 별도 메소드를 쓰기보단 getUser를 통해 호출
         User user = newSession.getUser();
-
         BaekjoonTier tier = user.getAlgorithmLevel();
-        double baekjoonScore = tier.getScore() / 100.0;
+        double baekjoonScore = tier.getScore() / MAX_BAEKJOON_SCORE;
         boolean isUnrated = tier == BaekjoonTier.UNRATED;
 
+        Map<Long, Double> scoreResult = calculateFinalScore(surveyScores, certificationScores, baekjoonScore, isUnrated);
+
+        saveCompetencyResults(newSession, scoreResult);
+    }
+
+    private Map<Long, Double> calculateFinalScore(Map<Long, Double> surveyScores, Map<Long, Double> certificationScores
+            , double baekjoonScore, boolean isUnrated) {
         Map<Long, Double> scoreResult = new HashMap<>();
 
         for (CompetencyPolicy policy : CompetencyPolicy.values()) {
@@ -79,8 +87,7 @@ public class EvaluationService {
 
             scoreResult.put(competencyId, finalScore);
         }
-
-        saveCompetencyResults(newSession, scoreResult);
+        return scoreResult;
     }
 
     /**
