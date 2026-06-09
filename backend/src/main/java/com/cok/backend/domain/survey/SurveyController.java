@@ -27,7 +27,7 @@ public class SurveyController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> submitSurvey(@Valid @RequestBody AnswersRequest request,
                                              @AuthenticationPrincipal Long userId) {
-        evaluationService.submitAnswers(request, userId);
+        evaluationService.submitAndCalculateCompetency(request, userId);
         return ResponseEntity.ok().build();
     }
 }
