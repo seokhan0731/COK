@@ -18,7 +18,11 @@ const BirthYearStep = () => {
         <LucideCake className="absolute left-2 text-font-gray" />
         <input
           type="number"
-          className="pl-6 font-semibold w-full"
+          className={clsx(
+            'pl-6 font-semibold w-full',
+            'text-font-black',
+            '[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
+          )}
           min={1900}
           max={new Date().getFullYear()}
           placeholder="EX) 2000"

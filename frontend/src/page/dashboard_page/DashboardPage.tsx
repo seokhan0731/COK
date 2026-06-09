@@ -105,14 +105,14 @@ const DashboardPage = () => {
               <SkillRadarChart data={userSkillData?.competencies ?? []} />
             </div>
 
-            <div className={clsx('p-4', 'bg-primary-blue/5 rounded-xl')}>
+            {/* TODO: 나중에 시간되면 comment 부분 추가 */}
+            {/* <div className={clsx('p-4', 'bg-primary-blue/5 rounded-xl')}>
               <span className="text-sm text-font-gray font-semibold">
-                {userSkillData?.comment}
-                {/* "오주노님은 6가지 역량 중 [CS 지식]과 [구현력]이 특히 돋보입니다. 탄탄한 컴퓨터 구조
+                "오주노님은 6가지 역량 중 [CS 지식]과 [구현력]이 특히 돋보입니다. 탄탄한 컴퓨터 구조
                 이해도를 바탕으로 코드를 직접 설계하고 구현하는 능력이 뛰어나므로, 대용량 트래픽과
-                서버 아키텍처를 다루는 [백엔드 엔지니어] 직무에 가장 완벽하게 부합합니다." */}
+                서버 아키텍처를 다루는 [백엔드 엔지니어] 직무에 가장 완벽하게 부합합니다."
               </span>
-            </div>
+            </div> */}
           </section>
 
           <div className="flex flex-col gap-5">

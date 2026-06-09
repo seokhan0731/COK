@@ -10,7 +10,6 @@ import { mockClient } from '../util/client';
 
 type GetUserSkillResponseType = {
   competencies: SkillDataType[];
-  comment: string;
 };
 
 export const getUserSkillApi = async (): Promise<GetUserSkillResponseType> => {
@@ -55,8 +54,9 @@ type GetAllLoadMapProgressResponseType = {
 };
 
 export const getAllLoadMapProgressApi = async (): Promise<GetAllLoadMapProgressResponseType> => {
-  const { data } =
-    await mockClient.get<GetAllLoadMapProgressResponseType>('user/roadmap/progress/all');
+  const { data } = await mockClient.get<GetAllLoadMapProgressResponseType>(
+    'user/roadmap/progress/all',
+  );
   console.log(data);
   return data;
 };

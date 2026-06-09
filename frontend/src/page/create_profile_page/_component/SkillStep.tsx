@@ -76,6 +76,7 @@ const SkillStep = () => {
             className={clsx(
               'px-4 py-2',
               'bg-background border border-border rounded-md outline-none',
+              'text-font-black',
               'transition duration-200 focus:border-primary-blue',
             )}
             placeholder="GitHub ID를 입력해주세요"
@@ -98,7 +99,10 @@ const SkillStep = () => {
             })}
           />
           <span
-            className={clsx(errors.githubId ? 'visible' : 'invisible', 'block text-sm text-red-500')}
+            className={clsx(
+              errors.githubId ? 'visible' : 'invisible',
+              'block text-sm text-red-500',
+            )}
           >
             {errors.githubId?.message ?? ' '}
           </span>

@@ -16,7 +16,7 @@ const NameStep = () => {
         <LucideUser2 className="absolute left-2 text-font-gray" />
         <input
           type="text"
-          className="pl-6 font-semibold w-full"
+          className={clsx('pl-6 font-semibold w-full', 'text-font-black')}
           placeholder="EX) 홍길동"
           {...register('name', {
             required: '이름은 필수입니다.',

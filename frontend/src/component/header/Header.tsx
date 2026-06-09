@@ -32,7 +32,10 @@ const Header = () => {
   return (
     <>
       <div className="top-0 z-10 sticky flex w-full h-18.75 justify-between items-center-safe px-4 bg-background border-b border-b-border">
-        <Link className="text-3xl font-extrabold text-primary-blue" to={'/'}>
+        <Link
+          className="text-3xl font-extrabold text-primary-blue"
+          to={isLoggedIn ? '/dashboard' : '/'}
+        >
           COK
         </Link>
 
