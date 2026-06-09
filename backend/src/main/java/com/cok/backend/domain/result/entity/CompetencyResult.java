@@ -1,6 +1,7 @@
-package com.cok.backend.domain.evaluation.entity;
+package com.cok.backend.domain.result.entity;
 
 import com.cok.backend.domain.competency.MasterCompetency;
+import com.cok.backend.domain.evaluation.entity.SurveySession;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
