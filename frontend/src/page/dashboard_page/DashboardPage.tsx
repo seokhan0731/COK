@@ -75,7 +75,9 @@ const DashboardPage = () => {
           <span className="text-sm text-font-gray text-center">
             진단 검사를 완료하면 맞춤형 역량 분석과 직무·공고 추천을 확인할 수 있어요.
           </span>
-          <PrimaryButton className="flex items-center-safe">
+
+          {/* TODO: useNavigate 사용해서 설문으로 넘기기 (주노) */}
+          <PrimaryButton className="flex items-center-safe" onClick={undefined}>
             검사하기 <ChevronRight size={20} />
           </PrimaryButton>
 
@@ -203,7 +205,7 @@ const DashboardPage = () => {
                   >
                     <span className="font-semibold mb-1">아직 로드맵을 생성하지 않았어요 </span>
                     <NavLink
-                      to={'/'} // TODO: 나중에 페이지 완성 되면 경로 수정
+                      to={'/'} // TODO: 경로 수정 (주노)
                       className="text-sm underline whitespace-nowrap"
                     >
                       로드맵 생성하러 가기
