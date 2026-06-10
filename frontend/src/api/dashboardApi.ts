@@ -4,7 +4,7 @@
 import type { SkillDataType, JobDataType, PostingDataType } from '../type';
 
 /* Util */
-import { mockClient } from '../util/client';
+import { authClient, mockClient } from '../util/client';
 
 // #region GetUserSkillAPI
 
@@ -13,7 +13,7 @@ type GetUserSkillResponseType = {
 };
 
 export const getUserSkillApi = async (): Promise<GetUserSkillResponseType> => {
-  const { data } = await mockClient.get<GetUserSkillResponseType>('/user/skill');
+  const { data } = await authClient.get<GetUserSkillResponseType>('/user/skill');
   console.log(data);
   return data;
 };

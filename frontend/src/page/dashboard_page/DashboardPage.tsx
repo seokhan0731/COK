@@ -2,12 +2,14 @@
 
 /* Library */
 import { NavLink } from 'react-router';
+import { type AxiosError } from 'axios';
 
 /* Component */
 import SkillRadarChart from './_component/SkillRadarChart';
 import JobCard from './_component/JobCard';
 import PostingCard from './_component/PostingCard';
 import SkillProgressDonutChart from './_component/SkillProgressDonutChart';
+import { PrimaryButton } from '../../component/button/Button';
 
 /* Hook */
 import { useGetUserName } from '../../hook/useProfile';
@@ -21,14 +23,12 @@ import {
   useRecommendPosting,
   useAllLoadMapProgress,
 } from '../../hook/useDashboard';
-
-// 진단 검사 완료 여부 (임의값 — 실제로는 API/상태에서 받아옴)
-const hasDiagnosis = true;
+import { ChevronRight } from 'lucide-react';
 
 const DashboardPage = () => {
   /* Hook */
   const { data: name, isPending: isNamePending } = useGetUserName();
-  const { data: userSkillData, isPending: isSkillPending } = useUserSkill();
+  const { data: userSkillData, isPending: isSkillPending, error: userSkillError } = useUserSkill();
   const { data: recommendJobs, isPending: isRecommendJobPending } = useRecommendJob();
   const { data: recommendPostings, isPending: isRecommendPostingPending } = useRecommendPosting();
   const { data: loadMapProgress, isPending: isLoadMapProgressPending } = useAllLoadMapProgress();
@@ -41,6 +41,9 @@ const DashboardPage = () => {
     isRecommendPostingPending ||
     isLoadMapProgressPending;
 
+  /* Effect */
+
+  /* 예외 상태에 따른 분기 처리 */
   if (isLoading)
     return (
       <div className="relative flex-1 flex justify-center-safe items-center-safe">
@@ -61,6 +64,38 @@ const DashboardPage = () => {
         />
       </div>
     );
+
+  if (userSkillError) {
+    const error = userSkillError as AxiosError;
+
+    if (error.status === 500) {
+      return (
+        <div className="relative flex-1 flex flex-col justify-center-safe items-center-safe p-6 gap-3">
+          <span className="text-h4 font-semibold">아직 역량 진단을 진행하지 않으셨어요</span>
+          <span className="text-sm text-font-gray text-center">
+            진단 검사를 완료하면 맞춤형 역량 분석과 직무·공고 추천을 확인할 수 있어요.
+          </span>
+          <PrimaryButton className="flex items-center-safe">
+            검사하기 <ChevronRight size={20} />
+          </PrimaryButton>
+
+          {/* Background Effect */}
+          <div
+            className={clsx(
+              'absolute top-20 right-px -z-10 w-48 h-48 rounded-full opacity-20 blur-3xl bg-primary-emerald',
+              'lg:w-96 lg:h-96',
+            )}
+          />
+          <div
+            className={clsx(
+              'absolute bottom-20 left-px -z-10 w-48 h-48 rounded-full opacity-20 blur-3xl bg-primary-blue',
+              'lg:w-96 lg:h-96',
+            )}
+          />
+        </div>
+      );
+    }
+  }
 
   return (
     <div className="relative flex-1 flex">
@@ -163,7 +198,7 @@ const DashboardPage = () => {
                   <div
                     className={clsx(
                       'absolute inset-0 flex flex-col justify-center-safe items-center-safe',
-                      'bg-linear-to-br from-blue-300/30 to-emerald-300/10 backdrop-blur-md border border-white/20 rounded-xl shadow-lg',
+                      'bg-linear-to-br from-blue-300/30 to-emerald-300/30 backdrop-blur-md border border-white/20 rounded-xl shadow-lg',
                     )}
                   >
                     <span className="font-semibold mb-1">아직 로드맵을 생성하지 않았어요 </span>
@@ -203,22 +238,6 @@ const DashboardPage = () => {
             </section>
           </div>
         </div>
-
-        {/* 진단 검사 미완료 시: 블러 + 안내 오버레이 */}
-
-        {!hasDiagnosis && (
-          <div
-            className={clsx(
-              'absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 p-6',
-              'bg-card-background/40 backdrop-blur-sm rounded-xl',
-            )}
-          >
-            <span className="text-h4 font-semibold">아직 역량 진단을 진행하지 않으셨어요</span>
-            <span className="text-sm text-font-gray text-center">
-              진단 검사를 완료하면 맞춤형 역량 분석과 직무·공고 추천을 확인할 수 있어요.
-            </span>
-          </div>
-        )}
       </div>
     </div>
   );
