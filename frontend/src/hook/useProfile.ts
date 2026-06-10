@@ -24,10 +24,13 @@ export const useCreateProfile = () => {
 };
 
 export const useProfile = () => {
+  const isLoggedIn = useIsLoggedIn();
+
   return useQuery<GetProfileAndSkillResponseType>({
     queryKey: ['profile'],
     queryFn: getProfileAndSkillApi,
     staleTime: 1000 * 60 * 5,
+    enabled: isLoggedIn,
   });
 };
 
