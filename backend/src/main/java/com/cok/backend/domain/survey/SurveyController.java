@@ -7,6 +7,7 @@ import com.cok.backend.domain.github.dto.RepositoryResponseForUser;
 import com.cok.backend.domain.survey.dto.QuestionResponse;
 import com.cok.backend.domain.survey.dto.RepositorySelectRequest;
 import com.cok.backend.domain.survey.dto.TechSkillResponse;
+import com.cok.backend.domain.survey.dto.TechSkillSelect;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,16 @@ public class SurveyController {
                                                           @AuthenticationPrincipal Long userId) {
         TechSkillResponse response = githubService.getUsedSkill(request, userId);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/stacks")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> submitSkills(@RequestBody TechSkillSelect request,
+                                             @AuthenticationPrincipal Long userID) {
+
+        //TODO 직무 추천 로직 완성 필요
+
+        return ResponseEntity.ok().build();
     }
 
 }
