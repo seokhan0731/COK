@@ -2,6 +2,7 @@ package com.cok.backend.domain.user;
 
 import com.cok.backend.domain.result.ResultResponseService;
 import com.cok.backend.domain.result.dto.CompetencyResultResponse;
+import com.cok.backend.domain.result.dto.JobResultResponse;
 import com.cok.backend.domain.user.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,13 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<CompetencyResultResponse> getCompetencyResult(@AuthenticationPrincipal Long userId) {
         CompetencyResultResponse response = resultResponseService.getLatestCompetencyResult(userId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/recommend/job")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<JobResultResponse> getJobResult(@AuthenticationPrincipal Long userId) {
+        JobResultResponse response = resultResponseService.getLatestJobResult(userId);
         return ResponseEntity.ok(response);
     }
 }

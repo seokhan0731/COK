@@ -5,8 +5,12 @@ import com.cok.backend.domain.evaluation.entity.SurveySession;
 import com.cok.backend.domain.evaluation.repository.SessionRepository;
 import com.cok.backend.domain.result.dto.CompetencyItem;
 import com.cok.backend.domain.result.dto.CompetencyResultResponse;
+import com.cok.backend.domain.result.dto.JobItem;
+import com.cok.backend.domain.result.dto.JobResultResponse;
 import com.cok.backend.domain.result.entity.CompetencyResult;
+import com.cok.backend.domain.result.entity.JobResult;
 import com.cok.backend.domain.result.repository.CompetencyResultRepository;
+import com.cok.backend.domain.result.repository.JobResultRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +26,7 @@ import java.util.List;
 public class ResultResponseService {
     private final CompetencyResultRepository competencyResultRepository;
     private final SessionRepository sessionRepository;
+    private final JobResultRepository jobResultRepository;
 
     private static final double PERCENTAGE_CORRECTION = 100.0;
 
@@ -55,6 +60,27 @@ public class ResultResponseService {
             double percentageScore = result.getTotalScore() * PERCENTAGE_CORRECTION;
 
             items.add(new CompetencyItem(competency, percentageScore));
+        }
+        return items;
+    }
+
+    public JobResultResponse getLatestJobResult(Long userId) {
+        SurveySession latestSession = getLatestSessionOrThrow(userId);
+
+        List<JobResult> top3Job = jobResultRepository.findTop3BySessionIdOrderByTotalScoreDesc(latestSession.getId());
+        List<JobItem> items = buildJobItems(top3Job);
+
+        return new JobResultResponse(items);
+    }
+
+    private List<JobItem> buildJobItems(List<JobResult> jobResults) {
+        List<JobItem> items = new ArrayList<>();
+
+        for (JobResult result : jobResults) {
+            Long jobId = result.getJob().getId();
+            double percentageScore = result.getTotalScore() * PERCENTAGE_CORRECTION;
+
+            items.add(new JobItem(jobId, percentageScore));
         }
         return items;
     }
