@@ -36,6 +36,7 @@ public class SurveyController {
         return ResponseEntity.ok().build();
     }
 
+    //TODO 디폴트 브랜치 정보도 줘야 기술스택 조회시, 모든 브랜치 조회가능
     @GetMapping("/repos")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<RepositoryResponseForUser> getUserRepositories(@AuthenticationPrincipal Long userId) {
@@ -43,5 +44,13 @@ public class SurveyController {
         return ResponseEntity.ok(response);
     }
 
+    //TODO main 브랜치가 디폴트일때만 가능
+    @PostMapping("/repos")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<TechSkillResponse> getUsedSkill(@RequestBody RepositorySelectRequest request,
+                                                          @AuthenticationPrincipal Long userId) {
+        TechSkillResponse response = githubService.getUsedSkill(request, userId);
+        return ResponseEntity.ok(response);
+    }
 
 }

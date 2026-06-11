@@ -17,10 +17,5 @@ import org.springframework.web.bind.annotation.RestController;
 public class GithubController {
     private final GithubService githubService;
 
-    @GetMapping("/repos")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<RepositoryResponseForUser> getUserRepositories(@AuthenticationPrincipal Long userId) {
-        RepositoryResponseForUser response = githubService.getUserRepositories(userId);
-        return ResponseEntity.ok(response);
-    }
+
 }
