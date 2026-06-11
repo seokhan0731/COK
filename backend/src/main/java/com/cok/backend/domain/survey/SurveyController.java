@@ -56,11 +56,8 @@ public class SurveyController {
 
     @PostMapping("/stacks")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> submitSkills(@RequestBody TechSkillSelect request,
-                                             @AuthenticationPrincipal Long userID) {
-
-        //TODO 직무 추천 로직 완성 필요
-
+    public ResponseEntity<Void> submitSkills(@RequestBody TechSkillSelect request) {
+        evaluationService.submitAndCalculateJob(request);
         return ResponseEntity.ok().build();
     }
 

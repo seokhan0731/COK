@@ -5,13 +5,18 @@ import com.cok.backend.domain.competency.CompetencyRepository;
 import com.cok.backend.domain.competency.MasterCompetency;
 import com.cok.backend.domain.evaluation.dto.AnswerItem;
 import com.cok.backend.domain.evaluation.dto.AnswersRequest;
+import com.cok.backend.domain.job.CompetencyWeightForJob;
 import com.cok.backend.domain.job.JobPolicy;
+import com.cok.backend.domain.job.MasterJob;
+import com.cok.backend.domain.job.MasterJobRepository;
 import com.cok.backend.domain.result.entity.CompetencyResult;
 import com.cok.backend.domain.evaluation.entity.SurveySession;
 import com.cok.backend.domain.evaluation.entity.UserResponse;
+import com.cok.backend.domain.result.entity.JobResult;
 import com.cok.backend.domain.result.repository.CompetencyResultRepository;
 import com.cok.backend.domain.evaluation.repository.ResponseRepository;
 import com.cok.backend.domain.evaluation.repository.SessionRepository;
+import com.cok.backend.domain.result.repository.JobResultRepository;
 import com.cok.backend.domain.survey.dto.TechSkillSelect;
 import com.cok.backend.domain.survey.entity.Option;
 import com.cok.backend.domain.survey.entity.Question;
@@ -43,8 +48,12 @@ public class EvaluationService {
     private final UserCertificationRepository userCertificationRepository;
     private final CompetencyRepository competencyRepository;
     private final CompetencyResultRepository competencyResultRepository;
+    private final JobResultRepository jobResultRepository;
+    private final MasterJobRepository masterJobRepository;
+
 
     private static final double MAX_BAEKJOON_SCORE = 100.0;
+
 
     /**
      * 응답값 제출과 동시에, 해당 응답값과 사용자의 서비스 이용전 입력값을 통한 역량 계산 및 저장 지휘
@@ -265,4 +274,133 @@ public class EvaluationService {
         return normalizedScores;
     }
 
+    /**
+     * 사용 기술스택 제출에 따른 직무 추천
+     * 산출된 역량값은 마스터 역량의 id값만을 갖고 있기에 key가 Long인 형태로 먼저 불러올 수 밖에 없음
+     * 불러온 후, 정책에 따라 계산 후, 경험 점수와 함께 각 직무 점수 계산 및 저장
+     *
+     * @param request 사용자가 선택한 기술 스택과 해당 설문회차
+     */
+    @Transactional
+    public void submitAndCalculateJob(TechSkillSelect request) {
+        //경험 점수
+        Map<JobPolicy, Double> experienceScores = calculateExperienceScore(request);
+
+        SurveySession session = findSessionOrThrow(request.sessionId());
+        //Db에 저장된 역량 점수
+        Map<Long, Double> competencyScoresById = competenciesToMap(session);
+        Map<JobPolicy, Double> competencyScoresByJob = calculateCompetencyScoreForJob(competencyScoresById);
+
+        //주어진 가중치에 따른 직무 점수 계산 및 저장
+        calculateAndSaveJobResults(session, competencyScoresByJob, experienceScores);
+
+    }
+
+    private Map<JobPolicy, Double> calculateExperienceScore(TechSkillSelect request) {
+        Map<JobPolicy, Double> experienceScores = new EnumMap<>(JobPolicy.class);
+        List<TechSkill> userSkills = request.selectedSkills();
+
+        for (TechSkill skill : userSkills) {
+            //11개밖에 안 되기에, 이중 for문 사용
+            for (JobPolicy job : JobPolicy.values()) {
+                double score = TechSkillPolicy.getScore(skill, job);
+
+                if (score == 0) {
+                    continue;
+                }
+                double currentScore = experienceScores.getOrDefault(job, 0.0);
+                experienceScores.put(job, currentScore + score);
+            }
+        }
+        return normalizeExperienceScore(experienceScores);
+    }
+
+    private Map<JobPolicy, Double> normalizeExperienceScore(Map<JobPolicy, Double> originScores) {
+        Map<JobPolicy, Double> normalizedScores = new EnumMap<>(JobPolicy.class);
+        for (Map.Entry<JobPolicy, Double> entry : originScores.entrySet()) {
+            JobPolicy job = entry.getKey();
+            double originScore = entry.getValue();
+
+            double maxScore = job.getMaxExperienceScore();
+            if (maxScore == 0.0) {
+                continue;
+            }
+            double normalizedScore = originScore / maxScore;
+            normalizedScores.put(job, normalizedScore);
+        }
+        return normalizedScores;
+    }
+
+    private SurveySession findSessionOrThrow(Long sessionID) {
+        return sessionRepository.findByIdWithResults(sessionID)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 설문 회차입니다"));
+    }
+
+    private Map<Long, Double> competenciesToMap(SurveySession session) {
+        Map<Long, Double> competencyScores = new HashMap<>();
+        List<CompetencyResult> competencies = session.getCompetencyResults();
+
+        for (CompetencyResult result : competencies) {
+            competencyScores.put(result.getCompetency().getId(), result.getTotalScore());
+        }
+        return competencyScores;
+    }
+
+    private Map<JobPolicy, Double> calculateCompetencyScoreForJob(Map<Long, Double> competencyScores) {
+        Map<JobPolicy, Double> competencyScoresForJob = new EnumMap<>(JobPolicy.class);
+
+        for (JobPolicy job : JobPolicy.values()) {
+            CompetencyWeightForJob weight = job.getWeight();
+            double score = sumCompetencyScoreWithWeight(weight, competencyScores);
+
+            competencyScoresForJob.put(job, score);
+        }
+        return competencyScoresForJob;
+    }
+
+    private double sumCompetencyScoreWithWeight(CompetencyWeightForJob weight, Map<Long, Double> competencyScores) {
+        double score = 0.0;
+        score += competencyScores.getOrDefault(1L, 0.0) * weight.implementationWeight();
+        score += competencyScores.getOrDefault(2L, 0.0) * weight.collaborationWeight();
+        score += competencyScores.getOrDefault(3L, 0.0) * weight.trendWeight();
+        score += competencyScores.getOrDefault(4L, 0.0) * weight.knowledgeWeight();
+        score += competencyScores.getOrDefault(5L, 0.0) * weight.algorithmWeight();
+        score += competencyScores.getOrDefault(6L, 0.0) * weight.infraWeight();
+
+        return score;
+    }
+
+    /**
+     * 직무별 계산된 경험, 역량 점수 Db 저장
+     * 계산된 결과는 별도의 직무 점수 조회 요청에 따라 보여지기에,
+     * 경험, 역량 점수에 따른 가중치 및 총합 직무 점수는 해당 Entity에 위임
+     * 값 저장시, 마스터 직무의 id만 빌려쓰면 되기에 프록시 사용
+     *
+     * @param newSession 해당하는 설문 회차
+     * @param competencyScores 계산된 원역량점수
+     * @param experienceScores 계산된 원경험점수
+     */
+    private void calculateAndSaveJobResults(SurveySession newSession,
+                                            Map<JobPolicy, Double> competencyScores, Map<JobPolicy, Double> experienceScores) {
+
+        List<JobResult> results = new ArrayList<>();
+
+        for (JobPolicy policy : JobPolicy.values()) {
+            double experienceScore = experienceScores.getOrDefault(policy, 0.0);
+            double competencyScore = competencyScores.getOrDefault(policy, 0.0);
+
+            Long jobId = policy.getJobId();
+            MasterJob jobProxy = masterJobRepository.getReferenceById(jobId);
+
+            JobResult newResult = JobResult.builder()
+                    .session(newSession)
+                    .job(jobProxy)
+                    .competencyScore(competencyScore)
+                    .experienceScore(experienceScore)
+                    .build();
+
+            results.add(newResult);
+        }
+        jobResultRepository.saveAll(results);
+    }
 }
