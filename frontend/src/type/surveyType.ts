@@ -19,9 +19,11 @@ export type Repo = {
   description: string | null;
 };
 
-export type Stack = {
-  keyword: string;
-  name: string;
+export type TechSkill = string;
+
+export type StacksResponse = {
+  detected: TechSkill[];
+  additional: TechSkill[];
 };
 
 export type Answer = {
@@ -34,10 +36,11 @@ export type SubmitSurveyRequest = {
   answers: Answer[];
 };
 
-export type SubmitReposRequest = {
-  selected_repos: string[];
+export type SubmitSurveyResponse = {
+  session_id: number;
 };
 
 export type SubmitStacksRequest = {
-  selected_stacks: string[];
+  selected_stacks: TechSkill[];
+  session_id: number;
 };

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import type { Answer } from "../../../type/surveyType";
-import { getSurveyApi, submitSurveyApi, submitReposApi } from "../../../api/surveyApi";
+import { getSurveyApi, submitSurveyApi } from "../../../api/surveyApi";
 import SurveyCard from "../../card/survey_card/SurveyCard";
 import RepoSelectModal from "./RepoSelectModal";
 import StackSelectModal from "./StackSelectModal";
@@ -31,6 +31,7 @@ const SurveyModal = ({ onClose }: Props) => {
 
     const [step, setStep] = useState<"survey" | "repo" | "stack">("survey");
     const [selectedRepos, setSelectedRepos] = useState<string[]>([]);
+    const [sessionId, setSessionId] = useState<number | null>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [selected, setSelected] = useState<number | null>(null);
     const [essay, setEssay] = useState("");
@@ -84,7 +85,8 @@ const SurveyModal = ({ onClose }: Props) => {
             return;
         }
         try {
-            await submitSurveyApi({ answers: newAnswers });
+            const newSessionId = await submitSurveyApi({ answers: newAnswers });
+            setSessionId(newSessionId);
             setStep("repo");
         } catch {
             setErrorMsg("제출 중 오류가 발생했어요.");
@@ -103,14 +105,10 @@ const SurveyModal = ({ onClose }: Props) => {
         setEssay(prevAnswer?.essay_answer ?? "");
     };
 
-    const handleRepoComplete = async (repos: string[]) => {
-        try {
-            await submitReposApi({ selected_repos: repos });
-            setSelectedRepos(repos);
-            setStep("stack");
-        } catch {
-            alert("레포 제출 중 오류가 발생했습니다.");
-        }
+    const handleRepoComplete = (repos: string[]) => {
+        // 레포 제출 + 스택 감지는 stack 단계의 getStacksApi(POST /survey/repos)가 함께 처리한다.
+        setSelectedRepos(repos);
+        setStep("stack");
     };
 
     if (step === "repo") {
@@ -122,10 +120,11 @@ const SurveyModal = ({ onClose }: Props) => {
         );
     }
 
-    if (step === "stack") {
+    if (step === "stack" && sessionId !== null) {
         return (
             <StackSelectModal
                 selectedRepos={selectedRepos}
+                sessionId={sessionId}
                 onClose={onClose}
                 onComplete={onClose}
             />

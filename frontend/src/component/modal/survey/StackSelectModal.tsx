@@ -4,16 +4,18 @@ import { useQuery } from "@tanstack/react-query";
 import { FaCheck } from "react-icons/fa";
 import { FiLayers } from "react-icons/fi";
 import { getStacksApi, submitStacksApi } from "../../../api/surveyApi";
+import { techSkillLabel } from "../../../util/techSkillLabel";
 
 type Props = {
   selectedRepos: string[];
+  sessionId: number;
   onClose: () => void;
   onComplete: () => void;
 };
 
-const StackSelectModal = ({ selectedRepos, onClose, onComplete }: Props) => {
+const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Props) => {
   const {
-    data: stacks,
+    data,
     isLoading,
     isError,
   } = useQuery({
@@ -25,13 +27,13 @@ const StackSelectModal = ({ selectedRepos, onClose, onComplete }: Props) => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
 
-  const isSelected = (keyword: string) => selected.includes(keyword);
+  const isSelected = (skill: string) => selected.includes(skill);
 
-  const toggle = (keyword: string) => {
-    if (selected.includes(keyword)) {
-      setSelected(selected.filter((k) => k !== keyword));
+  const toggle = (skill: string) => {
+    if (selected.includes(skill)) {
+      setSelected(selected.filter((k) => k !== skill));
     } else {
-      setSelected([...selected, keyword]);
+      setSelected([...selected, skill]);
     }
   };
 
@@ -40,7 +42,7 @@ const StackSelectModal = ({ selectedRepos, onClose, onComplete }: Props) => {
     setSubmitting(true);
     setError(false);
     try {
-      await submitStacksApi({ selected_stacks: selected });
+      await submitStacksApi({ selected_stacks: selected, session_id: sessionId });
       onComplete();
     } catch {
       setError(true);
@@ -49,9 +51,51 @@ const StackSelectModal = ({ selectedRepos, onClose, onComplete }: Props) => {
     }
   };
 
-  const stackList = stacks ?? [];
-  const hasStacks = stackList.length > 0;
+  const detected = data?.detected ?? [];
+  const additional = data?.additional ?? [];
+  const hasStacks = detected.length + additional.length > 0;
   const canSubmit = selected.length > 0 && !submitting;
+
+  const renderSkill = (skill: string) => {
+    const active = isSelected(skill);
+    return (
+      <li key={skill} className="w-full lg:w-auto">
+        <button
+          type="button"
+          onClick={() => toggle(skill)}
+          className={[
+            "flex w-full h-17 items-center justify-center gap-3 rounded-2xl border px-6 py-3.5 text-left transition lg:w-70",
+            "bg-background dark:bg-neutral-700/60 border-black",
+            active
+              ? "border-primary-blue ring-1 ring-primary-blue"
+              : "border-border hover:border-primary-blue/40",
+          ].join(" ")}
+        >
+          {/* 체크박스 */}
+          <span
+            className={[
+              "flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition",
+              active
+                ? "border-primary-blue bg-primary-blue text-font-white"
+                : "border-border bg-transparent text-transparent  dark:border-2",
+            ].join(" ")}
+          >
+            <FaCheck className="h-3 w-3" strokeWidth={3} />
+          </span>
+
+          {/* 스택 이름 */}
+          <span
+            className={[
+              "min-w-0 flex-1 truncate text-[15px] font-semibold",
+              active ? "text-primary-blue" : "text-font-black",
+            ].join(" ")}
+          >
+            {techSkillLabel(skill)}
+          </span>
+        </button>
+      </li>
+    );
+  };
 
   return createPortal(
     <div
@@ -94,48 +138,24 @@ const StackSelectModal = ({ selectedRepos, onClose, onComplete }: Props) => {
               감지된 기술 스택이 없어요.
             </div>
           ) : (
-            <ul className="flex flex-wrap justify-center gap-3 lg:gap-2.5 mt-1">
-              {stackList.map((stack) => {
-                const active = isSelected(stack.keyword);
-                return (
-                  <li key={stack.keyword} className="w-full lg:w-auto">
-                    <button
-                      type="button"
-                      onClick={() => toggle(stack.keyword)}
-                      className={[
-                        "flex w-full h-17 items-center justify-center gap-3 rounded-2xl border px-6 py-3.5 text-left transition lg:w-70",
-                        "bg-background dark:bg-neutral-700/60 border-black",
-                        active
-                          ? "border-primary-blue ring-1 ring-primary-blue"
-                          : "border-border hover:border-primary-blue/40",
-                      ].join(" ")}
-                    >
-                      {/* 체크박스 */}
-                      <span
-                        className={[
-                          "flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition",
-                          active
-                            ? "border-primary-blue bg-primary-blue text-font-white"
-                            : "border-border bg-transparent text-transparent  dark:border-2",
-                        ].join(" ")}
-                      >
-                        <FaCheck className="h-3 w-3" strokeWidth={3} />
-                      </span>
-
-                      {/* 스택 이름 */}
-                      <span
-                        className={[
-                          "min-w-0 flex-1 truncate text-[15px] font-semibold",
-                          active ? "text-primary-blue" : "text-font-black",
-                        ].join(" ")}
-                      >
-                        {stack.name}
-                      </span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
+            <div className="flex flex-col gap-5 mt-1">
+              {detected.length > 0 && (
+                <section className="flex flex-col gap-2.5">
+                  <h3 className="text-sm font-semibold text-zinc-400">감지된 스택</h3>
+                  <ul className="flex flex-wrap justify-center gap-3 lg:gap-2.5">
+                    {detected.map(renderSkill)}
+                  </ul>
+                </section>
+              )}
+              {additional.length > 0 && (
+                <section className="flex flex-col gap-2.5">
+                  <h3 className="text-sm font-semibold text-zinc-400">직접 선택</h3>
+                  <ul className="flex flex-wrap justify-center gap-3 lg:gap-2.5">
+                    {additional.map(renderSkill)}
+                  </ul>
+                </section>
+              )}
+            </div>
           )}
         </div>
 
