@@ -1,41 +1,49 @@
 export interface Session {
-    session_id: number;
-    user_id: number;
-    created_at: string;
+    sessionId: number;
+    userId: number;
+    createdAt: string;
 }
 
 export interface CompetencyResult {
-    competency_result_id: number;
-    session_id: number;
-    competency_id: number;
+    competencyResultId: number;
+    sessionId: number;
+    competencyId: number;
     name: string;
-    total_score: number;
+    value: number;
     rank: number;
 }
 
 export interface JobResult {
-    job_result_id: number;
-    session_id: number;
-    job_id: number;
+    jobResultId: number;
+    sessionId: number;
+    jobId: number;
     name: string;
-    total_score: number;
+    match: number;
     rank: number;
 }
 
 export interface PostingResult {
-    posting_result_id: number;
-    session_id: number;
-    posting_id: number;
-    company_name: string;
+    postingResultId: number;
+    sessionId: number;
+    postingId: number;
+    companyName: string;
     title: string;
     description: string;
-    similarity: number;
+    match: number;
     rank: number;
 }
 
 export interface SessionResultResponse {
     session: Session;
-    competency_results: CompetencyResult[];
-    job_results: JobResult[];
-    posting_results: PostingResult[];
+    competencyResults: CompetencyResult[];
+    jobResults: JobResult[];
+    postingResults: PostingResult[];
+}
+
+export interface SessionHistory {
+    sessionId: number;
+    createdAt: string;
+    recommendedJob: string;
+    topCompetency: string;
+    topScore: number;
 }

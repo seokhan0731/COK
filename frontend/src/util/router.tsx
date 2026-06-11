@@ -10,6 +10,7 @@ import EditProfilePage from '../page/mypage/EditProfilePage';
 import EditSkillPage from '../page/mypage/EditSkillPage';
 import RootLayout from '../layout/RootLayout';
 import DashboardPage from '../page/dashboard_page/DashboardPage';
+import HistoryPageResult from '../page/history/HIstoryResultPage';
 
 export const router = createBrowserRouter([
   {
@@ -29,6 +30,7 @@ export const router = createBrowserRouter([
           { path: 'edit-skill', element: <EditSkillPage /> },
         ],
       },
+      {path: '/history-result', element: <HistoryPageResult />},
     ],
   },
 ]);

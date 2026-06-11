@@ -1,43 +1,69 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { getSessionResultApi } from "../../api/historyApi";
+import { getSessionResultApi, getSessionHistoryApi } from "../../api/historyApi";
 
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaUsers, FaCode, FaDesktop, FaSitemap, FaChartLine, FaServer, FaStar } from "react-icons/fa";
 
 type TabType = "result" | "history";
+
+// 가장 빼어난 역량에 맞는 아이콘
+const getCompetencyIcon = (competency: string) => {
+    switch (competency) {
+        case "협업": return <FaUsers />;
+        case "구현력": return <FaCode />;
+        case "CS지식": return <FaDesktop />;
+        case "알고리즘": return <FaSitemap />;
+        case "트렌드": return <FaChartLine />;
+        case "인프라": return <FaServer />;
+        default: return <FaStar />;
+    }
+};
 
 const HistoryPageResult = () => {
     const [activeTab, setActiveTab] = useState<TabType>("result");
 
-    const { data } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ["session-result"],
         queryFn: ({ signal }) => getSessionResultApi(signal),
     });
 
-    return (
-        <div className="flex flex-col px-80">
+    const { data: historyList } = useQuery({
+        queryKey: ["session-history"],
+        queryFn: ({ signal }) => getSessionHistoryApi(signal),
+    });
 
-            <div className="flex flex-col gap-2 w-full p-6">
-                <span className="text-3xl font-semibold">공고 매칭 설문</span>
-                <span className="text-base text-black/75">역량 분석 및 직무, 공고 추천 결과를 확인하세요</span>
+    if (isLoading) {
+        return (
+            <div className="flex w-full h-full items-center justify-center py-80">
+                <div className="w-8 h-8 rounded-full border-4 border-sky-700/30 border-t-sky-700 animate-spin" />
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex flex-col w-full max-w-5xl mx-auto">
+
+            <div className="flex flex-col gap-2 w-full p-4 sm:p-6">
+                <span className="text-2xl lg:text-3xl font-semibold text-font-black">공고 매칭 설문</span>
+                <span className="text-sm lg:text-base text-font-gray">역량 분석 및 직무, 공고 추천 결과를 확인하세요</span>
             </div>
 
-            <div className="px-6">
-                <div className="relative flex w-full p-1.5 bg-black/10 rounded-2xl">
+            <div className="px-4 sm:px-6">
+                <div className="relative flex w-full p-1.5 bg-black/10 dark:bg-white/10 rounded-2xl">
                     <div
-                        className="absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white rounded-xl shadow-sm transition-transform duration-200 ease-in-out"
+                        className="absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-background dark:bg-neutral-700 rounded-xl shadow-sm transition-transform duration-200 ease-in-out"
                         style={{ transform: activeTab === "history" ? "translateX(calc(100% + 0px))" : "translateX(0)" }}
                     />
                     <button
                         onClick={() => setActiveTab("result")}
-                        className={`relative z-10 flex-1 h-11 rounded-xl text-sm font-medium transition-colors duration-150 ${activeTab === "result" ? "text-black" : "text-black/50"}`}
+                        className={`relative  flex-1 h-11 rounded-xl text-sm font-medium transition-colors duration-150 ${activeTab === "result" ? "text-font-black" : "text-font-gray"}`}
                     >
                         설문 결과
                     </button>
                     <button
                         onClick={() => setActiveTab("history")}
-                        className={`relative z-10 flex-1 h-11 rounded-xl text-sm font-medium transition-colors duration-150 ${activeTab === "history" ? "text-black" : "text-black/50"}`}
+                        className={`relative  flex-1 h-11 rounded-xl text-sm font-medium transition-colors duration-150 ${activeTab === "history" ? "text-font-black" : "text-font-gray"}`}
                     >
                         이력 조회
                     </button>
@@ -45,82 +71,110 @@ const HistoryPageResult = () => {
             </div>
 
             {activeTab === "result" && data && (
-                <div className="flex flex-col gap-4 px-6 mt-6">
+                <div className="flex flex-col gap-4 px-4 sm:px-6 mt-6">
 
-                    <div className="flex flex-col items-center gap-2 py-8 bg-white rounded-2xl border border-black/10">
+                    <div className="flex flex-col items-center gap-2 py-8 bg-card-background rounded-2xl border border-border">
                         <div className="w-16 h-16 bg-linear-100 from-sky-300 to-green-400 rounded-full flex justify-center items-center">
-                            <FaCheck  className="w-10 h-10 text-white" />
+                            <FaCheck className="w-10 h-10 text-white" />
                         </div>
-                        <span className="text-lg font-semibold mt-1">설문이 완료되었습니다.</span>
-                        <span className="text-sm text-black/50">객관식 주관식 응답을 기반으로 역량과 추천 결과를 분석했습니다.</span>
+                        <span className="text-lg font-semibold mt-1 text-font-black">설문이 완료되었습니다.</span>
+                        <span className="text-sm text-font-gray text-center px-4">객관식 주관식 응답을 기반으로 역량과 추천 결과를 분석했습니다.</span>
                     </div>
 
-                    <div className="bg-white rounded-2xl border border-black/10 p-5 flex flex-col gap-4">
-                        <span className="text-sm text-black/60">카테고리별 역량</span>
+                    <div className="bg-card-background rounded-2xl border border-border p-5 flex flex-col gap-4">
+                        <span className="text-sm text-font-gray">카테고리별 역량</span>
                         <div className="flex flex-col gap-4">
-                            {data.competency_results.map((c) => (
-                                <div key={c.competency_result_id} className="flex items-center gap-4">
-                                    <span className="w-16 text-sm font-medium text-right shrink-0">{c.name}</span>
-                                    <div className="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
+                            {data.competencyResults.map((c) => (
+                                <div key={c.competencyResultId} className="flex items-center gap-4">
+                                    <span className="w-16 text-sm font-medium text-right shrink-0 text-font-black">{c.name}</span>
+                                    <div className="flex-1 h-3 bg-gray-200 dark:bg-neutral-700 rounded-full overflow-hidden">
                                         <div
                                             className="h-full bg-linear-90 from-primary-blue to-sky-400 rounded-full"
-                                            style={{ width: `${c.total_score}%` }}
+                                            style={{ width: `${c.value}%` }}
                                         />
                                     </div>
-                                    <span className="w-8 text-sm font-semibold text-right shrink-0">{c.total_score}</span>
+                                    <span className="w-8 text-sm font-semibold text-right shrink-0 text-font-black">{c.value}</span>
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-2xl border border-black/10 p-5 flex flex-col gap-3">
-                        <span className="text-sm text-black/60">추천 직무</span>
+                    <div className="bg-card-background rounded-2xl border border-border p-5 flex flex-col gap-3">
+                        <span className="text-sm text-font-gray">추천 직무</span>
                         <div className="flex flex-wrap gap-2">
-                            {data.job_results.map((j) => (
-                                <div key={j.job_result_id} className="flex items-center gap-1.5 bg-blue-100 rounded-full px-4 py-2">
-                                    <span className="text-sm font-medium text-blue-700">{j.name}</span>
-                                    <span className="text-xs font-bold text-white bg-blue-500 rounded-full px-2 py-0.5">{j.total_score}%</span>
+                            {data.jobResults.map((j) => (
+                                <div key={j.jobResultId} className="flex items-center gap-1.5 bg-blue-100 dark:bg-blue-900/40 rounded-full px-4 py-2">
+                                    <span className="text-sm font-medium text-blue-700 dark:text-blue-300">{j.name}</span>
+                                    <span className="text-xs font-bold text-white bg-blue-500 rounded-full px-2 py-0.5">{j.match}%</span>
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-2xl border border-black/10 p-5 flex flex-col gap-3">
-                        <span className="text-sm text-black/60">매칭 공고</span>
+                    <div className="bg-card-background rounded-2xl border border-border p-5 flex flex-col gap-3">
+                        <span className="text-sm text-font-gray">매칭 공고</span>
                         <div className="flex flex-col gap-3">
-                            {data.posting_results.map((p) => (
-                                <div key={p.posting_result_id} className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3">
-                                    <div className="w-10 h-10 rounded-xl bg-gray-300 flex items-center justify-center shrink-0">
-                                        <span className="text-sm font-bold text-gray-600">{p.company_name[0]}</span>
+                            {data.postingResults.map((p) => (
+                                <div key={p.postingResultId} className="flex items-center gap-3 bg-background dark:bg-neutral-800 rounded-xl px-4 py-3">
+                                    <div className="w-10 h-10 rounded-xl bg-gray-300 dark:bg-neutral-700 flex items-center justify-center shrink-0">
+                                        <span className="text-sm font-bold text-gray-600 dark:text-gray-300">{p.companyName[0]}</span>
                                     </div>
                                     <div className="flex flex-col flex-1 min-w-0">
-                                        <span className="text-sm font-semibold truncate">{p.title}</span>
-                                        <span className="text-xs text-black/50">{p.company_name} {p.description}</span>
+                                        <span className="text-sm font-semibold truncate text-font-black">{p.title}</span>
+                                        <span className="text-xs text-font-gray truncate">{p.companyName} {p.description}</span>
                                     </div>
                                     <div className="w-12 h-12 rounded-full bg-teal-400 flex items-center justify-center shrink-0">
-                                        <span className="text-xs font-bold text-white">{p.similarity}%</span>
+                                        <span className="text-xs font-bold text-white">{p.match}%</span>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    <div className="flex justify-center gap-3 py-6">
+                    <div className="flex flex-col sm:flex-row justify-center gap-3 py-6">
                         <button
                             onClick={() => setActiveTab("history")}
-                            className="px-6 py-3 rounded-xl border border-black/20 text-sm font-medium"
+                            className="px-6 py-3 rounded-xl border border-border text-sm font-medium text-font-black"
                         >
                             이력 조회
                         </button>
-                        <button className="px-6 py-3 rounded-xl bg-blue-600 text-white text-sm font-medium">
+                        <button className="px-6 py-3 rounded-xl bg-primary-blue text-white text-sm font-medium hover:bg-sub-blue transition-colors">
                             로드맵 확인
                         </button>
                     </div>
                 </div>
             )}
             {activeTab === "history" && (
-                <div className="px-6 mt-6 text-center text-black/40 py-20">
-                    이력 조회 페이지
+                <div className="flex flex-col gap-3 px-4 sm:px-6 mt-6">
+
+                    <div className="flex items-center justify-between">
+                        <span className="text-lg font-semibold text-font-black">설문 이력</span>
+                        <span className="text-sm text-font-gray">총 {historyList?.length ?? 0}건</span>
+                    </div>
+
+                    {historyList?.map((item) => (
+                        <div key={item.sessionId} className="flex items-center gap-3 bg-card-background rounded-2xl border border-border px-4 py-4">
+                            <div className="w-11 h-11 rounded-xl bg-blue-50 dark:bg-blue-900/30 text-primary-blue text-xl flex items-center justify-center shrink-0">
+                                {getCompetencyIcon(item.topCompetency)}
+                            </div>
+
+                            <div className="flex flex-col flex-1 min-w-0">
+                                <span className="text-sm font-semibold text-font-black">공고 매칭 설문</span>
+                                <span className="text-xs text-font-gray truncate">
+                                    {item.createdAt.slice(0, 10).replace(/-/g, ".")} · 추천 직무 : {item.recommendedJob}
+                                </span>
+                            </div>
+
+                            <div className="flex flex-col items-end shrink-0">
+                                <span className="text-base font-bold text-primary-blue">{item.topScore}</span>
+                                <span className="text-xs text-font-gray">{item.topCompetency}</span>
+                            </div>
+
+                            <span className="shrink-0 text-xs font-medium text-primary-blue bg-blue-50 dark:bg-blue-900/30 rounded-full px-3 py-1">
+                                완료
+                            </span>
+                        </div>
+                    ))}
                 </div>
             )}
         </div>

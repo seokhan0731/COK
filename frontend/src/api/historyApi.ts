@@ -1,10 +1,16 @@
-import client from '../util/client';
-import type { SessionResultResponse } from '../type/historyType';
+import { mockClient } from '../util/client';
+import type { SessionResultResponse, SessionHistory } from '../type/historyType';
 
-/* 설문 결과(세션 결과) 조회 */
 export const getSessionResultApi = async (
   signal?: AbortSignal,
 ): Promise<SessionResultResponse> => {
-  const { data } = await client.get<SessionResultResponse>('/result', { signal });
+  const { data } = await mockClient.get<SessionResultResponse>('/result', { signal });
+  return data;
+};
+
+export const getSessionHistoryApi = async (
+  signal?: AbortSignal,
+): Promise<SessionHistory[]> => {
+  const { data } = await mockClient.get<SessionHistory[]>('/result/history', { signal });
   return data;
 };
