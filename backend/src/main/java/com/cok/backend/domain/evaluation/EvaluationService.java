@@ -5,16 +5,20 @@ import com.cok.backend.domain.competency.CompetencyRepository;
 import com.cok.backend.domain.competency.MasterCompetency;
 import com.cok.backend.domain.evaluation.dto.AnswerItem;
 import com.cok.backend.domain.evaluation.dto.AnswersRequest;
+import com.cok.backend.domain.job.JobPolicy;
 import com.cok.backend.domain.result.entity.CompetencyResult;
 import com.cok.backend.domain.evaluation.entity.SurveySession;
 import com.cok.backend.domain.evaluation.entity.UserResponse;
 import com.cok.backend.domain.result.repository.CompetencyResultRepository;
 import com.cok.backend.domain.evaluation.repository.ResponseRepository;
 import com.cok.backend.domain.evaluation.repository.SessionRepository;
+import com.cok.backend.domain.survey.dto.TechSkillSelect;
 import com.cok.backend.domain.survey.entity.Option;
 import com.cok.backend.domain.survey.entity.Question;
 import com.cok.backend.domain.survey.repository.OptionRepository;
 import com.cok.backend.domain.survey.repository.QuestionRepository;
+import com.cok.backend.domain.tech_skill.TechSkill;
+import com.cok.backend.domain.tech_skill.TechSkillPolicy;
 import com.cok.backend.domain.user.entity.User;
 import com.cok.backend.domain.user.enums.BaekjoonTier;
 import com.cok.backend.domain.user.repository.UserCertificationRepository;
@@ -24,10 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +55,7 @@ public class EvaluationService {
      * @param userId  session 저장 및 유저의 자격증 정보를 조회하기 위해 필요
      */
     @Transactional
-    public void submitAndCalculateCompetency(AnswersRequest request, Long userId) {
+    public Long submitAndCalculateCompetency(AnswersRequest request, Long userId) {
         SurveySession newSession = submitAnswers(request, userId);
 
         //설문 점수
@@ -72,6 +73,8 @@ public class EvaluationService {
         Map<Long, Double> scoreResult = calculateFinalScore(surveyScores, certificationScores, baekjoonScore, isUnrated);
 
         saveCompetencyResults(newSession, scoreResult);
+
+        return newSession.getId();
     }
 
     private Map<Long, Double> calculateFinalScore(Map<Long, Double> surveyScores, Map<Long, Double> certificationScores
@@ -261,4 +264,5 @@ public class EvaluationService {
         }
         return normalizedScores;
     }
+
 }

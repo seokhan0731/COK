@@ -31,10 +31,10 @@ public class SurveyController {
 
     @PostMapping("/submit")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> submitSurvey(@Valid @RequestBody AnswersRequest request,
+    public ResponseEntity<Long> submitSurvey(@Valid @RequestBody AnswersRequest request,
                                              @AuthenticationPrincipal Long userId) {
-        evaluationService.submitAndCalculateCompetency(request, userId);
-        return ResponseEntity.ok().build();
+        Long sessionId = evaluationService.submitAndCalculateCompetency(request, userId);
+        return ResponseEntity.ok(sessionId);
     }
 
     //TODO 디폴트 브랜치 정보도 줘야 기술스택 조회시, 모든 브랜치 조회가능

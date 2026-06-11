@@ -5,5 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public record TechSkillSelect(@JsonProperty("selected_stacks") List<TechSkill> selectedSkills) {
+public record TechSkillSelect(@JsonProperty("selected_stacks") List<TechSkill> selectedSkills,
+                              @JsonProperty("session_id") Long sessionId) {
 }
