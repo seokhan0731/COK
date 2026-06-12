@@ -1,10 +1,10 @@
 // src/pages/HomePage.tsx
 
 /* React */
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 /* Library */
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 /* Icon */
 import { FaAngleRight, FaCode, FaQuoteLeft, FaQuoteRight } from 'react-icons/fa6';
@@ -22,17 +22,17 @@ import { CompetencyDummyData } from '../dummy/HomeDummy';
 import previewImage from '../asset/preview/Preview.png';
 
 /* Util */
-import clsx from 'clsx'
-import SurveyModal from '../component/modal/survey/SurveyModal'
-
-const sectionBase = clsx(
-  'relative snap-start h-[calc(100dvh-75px)] overflow-hidden',
-  '[@media(max-height:700px)]:h-auto [@media(max-height:700px)]:min-h-[calc(100dvh-75px)]',
-)
+import clsx from 'clsx';
+import { useModal } from '../component/provider/ModalProvider';
+import LoginModal from '../component/modal/LoginModal';
+import { useAuthStore, useIsLoggedIn } from '../store/authStore';
+import { useNavigate } from 'react-router';
 
 const HomePage = () => {
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const [isOpen, setIsOpen] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const { open } = useModal();
+  const navigate = useNavigate();
+  const isLoggedIn = useIsLoggedIn();
 
   return (
     <div className="flex flex-col">
@@ -83,7 +83,13 @@ const HomePage = () => {
                 'hover:scale-105 transition-transform duration-300',
                 'dark:bg-primary-blue',
               )}
-              onClick={() => setIsOpen(true)}
+              onClick={() => {
+                if (isLoggedIn) {
+                  navigate('/dashboard');
+                  return;
+                }
+                open(<LoginModal />);
+              }}
             >
               <span className="text-sm font-medium leading-none text-font-white">시작하기</span>
             </button>
@@ -376,11 +382,6 @@ const HomePage = () => {
             </AnimatedDiv>
           </div>
         </section>
-        <AnimatePresence>
-            {isOpen &&
-              <SurveyModal onClose={() => setIsOpen(false)} />
-            }
-        </AnimatePresence>
       </div>
     </div>
   );
