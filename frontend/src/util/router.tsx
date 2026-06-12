@@ -9,6 +9,7 @@ import ProfilePage from '../page/mypage/ProfilePage';
 import EditProfilePage from '../page/mypage/EditProfilePage';
 import EditSkillPage from '../page/mypage/EditSkillPage';
 import RootLayout from '../layout/RootLayout';
+import PlanningPage from '../page/PlanningPage';
 import HubPage from '../page/HubPage';
 import DashboardPage from '../page/dashboard_page/DashboardPage';
 
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
           { path: 'edit-skill', element: <EditSkillPage /> },
         ],
       },
+        { path: '/planning', element: <PlanningPage /> },
     ],
   },
-]);
+])
