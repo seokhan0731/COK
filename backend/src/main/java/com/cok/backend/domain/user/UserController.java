@@ -1,5 +1,8 @@
 package com.cok.backend.domain.user;
 
+import com.cok.backend.domain.result.ResultResponseService;
+import com.cok.backend.domain.result.dto.CompetencyResultResponse;
+import com.cok.backend.domain.result.dto.JobResultResponse;
 import com.cok.backend.domain.user.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final ResultResponseService resultResponseService;
 
     @PostMapping("/profile")
     @PreAuthorize("hasRole('GUEST')")
@@ -42,6 +46,20 @@ public class UserController {
     public ResponseEntity<SkillInformEditResponse> editSkillInform(@Valid @RequestBody SkillInformEditRequest request,
                                                                    @AuthenticationPrincipal Long userId) {
         SkillInformEditResponse response = userService.editSkillInform(request, userId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/skill")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<CompetencyResultResponse> getCompetencyResult(@AuthenticationPrincipal Long userId) {
+        CompetencyResultResponse response = resultResponseService.getLatestCompetencyResult(userId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/recommend/job")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<JobResultResponse> getJobResult(@AuthenticationPrincipal Long userId) {
+        JobResultResponse response = resultResponseService.getLatestJobResult(userId);
         return ResponseEntity.ok(response);
     }
 }

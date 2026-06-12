@@ -1,6 +1,6 @@
 package com.cok.backend.domain.hub;
 
-import com.cok.backend.domain.certification.MasterCertificationRepository;
+import com.cok.backend.domain.certification.repository.MasterCertificationRepository;
 import com.cok.backend.domain.hub.dto.HubItem;
 import com.cok.backend.domain.hub.dto.HubResponse;
 import com.cok.backend.domain.job.MasterJobRepository;

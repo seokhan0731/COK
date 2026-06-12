@@ -51,7 +51,7 @@ Response Body
       "question_id": 1,
       "competency_id": 1,
       "content": "새로운 문제를 만났을 때 어떻게 접근하나요?",
-      "type": "single",
+      "type": "MULTI",
       "options": [
         { "option_id": 1, "question_id": 1, "content": "체계적으로 분석한다" },
         { "option_id": 2, "question_id": 1, "content": "직관적으로 해결한다" }
@@ -61,7 +61,7 @@ Response Body
       "question_id": 2,
       "competency_id": 1,
       "content": "최근에 해결한 문제 중 가장 기억에 남는 경험을 자유롭게 서술해주세요.",
-      "type": "subjective",
+      "type": "ESSAY",
       "options": []
     }
   ]
@@ -119,13 +119,11 @@ Response Body
   "repos": [
     {
       "name": "COK",
-      "description": "역량 진단 및 성장 로드맵 서비스",
-      "html_url": "https://github.com/seokhan0731/COK"
+      "description": "역량 진단 및 성장 로드맵 서비스"
     },
     {
       "name": "algorithm",
-      "description": null,
-      "html_url": "https://github.com/seokhan0731/algorithm"
+      "description": null
     }
   ]
 }
@@ -133,9 +131,76 @@ Response Body
 
 ---
 
-## 3. 설문 제출
+## 3. 기술 스택 조회 
 
-사용자가 응답한 설문 답변과 선택한 레포지토리 3개를 함께 제출한다.
+선택한 레포지토리 이름 목록을 보내면, 해당 레포들에서 감지된 기술 스택 목록을 반환한다.
+클라이언트는 이 목록을 체크박스로 보여주고, 사용자가 사용한 스택만 선택하여 제출.
+
+> 클라이언트는 응답으로 받은 `stacks` 목록만 그대로 렌더링한다.
+
+### Metadata
+
+| 항목 | 값 |
+|------|----|
+| Method | POST |
+| URL | `/github/stacks` |
+
+### Request Headers
+
+| 헤더 | 값 | 필수 | 설명 |
+|------|----|------|------|
+| `Authorization` | `Bearer {accessToken}` | O | 로그인 사용자 인증 토큰 |
+| `Content-Type` | `application/json` | O | 요청 바디 형식 |
+
+### Request Body
+
+| 필드 | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `selected_repos` | `string[]` | O | 스택을 감지할 레포지토리 이름 목록 (선택한 3개, `Repo.name`) |
+
+### Response Body
+
+| 필드 | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `stacks` | `Stack[]` | O | 선택한 레포들에서 감지된 기술 스택 목록 (중복 제거) |
+
+### Example
+
+Request
+```
+POST /github/stacks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+```
+
+Request Body
+```json
+{
+  "selected_repos": [
+    "COK",
+    "algorithm",
+    "study"
+  ]
+}
+```
+
+Response Body
+```json
+{
+  "stacks": [
+    { "keyword": "react", "name": "React" },
+    { "keyword": "next", "name": "Next.js" },
+    { "keyword": "tailwindcss", "name": "Tailwind CSS" },
+    { "keyword": "docker", "name": "Docker" }
+  ]
+}
+```
+
+---
+
+## 4. 설문 제출
+
+사용자가 응답한 설문 답변을 제출한다. (깃 레포지토리와 기술 스택은 각각 별도 API로 제출한다.)
 
 ### Metadata
 
@@ -158,10 +223,9 @@ Response Body
 | `answers` | `Answer[]` | O | 응답 목록 |
 | `answers[].question_id` | `number` | O | 질문 ID |
 | `answers[].option_id` | `number` | △ | 선택한 선택지 ID (객관식일 때 필수) |
-| `answers[].subjective_answer` | `string` | △ | 주관식 답변 텍스트 (주관식일 때 필수) |
-| `selected_repos` | `string[]` | O | 선택한 레포지토리 URL 목록 |
+| `answers[].essay_answer` | `string` | △ | 주관식 답변 텍스트 (주관식일 때 필수) |
 
-> `△` = 질문 유형에 따라 선택적으로 들어가는 프로퍼티. 객관식은 `option_id`, 주관식은 `subjective_answer` 중 하나만 보낸다.
+> `△` = 질문 유형에 따라 선택적으로 들어가는 프로퍼티. 객관식은 `option_id`, 주관식은 `essay_answer` 중 하나만 보낸다.
 
 ### Response
 
@@ -181,27 +245,132 @@ Request Body
 {
   "answers": [
     { "question_id": 1, "option_id": 2 },
-    { "question_id": 2, "subjective_answer": "대용량 트래픽 처리 중 발생한 병목을 캐시 도입으로 해결한 경험이 있습니다." }
-  ],
-  "selected_repos": [
-    "https://github.com/seokhan0731/COK",
-    "https://github.com/seokhan0731/algorithm",
-    "https://github.com/seokhan0731/study"
+    { "question_id": 2, "essay_answer": "대용량 트래픽 처리 중 발생한 병목을 캐시 도입으로 해결한 경험이 있습니다." }
   ]
 }
 ```
 
 ---
 
-## 4. Type 정의
+## 5. 깃 레포지토리 제출
+
+사용자가 선택한 깃 레포지토리 이름 목록(최대 3개)을 제출한다.
+
+### Metadata
+
+| 항목 | 값 |
+|------|----|
+| Method | POST |
+| URL | `/survey/repos` |
+
+### Request Headers
+
+| 헤더 | 값 | 필수 | 설명 |
+|------|----|------|------|
+| `Authorization` | `Bearer {accessToken}` | O | 로그인 사용자 인증 토큰 |
+| `Content-Type` | `application/json` | O | 요청 바디 형식 |
+
+### Request Body
+
+| 필드 | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `selected_repos` | `string[]` | O | 선택한 레포지토리 이름 목록 (선택한 3개, `Repo.name`) |
+
+### Response
+
+성공 시 `200 OK`만 반환하며, 응답 바디는 없다.
+
+### Example
+
+Request
+
+```
+POST /survey/repos
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+```
+
+Request Body
+
+```json
+{
+  "selected_repos": [
+    "COK",
+    "algorithm",
+    "study"
+  ]
+}
+```
+
+---
+
+## 6. 기술 스택 제출
+
+사용자가 확인·선택한 기술 스택 `keyword` 목록을 제출한다. (`3. 기술 스택 조회` 응답에서 고른 값)
+
+### Metadata
+
+| 항목 | 값 |
+|------|----|
+| Method | POST |
+| URL | `/survey/stacks` |
+
+### Request Headers
+
+| 헤더 | 값 | 필수 | 설명 |
+|------|----|------|------|
+| `Authorization` | `Bearer {accessToken}` | O | 로그인 사용자 인증 토큰 |
+| `Content-Type` | `application/json` | O | 요청 바디 형식 |
+
+### Request Body
+
+| 필드 | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `selected_stacks` | `string[]` | O | 사용자가 확인·선택한 기술 스택 `keyword` 목록. 선택한 스택이 없으면 빈 배열 `[]` |
+
+> `selected_stacks`에는 `Stack.name`이 아니라 **`Stack.keyword`** 를 담는다.
+
+### Response
+
+성공 시 `200 OK`만 반환하며, 응답 바디는 없다.
+
+### Example
+
+Request
+
+```
+POST /survey/stacks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+```
+
+Request Body
+
+```json
+{
+  "selected_stacks": ["react", "next", "tailwindcss"]
+}
+```
+
+---
+
+## 7. Type 정의
 
 ### Repo
 
 | 필드 | 타입 | 필수 | 설명 |
 |------|------|------|------|
-| `name` | `string` | O | 레포지토리 이름 |
+| `name` | `string` | O | 레포지토리 이름 (제출 시 `selected_repos`에 사용) |
 | `description` | `string` | X | 레포지토리 설명 (없으면 `null`) |
-| `html_url` | `string` | O | 레포지토리 URL (제출 시 `selected_repos`에 사용) |
+
+- html url 제거
+
+### Stack
+
+| 필드 | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `keyword` | `string` | O | 기술 스택 키워드 (마스터 표 기준 식별자, 제출 시 `selected_stacks`에 사용) |
+| `name` | `string` | O | 화면 표시용 이름 |
 
 ### Question
 
@@ -210,15 +379,15 @@ Request Body
 | `question_id` | `number` | O | 질문 고유 ID (`AssessmentQuestion.question_id`) |
 | `competency_id` | `number` | O | 평가 역량 ID (`AssessmentQuestion.competency_id`) |
 | `content` | `string` | O | 질문 내용 |
-| `type` | `QuestionType` | O | 질문 유형 (`single` / `subjective`) |
+| `type` | `QuestionType` | O | 질문 유형 (`MULTI` / `ESSAY`) |
 | `options` | `Option[]` | O | 선택지 목록 (주관식은 빈 배열 `[]`) |
 
 ### QuestionType
 
 | 값 | 설명 |
 |----|------|
-| `"single"` | 객관식 단일 선택 (선택지 중 하나 선택) |
-| `"subjective"` | 주관식 (텍스트 서술) |
+| `"MULTI"` | 객관식 단일 선택 (선택지 중 하나 선택) |
+| `"ESSAY"` | 주관식 (텍스트 서술) |
 
 ### Option
 
@@ -234,6 +403,6 @@ Request Body
 |------|------|------|------|
 | `question_id` | `number` | O | 질문 ID |
 | `option_id` | `number` | △ | 선택한 선택지 ID (객관식일 때 필수) |
-| `subjective_answer` | `string` | △ | 주관식 답변 텍스트 (주관식 `subjective`일 때 필수) |
+| `essay_answer` | `string` | △ | 주관식 답변 텍스트 (주관식 `ESSAY`일 때 필수) |
 
-> `△` = 질문 유형에 따라 선택적으로 들어가는 프로퍼티. 객관식은 `option_id`, 주관식은 `subjective_answer` 중 하나만 보낸다.
+> `△` = 질문 유형에 따라 선택적으로 들어가는 프로퍼티. 객관식은 `option_id`, 주관식은 `essay_answer` 중 하나만 보낸다.
