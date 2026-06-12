@@ -1,0 +1,39 @@
+import { NavLink, Outlet, useLocation } from "react-router";
+
+const tabClass = ({ isActive }: { isActive: boolean }) =>
+    `relative flex-1 h-11 rounded-xl text-sm font-medium transition-colors duration-150 flex items-center justify-center ${isActive ? "text-font-black" : "text-font-gray"}`;
+
+const HistoryLayout = () => {
+    const { pathname } = useLocation();
+
+    const isHistory = pathname.startsWith("/history-list");
+
+    return (
+        <div className="flex flex-col w-full max-w-5xl mx-auto">
+
+            <div className="flex flex-col gap-2 w-full p-4 sm:p-6">
+                <span className="text-2xl lg:text-3xl font-semibold text-font-black">공고 매칭 설문</span>
+                <span className="text-sm lg:text-base text-font-gray">역량 분석 및 직무, 공고 추천 결과를 확인하세요</span>
+            </div>
+
+            <div className="px-4 sm:px-6">
+                <div className="relative flex w-full p-1.5 bg-black/10 dark:bg-white/10 rounded-2xl">
+                    <div
+                        className="absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-background dark:bg-neutral-700 rounded-xl shadow-sm transition-transform duration-200 ease-in-out"
+                        style={{ transform: isHistory ? "translateX(100%)" : "translateX(0)" }}
+                    />
+                    <NavLink to="/history-result" className={tabClass}>
+                        설문 완료
+                    </NavLink>
+                    <NavLink to="/history-list" className={tabClass}>
+                        이력 조회
+                    </NavLink>
+                </div>
+            </div>
+
+            <Outlet />
+        </div>
+    );
+};
+
+export default HistoryLayout;

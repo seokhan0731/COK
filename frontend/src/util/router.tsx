@@ -12,6 +12,9 @@ import RootLayout from '../layout/RootLayout';
 import PlanningPage from '../page/PlanningPage';
 import HubPage from '../page/HubPage';
 import DashboardPage from '../page/dashboard_page/DashboardPage';
+import HistoryPageResult from '../page/history/HIstoryResultPage';
+import HistoryListPage from '../page/history/HistoryListPage';
+import HistoryLayout from '../layout/HistoryLayout';
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +33,13 @@ export const router = createBrowserRouter([
           { path: 'profile', element: <ProfilePage /> },
           { path: 'edit-profile', element: <EditProfilePage /> },
           { path: 'edit-skill', element: <EditSkillPage /> },
+        ],
+      },
+      {
+        element: <HistoryLayout />,
+        children: [
+          { path: '/history-result', element: <HistoryPageResult /> },
+          { path: '/history-list', element: <HistoryListPage /> },
         ],
       },
         { path: '/planning', element: <PlanningPage /> },
