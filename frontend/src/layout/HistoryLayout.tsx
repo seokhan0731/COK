@@ -1,7 +1,9 @@
-import { Outlet, useLocation, useNavigate } from "react-router";
+import { NavLink, Outlet, useLocation } from "react-router";
+
+const tabClass = ({ isActive }: { isActive: boolean }) =>
+    `relative flex-1 h-11 rounded-xl text-sm font-medium transition-colors duration-150 flex items-center justify-center ${isActive ? "text-font-black" : "text-font-gray"}`;
 
 const HistoryLayout = () => {
-    const navigate = useNavigate();
     const { pathname } = useLocation();
 
     const isHistory = pathname.startsWith("/history-list");
@@ -20,18 +22,12 @@ const HistoryLayout = () => {
                         className="absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-background dark:bg-neutral-700 rounded-xl shadow-sm transition-transform duration-200 ease-in-out"
                         style={{ transform: isHistory ? "translateX(100%)" : "translateX(0)" }}
                     />
-                    <button
-                        onClick={() => navigate("/history-result")}
-                        className={`relative flex-1 h-11 rounded-xl text-sm font-medium transition-colors duration-150 ${!isHistory ? "text-font-black" : "text-font-gray"}`}
-                    >
+                    <NavLink to="/history-result" className={tabClass}>
                         설문 완료
-                    </button>
-                    <button
-                        onClick={() => navigate("/history-list")}
-                        className={`relative flex-1 h-11 rounded-xl text-sm font-medium transition-colors duration-150 ${isHistory ? "text-font-black" : "text-font-gray"}`}
-                    >
+                    </NavLink>
+                    <NavLink to="/history-list" className={tabClass}>
                         이력 조회
-                    </button>
+                    </NavLink>
                 </div>
             </div>
 
