@@ -1,57 +1,72 @@
 // frontend/src/components/cards/CardDeck.tsx
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { cn } from '../../util/cn';
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { cn } from '../../util/cn'
+import { useHomeMemberInfo } from '../../hook/useHome';
+import LoadingSpinner from '../../page/mypage/_component/LoadingSpinner';
 
-import Member1 from '../../asset/member_image/조인흠.png'
-import Member2 from '../../asset/member_image/김석환.png'
-import Member3 from '../../asset/member_image/오주노.png'
-
-type MemberDataType = {
-  path: string
-  name: string
-  role: string[]
-}
-
-const MemberData: MemberDataType[] = [
-  { path: Member1, name: '조인흠', role: ['Frontend'] },
-  { path: Member2, name: '김석환', role: ['Backend', 'AI'] },
-  { path: Member3, name: '오주노', role: ['Frontend'] },
-]
-
-const CARD_W = 200
-const CARD_H = 280
-const CARD_OFFSET = 12
-const SCALE_FACTOR = 0.05
+const CARD_W = 200;
+const CARD_H = 280;
+const CARD_OFFSET = 12;
+const SCALE_FACTOR = 0.05;
 
 const CardDeck = () => {
-  const [order, setOrder] = useState([0, 1, 2])
-  const [isFlipping, setIsFlipping] = useState(false)
+  const { data, isPending, isError } = useHomeMemberInfo();
 
-  const n = MemberData.length
-  const containerW = CARD_W + CARD_OFFSET * (n - 1)
-  const containerH = CARD_H + CARD_OFFSET * (n - 1)
+  // 응답: { memberInfoData: MemberInfoType[] } → 멤버 배열 추출
+  const members = data?.memberInfoData ?? [];
+
+  const [order, setOrder] = useState<number[]>([]);
+  const [isFlipping, setIsFlipping] = useState(false);
+
+  const n = members.length;
+
+  // 데이터가 도착하면 카드 순서를 [0, 1, ..., n-1]로 초기화
+  useEffect(() => {
+    setOrder(Array.from({ length: n }, (_, i) => i));
+  }, [n]);
+
+  const containerW = CARD_W + CARD_OFFSET * Math.max(n - 1, 0);
+  const containerH = CARD_H + CARD_OFFSET * Math.max(n - 1, 0);
 
   const handleClick = () => {
-    if (isFlipping) return
-    setIsFlipping(true)
+    if (isFlipping || n === 0) return;
+    setIsFlipping(true);
     setTimeout(() => {
-      setOrder((prev) => [...prev.slice(1), prev[0]])
-      setIsFlipping(false)
-    }, 380)
+      setOrder((prev) => [...prev.slice(1), prev[0]]);
+      setIsFlipping(false);
+    }, 380);
+  };
+
+  // 로딩 / 에러 / 빈 데이터 — 카드 영역 크기를 유지한 채 가운데에 표시
+  if (isPending || isError || n === 0) {
+    return (
+      <div
+        className="flex items-center justify-center"
+        style={{ width: CARD_W + CARD_OFFSET * 2, height: CARD_H + CARD_OFFSET * 2 }}
+      >
+        {isPending ? (
+          <LoadingSpinner className="size-10" />
+        ) : (
+          <p className="text-sm text-gray-400">
+            {isError ? '팀원 정보를 불러오지 못했어요.' : '표시할 팀원이 없어요.'}
+          </p>
+        )}
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col items-center gap-6">
+    <div className="relative flex flex-col items-center gap-6">
       <div
         className="relative cursor-pointer select-none"
         style={{ width: containerW, height: containerH, perspective: '800px' }}
         onClick={handleClick}
       >
         {order.map((memberIdx, stackPos) => {
-          const isTop = stackPos === 0
-          const isLeaving = isTop && isFlipping
+          const isTop = stackPos === 0;
+          const isLeaving = isTop && isFlipping;
 
           return (
             <motion.div
@@ -84,8 +99,8 @@ const CardDeck = () => {
             >
               <div className="w-full overflow-hidden" style={{ height: '70%' }}>
                 <img
-                  src={MemberData[memberIdx].path}
-                  alt={MemberData[memberIdx].name}
+                  src={members[memberIdx].imageUrl}
+                  alt={members[memberIdx].name}
                   className="w-full h-full object-cover object-top"
                   draggable={false}
                 />
@@ -96,11 +111,9 @@ const CardDeck = () => {
                   isTop && !isFlipping ? 'opacity-100' : 'opacity-0',
                 )}
               >
-                <p className="font-bold text-base leading-tight">
-                  {MemberData[memberIdx].name}
-                </p>
+                <p className="font-bold text-base leading-tight">{members[memberIdx].name}</p>
                 <div className="flex flex-wrap gap-1 mt-1.5">
-                  {MemberData[memberIdx].role.map((r) => (
+                  {members[memberIdx].role.map((r) => (
                     <span
                       key={r}
                       className="px-2 py-0.5 rounded-full bg-primary-blue/10 border border-primary-blue/20 text-xs font-medium text-primary-blue"
@@ -111,13 +124,13 @@ const CardDeck = () => {
                 </div>
               </div>
             </motion.div>
-          )
+          );
         })}
       </div>
 
       {/* Navigation dots */}
       <div className="flex gap-2 items-center">
-        {MemberData.map((_, i) => (
+        {members.map((_, i) => (
           <div
             key={i}
             className={cn(
@@ -130,7 +143,7 @@ const CardDeck = () => {
 
       <p className="text-xs text-gray-400">클릭하여 다음 카드 보기</p>
     </div>
-  )
-}
+  );
+};
 
-export default CardDeck
+export default CardDeck;

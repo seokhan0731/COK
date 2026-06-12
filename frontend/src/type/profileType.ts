@@ -25,11 +25,16 @@ import algoPlatinum1 from '../asset/algorithm_level/platinum/1.svg';
 import algoDiamond from '../asset/algorithm_level/over/over.svg';
 
 // #region Form Type
+// 프로필 생성 시 imageState는 백엔드에서 받지 않으므로 제외 (수정 플로우에서만 사용)
+export type CreateProfileFormDataType = Omit<EditProfileFormDataType, 'imageState'> &
+  EditSkillFormDataType;
+
 export type EditProfileFormDataType = {
   name: string;
   birthYear: number;
   attendStatus: AttendStatusType;
   currentGrade: GradeType;
+  imageState: ImageStateType;
   imageFile?: File;
 };
 
@@ -203,6 +208,11 @@ export const ATTEND_STATUS_META: Record<AttendStatusType, AttendMetaType> = {
   ON_LEAVE: { icon: LucidePause, label: '휴학' },
   GRADUATION: { icon: LucideGraduationCap, label: '졸업' },
 };
+
+export const ATTEND_STATUS_OPTION = ATTEND_STATUS_TYPE.map((value) => ({
+  value,
+  label: ATTEND_STATUS_META[value].label,
+}));
 // #endregion
 
 // #region Grade
@@ -226,3 +236,8 @@ export const GRADE_OPTION = (Object.entries(GRADE_META) as [GradeType, GradeMeta
 );
 
 // #endregion
+
+// #region ImageState
+const IMAGESTATE_TYPE = ['INIT', 'KEEP', 'CHANGE'] as const;
+export type ImageStateType = (typeof IMAGESTATE_TYPE)[number];
+//#endregion

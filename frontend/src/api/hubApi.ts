@@ -1,4 +1,4 @@
-import type { GetHubResponseType, ItemType } from '../type/infoType';
+import type { GetHubResponseType, ItemType } from '../type/HubType';
 import { authClient } from '../util/client';
 
 export const getHubApi = async (

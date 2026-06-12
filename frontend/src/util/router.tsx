@@ -9,7 +9,8 @@ import ProfilePage from '../page/mypage/ProfilePage';
 import EditProfilePage from '../page/mypage/EditProfilePage';
 import EditSkillPage from '../page/mypage/EditSkillPage';
 import RootLayout from '../layout/RootLayout';
-import InfoPage from '../page/InfoPage';
+import HubPage from '../page/HubPage';
+import DashboardPage from '../page/dashboard_page/DashboardPage';
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
       { path: '/', element: <HomePage /> },
       { path: '/test', element: <TestPage /> },
       { path: '/kakao/oauth/loading', element: <KakaoOauthLoadingPage /> },
+      { path: 'dashboard', element: <DashboardPage /> },
       {
         path: '/my',
         element: <MypageLayout />,
@@ -31,7 +33,7 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: '/info',
-    element: <InfoPage />,
+    path: '/hub',
+    element: <HubPage />,
   },
 ]);
