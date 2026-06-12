@@ -1,3 +1,5 @@
+import type { JobType, SkillType } from './d707/DashboardType';
+
 export interface Session {
     sessionId: number;
     userId: number;
@@ -40,10 +42,23 @@ export interface SessionResultResponse {
     postingResults: PostingResult[];
 }
 
+export interface SessionHistoryRaw {
+    session_id: number;
+    created_at: string;
+    top_job: JobType;
+    top_competency: SkillType;
+    top_score: number;
+}
+
+export interface SessionHistoryResponse {
+    history: SessionHistoryRaw[];
+    total: number;
+}
+
 export interface SessionHistory {
     sessionId: number;
     createdAt: string;
     recommendedJob: string;
-    topCompetency: string;
+    topCompetency: SkillType;
     topScore: number;
 }

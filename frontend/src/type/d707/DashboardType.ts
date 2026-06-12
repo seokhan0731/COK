@@ -34,16 +34,28 @@ export const JOB_META: Record<JobType, JobMetaType> = {
   10: { label: '블록체인 엔지니어' },
   11: { label: '영상/음성 엔지니어' },
 };
+
+export type JobDataType = {
+  jobId: JobType;
+  match: number;
+};
+
+export type PostingDataType = {
+  companyName: string;
+  title: string;
+  match: number;
+  postingUrl: string;
+};
 // #endregion
 
 // #region Skill
 export const SKILL_TYPE = [
-  'collaboration', // 협업
-  'csKnowledge', // cs지식
-  'implementation', // 구현력
-  'algorithm', // 알고리즘
-  'trend', // 트렌드
-  'infrastructure', // 인프라
+  'COLLABORATION', // 협업
+  'CS_KNOWLEDGE', // cs지식
+  'IMPLEMENTATION', // 구현력
+  'ALGORITHM', // 알고리즘
+  'TREND', // 트렌드
+  'INFRA_STRUCTURE', // 인프라
 ] as const;
 
 export type SkillType = (typeof SKILL_TYPE)[number];
@@ -53,12 +65,12 @@ type SkillMetaType = {
 };
 
 export const SKILL_META: Record<SkillType, SkillMetaType> = {
-  algorithm: { label: '알고리즘' },
-  collaboration: { label: '협업' },
-  csKnowledge: { label: 'cs지식' },
-  implementation: { label: '구현력' },
-  infrastructure: { label: '인프라' },
-  trend: { label: '트랜드' },
+  ALGORITHM: { label: '알고리즘' },
+  COLLABORATION: { label: '협업' },
+  CS_KNOWLEDGE: { label: 'cs지식' },
+  IMPLEMENTATION: { label: '구현력' },
+  INFRA_STRUCTURE: { label: '인프라' },
+  TREND: { label: '트랜드' },
 };
 
 export type SkillDataType = {

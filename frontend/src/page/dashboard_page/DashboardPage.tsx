@@ -5,7 +5,7 @@ import { NavLink } from 'react-router';
 
 /* Type & constant */
 import { type SkillDataType } from './_component/chartType';
-import type { JobType } from '../../type/dashboardType';
+import type { JobType } from '../../type/d707/DashboardType';
 
 /* Component */
 import SkillRadarChart from './_component/SkillRadarChart';
