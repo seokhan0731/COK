@@ -59,6 +59,7 @@ const KakaoOauthLoadingPage = () => {
         navigate('/', { replace: true });
       } catch (error: any) {
         console.error('카카오 로그인 실패: ', error.message);
+        alert('로그인에 실패하였습니다.');
         navigate('/', { replace: true });
       }
     };

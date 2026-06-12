@@ -63,6 +63,7 @@ const CreateProfileModal = () => {
       certifications: [],
     },
   });
+  const { isValidating } = methods.formState;
   const currentFields = STEPS[step].fields;
   const watched = methods.watch(currentFields);
   const isStepInvalid =
@@ -125,7 +126,8 @@ const CreateProfileModal = () => {
         />
 
         <div className="absolute top-0 w-full flex justify-between items-center-safe p-2">
-          <div className="h-2 w-50 bg-card-background/40 rounded-full overflow-hidden">
+          {/* Progress Bar */}
+          <div className="h-2 w-50 bg-font-gray/25 rounded-full overflow-hidden">
             <motion.div
               className="h-full bg-linear-to-r from-primary-blue to-primary-emerald rounded-full"
               initial={false}
@@ -188,7 +190,7 @@ const CreateProfileModal = () => {
 
           <PrimaryButton
             onClick={handleNext}
-            disabled={isStepInvalid || isPending}
+            disabled={isValidating || isStepInvalid || isPending}
             className="py-2 rounded-full lg:text-base"
           >
             {isLastStep ? (isPending ? '생성 중...' : '시작하기') : '다음으로'}

@@ -36,7 +36,7 @@ const SingleSelect = <T extends string = string>({
         className={clsx(
           'flex items-center justify-between w-full px-4 py-2',
           'bg-background border border-border rounded-md text-sm',
-          'focus:outline-none disabled:opacity-50 data-placeholder:text-muted-foreground',
+          'focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed data-placeholder:text-muted-foreground',
         )}
       >
         <SelectPrimitive.Value placeholder={placeholder ?? '선택해주세요'} />

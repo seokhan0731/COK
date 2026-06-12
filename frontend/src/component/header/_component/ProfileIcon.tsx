@@ -7,10 +7,11 @@ import { cn } from '../../../util/cn';
 type ProfileIconProps = {
   className: string;
   imageUrl?: string;
+  iconSize?: number;
   onClick?: () => void;
 };
 
-const ProfileIcon = ({ imageUrl, onClick, className }: ProfileIconProps) => (
+const ProfileIcon = ({ imageUrl, onClick, className, iconSize = 20 }: ProfileIconProps) => (
   <button
     onClick={onClick}
     className={cn(
@@ -21,7 +22,7 @@ const ProfileIcon = ({ imageUrl, onClick, className }: ProfileIconProps) => (
     {imageUrl ? (
       <img src={imageUrl} alt="프로필" className="size-full object-cover" />
     ) : (
-      <LucideUser2 size={20} className="text-font-gray" />
+      <LucideUser2 size={iconSize} className="text-font-black" />
     )}
   </button>
 );
