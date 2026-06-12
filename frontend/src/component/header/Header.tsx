@@ -19,6 +19,9 @@ import { useThemeStore } from '../../store/themeStore';
 import { useModal } from '../provider/ModalProvider';
 import { useAuthStore, useIsLoggedIn } from '../../store/authStore';
 import { useProfileImage } from '../../hook/useProfile';
+import { Menu } from 'lucide-react';
+import { useSidebarStore } from '../../store/sidebarStore';
+import clsx from 'clsx';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -26,15 +29,30 @@ const Header = () => {
   const toggleTheme = useThemeStore((s) => s.toggleTheme);
   const isLoggedIn = useIsLoggedIn();
   const clearAuth = useAuthStore((s) => s.clearAuth);
-  const { data: imageUrl } = useProfileImage();
+  const { data: imageUrl, isPending } = useProfileImage();
   const { open } = useModal();
+  const toggleSidebar = useSidebarStore((s) => s.toggle);
 
   return (
     <>
-      <div className="top-0 z-10 sticky flex w-full h-18.75 justify-between items-center-safe px-4 bg-background border-b border-b-border">
-        <Link className="text-3xl font-extrabold text-primary-blue" to={'/'}>
-          COK
-        </Link>
+      <div className="top-0 z-10 sticky flex w-full h-18.75 justify-between items-center-safe px-4 bg-background border-b border-b-border select-none">
+        <div className="flex items-center-safe gap-4">
+          {isLoggedIn && (
+            <Menu
+              className={clsx('hidden cursor-pointer', 'text-primary-blue', 'lg:block')}
+              onClick={isPending ? undefined : toggleSidebar}
+              size={24}
+              strokeWidth={3}
+            />
+          )}
+
+          <Link
+            className="text-3xl font-extrabold text-primary-blue"
+            to={isLoggedIn ? '/dashboard' : '/'}
+          >
+            COK
+          </Link>
+        </div>
 
         <div className="h-12 flex items-center-safe gap-4">
           <OutlineButton className="p-2.5" onClick={toggleTheme}>
@@ -44,6 +62,7 @@ const Header = () => {
           {isLoggedIn ? (
             <>
               <OutlineButton
+                className="hidden lg:inline"
                 onClick={() => {
                   clearAuth();
                   navigate('/');
@@ -54,7 +73,14 @@ const Header = () => {
               <ProfileIcon
                 imageUrl={imageUrl}
                 onClick={() => navigate('/my/profile')}
-                className="size-10"
+                className="size-10 hidden lg:flex"
+              />
+
+              <Menu
+                className={clsx('cursor-pointer', 'text-primary-blue', 'lg:hidden')}
+                onClick={toggleSidebar}
+                size={24}
+                strokeWidth={3}
               />
             </>
           ) : (

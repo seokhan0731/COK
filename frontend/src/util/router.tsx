@@ -9,6 +9,8 @@ import ProfilePage from '../page/mypage/ProfilePage';
 import EditProfilePage from '../page/mypage/EditProfilePage';
 import EditSkillPage from '../page/mypage/EditSkillPage';
 import RootLayout from '../layout/RootLayout';
+import PlanningPage from '../page/PlanningPage';
+import HubPage from '../page/HubPage';
 import DashboardPage from '../page/dashboard_page/DashboardPage';
 import HistoryPageResult from '../page/history/HIstoryResultPage';
 import HistoryListPage from '../page/history/HistoryListPage';
@@ -22,6 +24,7 @@ export const router = createBrowserRouter([
       { path: '/test', element: <TestPage /> },
       { path: '/kakao/oauth/loading', element: <KakaoOauthLoadingPage /> },
       { path: 'dashboard', element: <DashboardPage /> },
+      { path: '/hub', element: <HubPage /> },
       {
         path: '/my',
         element: <MypageLayout />,
@@ -39,6 +42,7 @@ export const router = createBrowserRouter([
           { path: '/history-list', element: <HistoryListPage /> },
         ],
       },
+        { path: '/planning', element: <PlanningPage /> },
     ],
   },
-]);
+])

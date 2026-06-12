@@ -17,7 +17,11 @@ const SkillRadarChart = ({ data }: SkillRadarChartProps) => {
   }));
 
   return (
-    <ResponsiveContainer width={'100%'} aspect={1}>
+    <ResponsiveContainer
+      width={'100%'}
+      height={'100%'}
+      initialDimension={{ width: 300, height: 300 }}
+    >
       <RadarChart data={chartData} outerRadius={'70%'}>
         <PolarGrid stroke="#e5e5e5" />
         <PolarAngleAxis dataKey={'label'} tick={{ fontSize: 14, fontWeight: '500' }} />

@@ -30,7 +30,7 @@ const JobCard = ({ jobId, rank, match }: JobCardProps) => {
       </div>
 
       <div className="flex flex-col items-center-safe">
-        <span className="text-primary-blue font-bold">{match}%</span>
+        <span className="text-primary-blue font-bold">{match.toFixed(0)}점</span>
         <span className="text-[12px]">적합도</span>
       </div>
     </div>

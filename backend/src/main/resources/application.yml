@@ -47,3 +47,7 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+
+# 깃허브 토큰
+github:
+  token: ${GITHUB_TOKEN}

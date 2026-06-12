@@ -1,6 +1,6 @@
 package com.cok.backend.domain.hub.dto;
 
-import com.cok.backend.domain.certification.MasterCertification;
+import com.cok.backend.domain.certification.entity.MasterCertification;
 import com.cok.backend.domain.job.MasterJob;
 
 import java.util.List;

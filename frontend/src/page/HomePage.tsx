@@ -25,10 +25,17 @@ import previewImage from '../asset/preview/Preview.png';
 import clsx from 'clsx';
 import { useModal } from '../component/provider/ModalProvider';
 import LoginModal from '../component/modal/LoginModal';
+import { useAuthStore, useIsLoggedIn } from '../store/authStore';
+import { useNavigate } from 'react-router';
 
 const HomePage = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { open } = useModal();
+<<<<<<< HEAD
+=======
+  const navigate = useNavigate();
+  const isLoggedIn = useIsLoggedIn();
+>>>>>>> develop
 
   return (
     <div className="flex flex-col">
@@ -70,7 +77,7 @@ const HomePage = () => {
               취업을 <span className={clsx('text-5xl text-primary-blue', 'lg:text-6xl')}>콕</span>
             </span>
             <span className="text-h1 font-bold">
-              진로를 <span className={clsx('text-5xl text-primary-blue', 'lg:text-6xl')}>COK</span>
+              진로를 <span className={clsx('text-5xl text-primary-blue ', 'lg:text-6xl ')}>COK</span>
             </span>
 
             <button
@@ -79,7 +86,17 @@ const HomePage = () => {
                 'hover:scale-105 transition-transform duration-300',
                 'dark:bg-primary-blue',
               )}
+<<<<<<< HEAD
               onClick={() => open(<LoginModal />)}
+=======
+              onClick={() => {
+                if (isLoggedIn) {
+                  navigate('/dashboard');
+                  return;
+                }
+                open(<LoginModal />);
+              }}
+>>>>>>> develop
             >
               <span className="text-sm font-medium leading-none text-font-white">시작하기</span>
             </button>
@@ -245,7 +262,8 @@ const HomePage = () => {
                   </div>
                 </div>
 
-                <button className="flex items-center-safe gap-3 p-2 mt-1 bg-card-background border border-border rounded-xl">
+                <button 
+                className="flex items-center-safe gap-3 p-2 mt-1 bg-card-background border border-border rounded-xl">
                   <div className="p-2 bg-primary-blue/10 border border-border rounded-full">
                     <FaCode className="text-h5" />
                   </div>
