@@ -36,10 +36,6 @@ export type SubmitSurveyRequest = {
   answers: Answer[];
 };
 
-export type SubmitSurveyResponse = {
-  session_id: number;
-};
-
 export type SubmitStacksRequest = {
   selected_stacks: TechSkill[];
   session_id: number;

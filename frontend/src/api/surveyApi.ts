@@ -4,7 +4,6 @@ import type {
   Repo,
   StacksResponse,
   SubmitSurveyRequest,
-  SubmitSurveyResponse,
   SubmitStacksRequest,
 } from '../type/surveyType';
 
@@ -40,8 +39,8 @@ export const getStacksApi = async (
 // 제출
 
 export const submitSurveyApi = async (payload: SubmitSurveyRequest): Promise<number> => {
-  const { data } = await authClient.post<number | SubmitSurveyResponse>('/survey/submit', payload);
-  return typeof data === 'number' ? data : data.session_id;
+  const { data } = await authClient.post<number>('/survey/submit', payload);
+  return data;
 };
 
 
