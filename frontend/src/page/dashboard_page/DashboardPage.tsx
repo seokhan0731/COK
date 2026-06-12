@@ -16,7 +16,7 @@ import { useGetUserName } from '../../hook/useProfile';
 
 /* Util */
 import clsx from 'clsx';
-import LoadingSpinner from '../mypage/_component/LoadingSpinner';
+import LoadingSpinner from '../../component/loading/LoadingSpinner';
 import {
   useUserSkill,
   useRecommendJob,
@@ -214,10 +214,7 @@ const DashboardPage = () => {
                     )}
                   >
                     <span className="font-semibold mb-1">아직 로드맵을 생성하지 않았어요 </span>
-                    <NavLink
-                      to={'/'} // TODO: 경로 수정 (주노)
-                      className="text-sm underline whitespace-nowrap"
-                    >
+                    <NavLink to={'/my/surveys'} className="text-sm underline whitespace-nowrap">
                       로드맵 생성하러 가기
                     </NavLink>
                   </div>

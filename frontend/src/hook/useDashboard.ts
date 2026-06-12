@@ -16,7 +16,6 @@ export const useUserSkill = () => {
     queryFn: getUserSkillApi,
     staleTime: 1000 * 60 * 5,
     enabled: isLoggedIn,
-    retry: 2,
   });
 };
 

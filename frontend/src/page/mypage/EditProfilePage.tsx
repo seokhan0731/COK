@@ -32,7 +32,7 @@ import { cn } from '../../util/cn';
 import { useProfile, useUpdateProfile } from '../../hook/useProfile';
 import PendingCard from './_component/PendingCard';
 import SelectSingle from './_component/SelectSingle';
-import LoadingSpinner from './_component/LoadingSpinner';
+import LoadingSpinner from '../../component/loading/LoadingSpinner';
 
 // #region Constant
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;

@@ -33,6 +33,7 @@ export const router = createBrowserRouter([
           { path: 'profile', element: <ProfilePage /> },
           { path: 'edit-profile', element: <EditProfilePage /> },
           { path: 'edit-skill', element: <EditSkillPage /> },
+          { path: 'surveys', element: <HistoryListPage /> },
         ],
       },
       {
@@ -42,7 +43,7 @@ export const router = createBrowserRouter([
           { path: '/history-list', element: <HistoryListPage /> },
         ],
       },
-        { path: '/planning', element: <PlanningPage /> },
+      { path: '/planning', element: <PlanningPage /> },
     ],
   },
-])
+]);

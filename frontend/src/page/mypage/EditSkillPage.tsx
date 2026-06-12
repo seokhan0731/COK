@@ -18,7 +18,7 @@ import { useProfile, useUpdateSkill } from '../../hook/useProfile';
 import PendingCard from './_component/PendingCard';
 import TextInput from './_component/TextInput';
 import { useNavigate } from 'react-router';
-import LoadingSpinner from './_component/LoadingSpinner';
+import LoadingSpinner from '../../component/loading/LoadingSpinner';
 import AsyncDebounce from '../../util/AsyncDebounce';
 import { checkGithubIDApi } from '../../api/profileApi';
 // #region Component

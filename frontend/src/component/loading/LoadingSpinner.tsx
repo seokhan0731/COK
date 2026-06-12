@@ -1,6 +1,6 @@
 /* src/page/mypage/_component/LoadingSpinner.tsx */
 
-import { cn } from '../../../util/cn';
+import { cn } from '../../util/cn';
 
 type LoadingSpinnerProps = {
   className?: string;
