@@ -9,6 +9,7 @@ import ProfilePage from '../page/mypage/ProfilePage';
 import EditProfilePage from '../page/mypage/EditProfilePage';
 import EditSkillPage from '../page/mypage/EditSkillPage';
 import RootLayout from '../layout/RootLayout';
+import HubPage from '../page/HubPage';
 import DashboardPage from '../page/dashboard_page/DashboardPage';
 
 export const router = createBrowserRouter([
@@ -30,5 +31,9 @@ export const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: '/hub',
+    element: <HubPage />,
   },
 ]);
