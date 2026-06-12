@@ -73,7 +73,7 @@ const Header = () => {
               <ProfileIcon
                 imageUrl={imageUrl}
                 onClick={() => navigate('/my/profile')}
-                className="size-10 hidden lg:inline"
+                className="size-10 hidden lg:flex"
               />
 
               <Menu

@@ -20,6 +20,7 @@ export const router = createBrowserRouter([
       { path: '/test', element: <TestPage /> },
       { path: '/kakao/oauth/loading', element: <KakaoOauthLoadingPage /> },
       { path: 'dashboard', element: <DashboardPage /> },
+      { path: '/hub', element: <HubPage /> },
       {
         path: '/my',
         element: <MypageLayout />,
@@ -31,9 +32,5 @@ export const router = createBrowserRouter([
         ],
       },
     ],
-  },
-  {
-    path: '/hub',
-    element: <HubPage />,
   },
 ]);

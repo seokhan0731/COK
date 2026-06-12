@@ -1,7 +1,7 @@
 /* src/page/dashboard_page/DashboardPage.tsx */
 
 /* Library */
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
 import { type AxiosError } from 'axios';
 
 /* Component */
@@ -25,6 +25,8 @@ import {
 } from '../../hook/useDashboard';
 import { ChevronRight } from 'lucide-react';
 import { useEffect } from 'react';
+import { useModal } from '../../component/provider/ModalProvider';
+import SurveyModal from '../../component/modal/survey/SurveyModal';
 
 const DashboardPage = () => {
   /* Hook */
@@ -33,6 +35,7 @@ const DashboardPage = () => {
   const { data: recommendJobs, isPending: isRecommendJobPending } = useRecommendJob();
   const { data: recommendPostings, isPending: isRecommendPostingPending } = useRecommendPosting();
   const { data: loadMapProgress, isPending: isLoadMapProgressPending } = useAllLoadMapProgress();
+  const { open } = useModal();
 
   /* Constant */
   const isLoading =
@@ -84,7 +87,7 @@ const DashboardPage = () => {
           </span>
 
           {/* TODO: useNavigate 사용해서 설문으로 넘기기 (주노) */}
-          <PrimaryButton className="flex items-center-safe" onClick={undefined}>
+          <PrimaryButton className="flex items-center-safe" onClick={() => open(<SurveyModal />)}>
             검사하기 <ChevronRight size={20} />
           </PrimaryButton>
 

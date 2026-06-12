@@ -19,6 +19,8 @@ import ProfileIcon from '../header/_component/ProfileIcon';
 import { useProfile } from '../../hook/useProfile';
 import { ATTEND_STATUS_META } from '../../type';
 import { useAuthStore } from '../../store/authStore';
+import SurveyModal from '../modal/survey/SurveyModal';
+import { useModal } from '../provider/ModalProvider';
 
 // #region Helper
 type SidebarLinkProps = {
@@ -76,6 +78,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { data: profile } = useProfile();
+  const { open } = useModal();
 
   // Effect
   useEffect(() => {
@@ -128,7 +131,13 @@ const Sidebar = () => {
             </SidebarLink>
 
             {/* TODO: 추추 경로 연결 (주노) */}
-            <SidebarLink icon={StickyNote} onClick={close}>
+            <SidebarLink
+              icon={StickyNote}
+              onClick={() => {
+                close();
+                open(<SurveyModal />);
+              }}
+            >
               설문 조사
             </SidebarLink>
           </div>

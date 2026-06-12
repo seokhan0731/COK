@@ -65,7 +65,7 @@ const ModalProvider = ({ children }: Props) => {
                 transition={{ duration: 0.3 }}
                 onClick={requestClose}
                 className={clsx(
-                  'fixed z-20 inset-0 flex justify-center-safe items-center-safe px-7.5',
+                  'fixed z-30 inset-0 flex justify-center-safe items-center-safe px-7.5',
                   'bg-black/50',
                 )}
               >

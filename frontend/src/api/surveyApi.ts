@@ -7,7 +7,6 @@ import type {
   SubmitStacksRequest,
 } from '../type/surveyType';
 
-
 export const getSurveyApi = async (signal?: AbortSignal): Promise<Question[]> => {
   const { data } = await authClient.get<{ questions: Question[] }>('/survey', { signal });
 
@@ -34,7 +33,6 @@ export const getStacksApi = async (
   };
 };
 
-
 /* =============================================================================================== */
 
 // 제출
@@ -45,8 +43,6 @@ export const submitSurveyApi = async (payload: SubmitSurveyRequest): Promise<num
   return data;
 };
 
-
 export const submitStacksApi = async (payload: SubmitStacksRequest): Promise<void> => {
   await authClient.post('/survey/stacks', payload);
-  
 };

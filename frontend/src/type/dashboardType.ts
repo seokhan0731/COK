@@ -1,4 +1,4 @@
-/* src/type/DashboardType.ts */
+/* src/type/dashboardType.ts */
 
 // #region Job
 const JOB_TYPE = [
