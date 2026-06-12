@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/home").permitAll()
                                 //에러가 403으로 마스킹되는 현상 방지
                                 .requestMatchers("/error").permitAll()
                                 //PreAuthorize로 필터링 하기 위해, 토큰 소유 유무만 판단

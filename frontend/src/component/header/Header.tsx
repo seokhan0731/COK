@@ -1,8 +1,6 @@
 // src/components/headers/Header.tsx
 
 /* React */
-
-import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 
 /* Library */
@@ -10,7 +8,7 @@ import LoginModal from '../modal/LoginModal';
 
 /* Component */
 import ProfileIcon from './_component/ProfileIcon';
-import { OutlineButton, PrimaryButton } from '../../page/mypage/_component/Button'; // 나중에 지줘야 함
+import { OutlineButton, PrimaryButton } from '../button/Button';
 
 /* Icon */
 import { FaMoon } from 'react-icons/fa6';
@@ -22,9 +20,6 @@ import { useModal } from '../provider/ModalProvider';
 import { useAuthStore, useIsLoggedIn } from '../../store/authStore';
 import { useProfileImage } from '../../hook/useProfile';
 
-/* Util */
-import clsx from 'clsx';
-
 const Header = () => {
   const navigate = useNavigate();
   const isDark = useThemeStore((s) => s.theme === 'Dark');
@@ -34,10 +29,6 @@ const Header = () => {
   const { data: imageUrl } = useProfileImage();
   const { open } = useModal();
 
-  /* Effect */
-  useEffect(() => {
-    console.log(imageUrl);
-  }, []);
   return (
     <>
       <div className="top-0 z-10 sticky flex w-full h-18.75 justify-between items-center-safe px-4 bg-background border-b border-b-border">
@@ -60,18 +51,14 @@ const Header = () => {
               >
                 로그아웃
               </OutlineButton>
-              <ProfileIcon imageUrl={imageUrl} onClick={() => navigate('/my/profile')} />
+              <ProfileIcon
+                imageUrl={imageUrl}
+                onClick={() => navigate('/my/profile')}
+                className="size-10"
+              />
             </>
           ) : (
-            <PrimaryButton
-              onClick={() =>
-                open(<LoginModal />, {
-                  cardClassName: 'items-center-safe justify-center-safe',
-                })
-              }
-            >
-              로그인
-            </PrimaryButton>
+            <PrimaryButton onClick={() => open(<LoginModal />)}>로그인</PrimaryButton>
           )}
         </div>
       </div>

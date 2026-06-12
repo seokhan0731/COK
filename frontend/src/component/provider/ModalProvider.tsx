@@ -4,13 +4,15 @@ import { AnimatePresence, motion } from 'framer-motion';
 import clsx from 'clsx';
 
 type ModalOptions = {
-  cardClassName?: string;
   backdrop?: boolean;
+  closeConfirm?: string;
+  onClose?: () => void;
 };
 
 type ModalContextValue = {
   open: (content: ReactNode, options?: ModalOptions) => void;
   close: () => void;
+  requestClose: () => void;
 };
 
 const ModalContext = createContext<ModalContextValue | null>(null);
@@ -24,19 +26,31 @@ export const useModal = () => {
 type Props = { children: ReactNode };
 
 const ModalProvider = ({ children }: Props) => {
+  /* State */
   const [state, setState] = useState<{
     content: ReactNode;
     options: ModalOptions;
   } | null>(null);
 
+  /* Handler */
   const open = useCallback(
     (content: ReactNode, options: ModalOptions = {}) => setState({ content, options }),
     [],
   );
+
   const close = useCallback(() => setState(null), []);
 
+  const requestClose = useCallback(() => {
+    const options = state?.options;
+    if (options?.closeConfirm && !window.confirm(options.closeConfirm)) {
+      return;
+    }
+    options?.onClose?.();
+    close();
+  }, [state, close]);
+
   return (
-    <ModalContext.Provider value={{ open, close }}>
+    <ModalContext.Provider value={{ open, close, requestClose }}>
       {children}
 
       {createPortal(
@@ -49,8 +63,11 @@ const ModalProvider = ({ children }: Props) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                onClick={close}
-                className="fixed z-20 inset-0 flex justify-center-safe items-center-safe bg-black/50"
+                onClick={requestClose}
+                className={clsx(
+                  'fixed z-20 inset-0 flex justify-center-safe items-center-safe px-7.5',
+                  'bg-black/50',
+                )}
               >
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -58,11 +75,6 @@ const ModalProvider = ({ children }: Props) => {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3 }}
                   onClick={(e) => e.stopPropagation()}
-                  className={clsx(
-                    'relative flex flex-col w-full max-w-xs border border-border rounded-lg bg-background p-6',
-                    'lg:max-w-sm',
-                    state.options.cardClassName,
-                  )}
                 >
                   {state.content}
                 </motion.div>

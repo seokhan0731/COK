@@ -21,10 +21,11 @@ import { NavLink, useNavigate } from 'react-router';
 import DefaultProfile from '../../component/profile/DefaultProfile';
 import { type ReactNode } from 'react';
 import { cn } from '../../util/cn';
-import { OutlineButton, PrimaryButton } from './_component/Button';
+import { OutlineButton, PrimaryButton } from '../../component/button/Button';
 import { useProfile } from '../../hook/useProfile';
 import PendingCard from './_component/PendingCard';
 import { ALGORITHM_META } from '../../type/profileType';
+import ProfileIcon from '../../component/header/_component/ProfileIcon';
 
 // #region TagCard
 
@@ -194,7 +195,7 @@ const ProfilePage = () => {
           )}
         >
           <div className="flex flex-row gap-4">
-            <DefaultProfile blueAreaClassName="lg:p-6" />
+            <ProfileIcon imageUrl={profile.imageUrl} className="size-20 cursor-auto lg:size-25" />
 
             <div className="flex flex-col justify-center-safe gap-2">
               <p className="text-h5 font-bold">{profile.name}</p>

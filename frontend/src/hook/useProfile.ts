@@ -2,13 +2,26 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
+  createProfileApi,
   getProfileAndSkillApi,
   updateProfileApi,
   updateSkillApi,
+  type CreateProfileRequestType,
   type GetProfileAndSkillResponseType,
   type UpdateProfileRequestType,
   type UpdateSkillRequest,
 } from '../api/profileApi';
+import { useIsLoggedIn, useUserRole } from '../store/authStore';
+
+export const useCreateProfile = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: CreateProfileRequestType) => createProfileApi(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
+    },
+  });
+};
 
 export const useProfile = () => {
   return useQuery<GetProfileAndSkillResponseType>({
@@ -18,12 +31,28 @@ export const useProfile = () => {
   });
 };
 
+export const useGetUserName = () => {
+  const isLoggedIn = useIsLoggedIn();
+
+  return useQuery({
+    queryKey: ['profile'],
+    queryFn: getProfileAndSkillApi,
+    staleTime: 1000 * 60 * 5,
+    select: (data) => data.name,
+    enabled: isLoggedIn,
+  });
+};
+
 export const useProfileImage = () => {
+  const isLoggedIn = useIsLoggedIn();
+  const userRole = useUserRole();
+
   return useQuery({
     queryKey: ['profile'],
     queryFn: getProfileAndSkillApi,
     staleTime: 1000 * 60 * 5,
     select: (data) => data.imageUrl,
+    enabled: isLoggedIn && userRole === 'USER',
   });
 };
 

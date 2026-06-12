@@ -34,3 +34,16 @@ kakao:
 jwt:
   secret: ${JWT_SECRET}
   duration: ${JWT_VALID_TIME}
+
+# aws 설정관련
+cloud:
+  aws:
+    s3:
+      bucket: ${AWS_BUCKET_NAME}
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false

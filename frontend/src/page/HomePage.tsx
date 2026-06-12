@@ -49,13 +49,13 @@ const HomePage = () => {
           {/* background effect */}
           <div
             className={clsx(
-              'absolute top-20 left-px -z-10 w-48 h-48 rounded-full opacity-20 blur-3xl bg-primary-blue',
+              'absolute top-20 left-px w-48 h-48 rounded-full opacity-20 blur-3xl bg-primary-blue',
               'lg:w-96 lg:h-96',
             )}
           />
           <div
             className={clsx(
-              'absolute bottom-20 right-px -z-10 w-48 h-48 rounded-full opacity-20 blur-3xl bg-primary-emerald',
+              'absolute bottom-20 right-px w-48 h-48 rounded-full opacity-20 blur-3xl bg-primary-emerald',
               'lg:w-96 lg:h-96',
             )}
           />
@@ -144,8 +144,8 @@ const HomePage = () => {
                   </div>
 
                   <div className="flex flex-col">
-                    <span className="text-h5 font-semibold">자격증 취득</span>
-                    <span className="">리눅스 마스터 취득</span>
+                    <span className="text-h5 font-semibold">알고리즘 역량</span>
+                    <span className="">백준 골드 달성</span>
                   </div>
 
                   <button className="p-2 ml-auto bg-primary-blue/10 border border-border rounded-full ">
@@ -267,8 +267,8 @@ const HomePage = () => {
                   </div>
 
                   <div className="flex flex-col">
-                    <span className="text-lg text-left font-semibold">자격증 취득</span>
-                    <span className="text-sm font-semibold">리눅스 마스터 취득</span>
+                    <span className="text-lg text-left font-semibold">알고리즘 역량</span>
+                    <span className="text-sm text-left font-semibold">백준 골드 달성</span>
                   </div>
 
                   <div className="p-2 ml-auto bg-primary-blue/10 border border-border rounded-full ">
