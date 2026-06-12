@@ -14,7 +14,7 @@ type Props = {
 };
 
 const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Props) => {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['github-stacks', selectedRepos],
     queryFn: ({ signal }) => getStacksApi(selectedRepos, signal),
   });
@@ -65,7 +65,7 @@ const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Pro
           type="button"
           onClick={() => toggle(skill)}
           className={[
-            'flex w-full h-17 items-center justify-center gap-3 rounded-2xl border px-6 py-3.5 text-left transition lg:w-70',
+            'flex w-full h-17 items-center justify-start gap-3 rounded-2xl border px-6 py-3.5 text-left transition lg:w-70',
             'bg-background dark:bg-neutral-700/60',
 
             isManual ? 'border-dashed' : 'border-black',
@@ -76,7 +76,7 @@ const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Pro
         >
           <span
             className={[
-              'flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition',
+              'flex h-5 w-5 shrink-0 items-center justify-start rounded-md border transition',
               active
                 ? 'border-primary-blue bg-primary-blue text-font-white'
                 : 'border-border bg-transparent text-transparent  dark:border-2',
@@ -123,7 +123,7 @@ const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Pro
         <div className="flex flex-col gap-5 mt-1">
           <section className="flex flex-col gap-2.5">
             <h3 className="text-sm font-semibold text-zinc-400">레포에서 추적한 스택</h3>
-            <ul className="flex flex-wrap justify-center gap-3 lg:gap-2.5">
+            <ul className="flex flex-wrap justify-start gap-3 lg:gap-2.5">
               {detected.map((skill) => renderSkill(skill, 'detected'))}
             </ul>
 
@@ -157,9 +157,11 @@ const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Pro
         <button
           type="button"
           onClick={handleSubmit}
+          disabled={isLoading || submitting}
           className={[
             'rounded-full px-9 py-3 text-sm font-bold transition',
             'bg-black text-font-white hover:bg-zinc-800 dark:bg-sub-blue dark:hover:bg-primary-blue',
+            'disabled:cursor-not-allowed disabled:opacity-50',
           ].join(' ')}
         >
           {submitting ? '제출 중…' : '제출'}
