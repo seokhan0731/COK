@@ -2,7 +2,6 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useQuery } from "@tanstack/react-query";
 import { FaCheck } from "react-icons/fa";
-import { FiLayers } from "react-icons/fi";
 import { getStacksApi, submitStacksApi } from "../../../api/surveyApi";
 import { techSkillLabel } from "../../../util/techSkillLabel";
 
@@ -16,8 +15,6 @@ type Props = {
 const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Props) => {
   const {
     data,
-    isLoading,
-    isError,
   } = useQuery({
     queryKey: ["github-stacks", selectedRepos],
     queryFn: ({ signal }) => getStacksApi(selectedRepos, signal),
@@ -38,7 +35,6 @@ const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Pro
   };
 
   const handleSubmit = async () => {
-    if (selected.length === 0) return;
     setSubmitting(true);
     setError(false);
     try {
@@ -53,11 +49,10 @@ const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Pro
 
   const detected = data?.detected ?? [];
   const additional = data?.additional ?? [];
-  const hasStacks = detected.length + additional.length > 0;
-  const canSubmit = selected.length > 0 && !submitting;
 
-  const renderSkill = (skill: string) => {
+  const renderSkill = (skill: string, variant: "detected" | "manual") => {
     const active = isSelected(skill);
+    const isManual = variant === "manual";
     return (
       <li key={skill} className="w-full lg:w-auto">
         <button
@@ -65,13 +60,14 @@ const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Pro
           onClick={() => toggle(skill)}
           className={[
             "flex w-full h-17 items-center justify-center gap-3 rounded-2xl border px-6 py-3.5 text-left transition lg:w-70",
-            "bg-background dark:bg-neutral-700/60 border-black",
+            "bg-background dark:bg-neutral-700/60",
+            
+            isManual ? "border-dashed" : "border-black",
             active
               ? "border-primary-blue ring-1 ring-primary-blue"
               : "border-border hover:border-primary-blue/40",
           ].join(" ")}
         >
-          {/* 체크박스 */}
           <span
             className={[
               "flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition",
@@ -83,7 +79,7 @@ const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Pro
             <FaCheck className="h-3 w-3" strokeWidth={3} />
           </span>
 
-          {/* 스택 이름 */}
+
           <span
             className={[
               "min-w-0 flex-1 truncate text-[15px] font-semibold",
@@ -92,6 +88,7 @@ const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Pro
           >
             {techSkillLabel(skill)}
           </span>
+
         </button>
       </li>
     );
@@ -115,7 +112,7 @@ const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Pro
             사용한 기술 스택을 선택해주세요
           </h2>
           <p className="mt-2 text-sm text-zinc-400">
-            선택한 레포에서 감지된 스택이에요. 실제로 사용한 것만 골라주세요.
+            선택한 레포에서 추적한 스택이에요. 실제로 사용한 것만 골라주세요.
           </p>
         </div>
 
@@ -123,40 +120,30 @@ const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Pro
           className="mt-5 overflow-y-auto px-6 pb-2 lg:px-8"
           style={{ height: 280, scrollbarGutter: "stable both-edges" }}
         >
-          {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="w-8 h-8 rounded-full border-4 border-sky-700/30 border-t-sky-700 animate-spin mt-25" />
-            </div>
-          ) : isError ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center text-sm text-zinc-400">
-              <FiLayers className="mb-3 h-8 w-8 opacity-40" />
-              기술 스택을 불러오지 못했어요.
-            </div>
-          ) : !hasStacks ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center text-sm text-zinc-400">
-              <FiLayers className="mb-3 h-8 w-8 opacity-40" />
-              감지된 기술 스택이 없어요.
-            </div>
-          ) : (
             <div className="flex flex-col gap-5 mt-1">
-              {detected.length > 0 && (
+              
                 <section className="flex flex-col gap-2.5">
-                  <h3 className="text-sm font-semibold text-zinc-400">감지된 스택</h3>
+                  <h3 className="text-sm font-semibold text-zinc-400">레포에서 추적한 스택</h3>
                   <ul className="flex flex-wrap justify-center gap-3 lg:gap-2.5">
-                    {detected.map(renderSkill)}
+                    {detected.map((skill) => renderSkill(skill, "detected"))}
                   </ul>
+
+                  {additional.length > 0 && (
+                    <span className="flex items-center justify-center py-10 text-zinc-400">추적된 스택이 없어요</span>
+                  )}
                 </section>
-              )}
+              
               {additional.length > 0 && (
                 <section className="flex flex-col gap-2.5">
-                  <h3 className="text-sm font-semibold text-zinc-400">직접 선택</h3>
+                  <span className="text-sm font-semibold text-zinc-400">
+                    추적이 불가능한 기술스택 직접 선택해주세요
+                  </span>
                   <ul className="flex flex-wrap justify-center gap-3 lg:gap-2.5">
-                    {additional.map(renderSkill)}
+                    {additional.map((skill) => renderSkill(skill, "manual"))}
                   </ul>
                 </section>
               )}
             </div>
-          )}
         </div>
 
         {error && (
@@ -169,12 +156,9 @@ const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Pro
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={!canSubmit}
             className={[
               "rounded-full px-9 py-3 text-sm font-bold transition",
-              canSubmit
-                ? "bg-black text-font-white hover:bg-zinc-800 dark:bg-sub-blue dark:hover:bg-primary-blue"
-                : "cursor-not-allowed bg-zinc-200 text-zinc-400 dark:bg-neutral-700 dark:text-neutral-500",
+              "bg-black text-font-white hover:bg-zinc-800 dark:bg-sub-blue dark:hover:bg-primary-blue"
             ].join(" ")}
           >
             {submitting ? "제출 중…" : "제출"}

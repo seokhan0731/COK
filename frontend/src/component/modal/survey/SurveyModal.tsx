@@ -42,6 +42,8 @@ const SurveyModal = ({ onClose }: Props) => {
     const isEssay = currentQuestion?.type === "ESSAY";
     const isLast = !!questions && currentIndex === questions.length - 1;
 
+    console.log(questions)
+
     const handleNextClick = async () => {
         if (!currentQuestion) return;
 
@@ -192,12 +194,10 @@ const SurveyModal = ({ onClose }: Props) => {
                     </div>
 
                     <div className="flex flex-col items-center gap-3 py-2">
-                        {/* TODO: 카테고리 뱃지 - competency_id로 프론트에서 매핑 후 복구 예정
-                        <span className="text-xs lg:text-sm font-medium text-primary-blue bg-primary-blue/10 px-3 py-1 rounded-full">
-                            {currentCategory}
-                        </span>
-                        */}
-                        <span className="text-lg lg:text-2xl font-semibold text-center mb-2">
+                  
+                        <span className={["font-semibold text-center mb-2",
+                            currentQuestion.content.length > 50 ? "text-base lg:text-lg" : "text-lg lg:text-2xl"
+                        ].join(" ")}>
                             {currentQuestion.content}
                         </span>
                     </div>

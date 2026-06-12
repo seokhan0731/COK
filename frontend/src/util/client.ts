@@ -10,7 +10,7 @@ export const githubClient = axios.create({
 
 /* 비회원 Backend API 요청 */
 export const publicClient = axios.create({
-  baseURL: env.VITE_MOCK_API_BASE_URL,
+  baseURL: env.API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -18,7 +18,7 @@ export const publicClient = axios.create({
 
 /* 회원 Backend API 요청 */
 export const authClient = axios.create({
-  baseURL: env.VITE_MOCK_API_BASE_URL,
+  baseURL: env.API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 });
 

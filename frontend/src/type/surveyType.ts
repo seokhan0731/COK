@@ -21,6 +21,8 @@ export type Repo = {
 
 export type TechSkill = string;
 
+export type UserTechSkill = string;
+
 export type StacksResponse = {
   detected: TechSkill[];
   additional: TechSkill[];

@@ -10,7 +10,8 @@ import type {
 
 export const getSurveyApi = async (signal?: AbortSignal): Promise<Question[]> => {
   const { data } = await authClient.get<{ questions: Question[] }>('/survey', { signal });
-  return data.questions;
+
+  return [...data.questions].sort((a, b) => a.question_id - b.question_id);
 };
 
 export const getGithubReposApi = async (signal?: AbortSignal): Promise<Repo[]> => {
@@ -40,10 +41,12 @@ export const getStacksApi = async (
 
 export const submitSurveyApi = async (payload: SubmitSurveyRequest): Promise<number> => {
   const { data } = await authClient.post<number>('/survey/submit', payload);
+  console.log(data);
   return data;
 };
 
 
 export const submitStacksApi = async (payload: SubmitStacksRequest): Promise<void> => {
   await authClient.post('/survey/stacks', payload);
+  
 };
