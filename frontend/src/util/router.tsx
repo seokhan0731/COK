@@ -35,9 +35,4 @@ export const router = createBrowserRouter([
         { path: '/planning', element: <PlanningPage /> },
     ],
   },
-
-  {
-    path: '/kakao/oauth/loading',
-    element: <KakaoOauthLoadingPage />,
-  },
 ])
