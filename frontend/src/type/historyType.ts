@@ -1,4 +1,4 @@
-import type { JobType, SkillType } from './d707/DashboardType';
+import type { JobType, SkillType } from './DashboardType';
 
 export interface Session {
     sessionId: number;

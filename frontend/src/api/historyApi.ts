@@ -1,6 +1,6 @@
 import { mockClient } from '../util/client';
 import type { SessionResultResponse, SessionHistory, SessionHistoryResponse } from '../type/historyType';
-import { JOB_META } from '../type/d707/DashboardType';
+import { JOB_META } from '../type/DashboardType';
 
 export const getSessionResultApi = async (
   signal?: AbortSignal,

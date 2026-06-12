@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getSessionHistoryApi } from "../../api/historyApi";
 
 import { getCompetencyIcon } from "./HIstoryResultPage";
-import { SKILL_META } from "../../type/d707/DashboardType";
+import { SKILL_META } from "../../type/DashboardType";
 
 const HistoryListPage = () => {
     const { data: historyList, isLoading } = useQuery({

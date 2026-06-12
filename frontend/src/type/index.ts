@@ -23,4 +23,4 @@ export {
   type CreateProfileFormDataType,
 } from './profileType';
 
-export { SKILL_META, type SkillType, type SkillDataType } from './d707/DashboardType';
+export { SKILL_META, type SkillType, type SkillDataType } from './DashboardType';

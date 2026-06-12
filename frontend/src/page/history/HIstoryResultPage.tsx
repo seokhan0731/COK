@@ -5,7 +5,7 @@ import { getSessionResultApi } from "../../api/historyApi";
 
 import { FaCheck, FaUsers, FaCode, FaDesktop, FaSitemap, FaChartLine, FaServer, FaStar } from "react-icons/fa";
 
-import type { SkillType } from "../../type/d707/DashboardType";
+import type { SkillType } from "../../type/DashboardType";
 
 export const getCompetencyIcon = (competency: SkillType) => {
     switch (competency) {
