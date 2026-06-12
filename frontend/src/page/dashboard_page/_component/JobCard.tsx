@@ -1,7 +1,7 @@
 /* src/page/dashboard_page/_component/JobCard.tsx */
 
 import clsx from 'clsx';
-import { JOB_META, type JobType } from '../../../type/DashboardType';
+import { JOB_META, type JobType } from '../../../type/dashboardType';
 
 type JobCardProps = {
   jobId: JobType;
