@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { authClient } from "../util/client";
+import { authClient, mockClient } from "../util/client";
 import type { RoadmapData } from "../type/planningType";
 
 /* 로드맵 조회 */
@@ -8,7 +8,7 @@ export const getPlanningApi = async (
 ): Promise<RoadmapData> => {
   console.log("[planning] GET /planning 요청 시작");
   try {
-    const res = await authClient.get<RoadmapData>("/planning", { signal });
+    const res = await mockClient.get<RoadmapData>("/planning", { signal });
     console.log("[planning] status:", res.status);
     console.log("[planning] 응답 data:", res.data);
     console.log("[planning] months 개수:", res.data?.months?.length ?? 0);
@@ -27,7 +27,7 @@ export const patchDetailApi = async (
 ): Promise<{ detail_id: number; is_completed: boolean }> => {
   console.log(`[planning] PATCH /planning/details/${detailId} 요청, is_completed:`, isCompleted);
   try {
-    const res = await authClient.patch<{ detail_id: number; is_completed: boolean }>(
+    const res = await mockClient.patch<{ detail_id: number; is_completed: boolean }>(
       `/planning/details/${detailId}`,
       { is_completed: isCompleted },
     );

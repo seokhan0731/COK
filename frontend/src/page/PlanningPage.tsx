@@ -1,4 +1,4 @@
-import HomeHeader from "../component/header/Header";
+
 import RoadmapCard from "../component/planning/roadmap";
 import ProgressCard from "../component/planning/progress";
 import clsx from 'clsx'
@@ -54,7 +54,6 @@ const PlanningPage = () => {
     if (!isLoggedIn) {
         return (
             <div className="flex flex-col">
-                <HomeHeader />
                 <div
                     className={clsx(
                         'absolute bottom-10 left-px -z-10 w-48 h-48 rounded-full opacity-10 blur-3xl bg-primary-blue',
@@ -81,7 +80,6 @@ const PlanningPage = () => {
         return(
 
             <div className="flex flex-col">
-                <HomeHeader />
                 <div
                     className={clsx(
                         'absolute bottom-10 left-px -z-10 w-48 h-48 rounded-full opacity-10 blur-3xl bg-primary-blue',
@@ -105,7 +103,6 @@ const PlanningPage = () => {
     
     return (
         <div className="flex flex-col">
-            <HomeHeader />
 
             <section 
                 className={clsx(
