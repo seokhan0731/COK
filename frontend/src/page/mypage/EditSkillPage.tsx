@@ -16,7 +16,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { OutlineButton, PrimaryButton } from '../../component/button/Button';
 import { useProfile, useUpdateSkill } from '../../hook/useProfile';
 import PendingCard from './_component/PendingCard';
-import TextInput from './_component/TextInput';
+import TextInput from '../../component/input/TextInput';
 import { useNavigate } from 'react-router';
 import LoadingSpinner from '../../component/loading/LoadingSpinner';
 import AsyncDebounce from '../../util/AsyncDebounce';

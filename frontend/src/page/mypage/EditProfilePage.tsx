@@ -11,7 +11,7 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { OutlineButton, PrimaryButton } from '../../component/button/Button';
-import TextInput from './_component/TextInput';
+import TextInput from '../../component/input/TextInput';
 import {
   LucideCake,
   LucideGraduationCap,
