@@ -76,7 +76,7 @@ const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Pro
         >
           <span
             className={[
-              'flex h-5 w-5 shrink-0 items-center justify-start rounded-md border transition',
+              'flex h-5 w-5 shrink-0 items-center-safe justify-center-safe rounded-md border transition',
               active
                 ? 'border-primary-blue bg-primary-blue text-font-white'
                 : 'border-border bg-transparent text-transparent  dark:border-2',
@@ -127,7 +127,7 @@ const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Pro
               {detected.map((skill) => renderSkill(skill, 'detected'))}
             </ul>
 
-            {additional.length > 0 && (
+            {additional.length === 0 && (
               <span className="flex items-center justify-center py-10 text-zinc-400">
                 추적된 스택이 없어요
               </span>
@@ -164,7 +164,7 @@ const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Pro
             'disabled:cursor-not-allowed disabled:opacity-50',
           ].join(' ')}
         >
-          {submitting ? '제출 중…' : '제출'}
+          제출
         </button>
       </div>
     </div>
