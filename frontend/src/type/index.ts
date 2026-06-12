@@ -7,6 +7,7 @@ export {
   CERTIFICATE_META,
   ISSUER_LABEL,
   ATTEND_STATUS_META,
+  ATTEND_STATUS_OPTION,
   GRADE_TYPE,
   GRADE_META,
   ALGORITHM_OPTION,
@@ -18,4 +19,8 @@ export {
   type EditProfileFormDataType,
   type EditSkillFormDataType,
   type GradeType,
+  type ImageStateType,
+  type CreateProfileFormDataType,
 } from './profileType';
+
+export { SKILL_META, type SkillType, type SkillDataType } from './dashboardType';

@@ -25,7 +25,7 @@
   --color-border-dark: #404040; /* Neutral-700 */
 
   /* font */
-  --font-sans: 'Roboto', sans-serif;
+  --font-sans: 'Pretendard', sans-serif;
 }
 
 @layer base {
@@ -36,6 +36,10 @@
 
   button {
     @apply text-sm text-font-black cursor-pointer;
+  }
+
+  input {
+    @apply outline-none;
   }
 
   .url {

@@ -80,7 +80,7 @@ const SelectMulti = <T extends string | number = string>({
               {value.length}/{max}
             </span>
           )}
-          <LucideChevronDown size={16} className="opacity-50" />
+          <LucideChevronDown size={16} className="ml-auto opacity-50" />
         </div>
       </PopoverPrimitive.Trigger>
 
