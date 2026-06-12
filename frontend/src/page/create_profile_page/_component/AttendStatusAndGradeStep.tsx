@@ -9,13 +9,15 @@ import {
   type CreateProfileFormDataType,
   type GradeType,
 } from '../../../type';
-import { Controller } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
 import SingleSelect from '../../../component/select/SingleSelect';
 import ButtonSelect from '../../../component/select/ButtonSelect';
 import { LucideBookOpen, LucideLayers } from 'lucide-react';
 
 const AttendStatusAndGradeStep = () => {
   const { control, setValue } = useFormContext<CreateProfileFormDataType>();
+  const attendStatus = useWatch<CreateProfileFormDataType>({ control, name: 'attendStatus' });
+  const isGraduation = attendStatus === 'GRADUATION';
 
   return (
     <>
@@ -58,6 +60,7 @@ const AttendStatusAndGradeStep = () => {
                 options={GRADE_OPTION}
                 value={field.value}
                 onValueChange={field.onChange}
+                disabled={isGraduation}
               />
             )}
           />

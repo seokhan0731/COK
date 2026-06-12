@@ -1,7 +1,7 @@
 package com.cok.backend.domain.user;
 
-import com.cok.backend.domain.certification.MasterCertification;
-import com.cok.backend.domain.certification.MasterCertificationRepository;
+import com.cok.backend.domain.certification.entity.MasterCertification;
+import com.cok.backend.domain.certification.repository.MasterCertificationRepository;
 import com.cok.backend.domain.user.dto.*;
 import com.cok.backend.domain.user.entity.User;
 import com.cok.backend.domain.user.entity.UserCertification;

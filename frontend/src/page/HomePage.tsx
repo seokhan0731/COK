@@ -25,10 +25,14 @@ import previewImage from '../asset/preview/Preview.png';
 import clsx from 'clsx';
 import { useModal } from '../component/provider/ModalProvider';
 import LoginModal from '../component/modal/LoginModal';
+import { useAuthStore, useIsLoggedIn } from '../store/authStore';
+import { useNavigate } from 'react-router';
 
 const HomePage = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { open } = useModal();
+  const navigate = useNavigate();
+  const isLoggedIn = useIsLoggedIn();
 
   return (
     <div className="flex flex-col">
@@ -79,7 +83,13 @@ const HomePage = () => {
                 'hover:scale-105 transition-transform duration-300',
                 'dark:bg-primary-blue',
               )}
-              onClick={() => open(<LoginModal />)}
+              onClick={() => {
+                if (isLoggedIn) {
+                  navigate('/dashboard');
+                  return;
+                }
+                open(<LoginModal />);
+              }}
             >
               <span className="text-sm font-medium leading-none text-font-white">시작하기</span>
             </button>

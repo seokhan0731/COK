@@ -23,4 +23,10 @@ export {
   type CreateProfileFormDataType,
 } from './profileType';
 
-export { SKILL_META, type SkillType, type SkillDataType } from './dashboardType';
+export {
+  SKILL_META,
+  type SkillType,
+  type SkillDataType,
+  type JobDataType,
+  type PostingDataType,
+} from './dashboardType';
