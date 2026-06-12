@@ -26,7 +26,7 @@ type GetRecommendJobResponseType = {
 };
 
 export const getRecommendJobApi = async (): Promise<GetRecommendJobResponseType> => {
-  const { data } = await mockClient.get<GetRecommendJobResponseType>('user/recommend/job');
+  const { data } = await authClient.get<GetRecommendJobResponseType>('user/recommend/job');
   console.log(data);
   return data;
 };
