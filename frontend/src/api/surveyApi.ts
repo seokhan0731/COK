@@ -40,9 +40,10 @@ export const getStacksApi = async (
 // 제출
 
 export const submitSurveyApi = async (payload: SubmitSurveyRequest): Promise<number> => {
-  const { data } = await authClient.post<SubmitSurveyResponse>('/survey/submit', payload);
-  return data.session_id;
+  const { data } = await authClient.post<number | SubmitSurveyResponse>('/survey/submit', payload);
+  return typeof data === 'number' ? data : data.session_id;
 };
+
 
 export const submitStacksApi = async (payload: SubmitStacksRequest): Promise<void> => {
   await authClient.post('/survey/stacks', payload);
