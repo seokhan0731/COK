@@ -1,7 +1,7 @@
 /* src/api/homeApi.ts */
 
 /* Util */
-import { mockClient } from '../util/client';
+import { publicClient } from '../util/client';
 
 /* Type */
 export type MemberInfoType = {
@@ -15,6 +15,6 @@ export type GetMemberInfoResponseType = {
 };
 
 export const GetMemberInfoApi = async (): Promise<GetMemberInfoResponseType> => {
-  const { data } = await mockClient.get<GetMemberInfoResponseType>('/home');
+  const { data } = await publicClient.get<GetMemberInfoResponseType>('/home');
   return data;
 };

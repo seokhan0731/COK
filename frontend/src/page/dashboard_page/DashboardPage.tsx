@@ -24,6 +24,7 @@ import {
   useAllLoadMapProgress,
 } from '../../hook/useDashboard';
 import { ChevronRight } from 'lucide-react';
+import { useEffect } from 'react';
 
 const DashboardPage = () => {
   /* Hook */
@@ -42,6 +43,12 @@ const DashboardPage = () => {
     isLoadMapProgressPending;
 
   /* Effect */
+  useEffect(() => {
+    console.log('skill:', isSkillPending);
+    console.log('recommendJobs:', isRecommendJobPending);
+    console.log('Posting:', isRecommendPostingPending);
+    console.log('loadMap:', isLoadMapProgressPending);
+  }, [isSkillPending, isRecommendJobPending, isRecommendPostingPending, isRecommendPostingPending]);
 
   /* 예외 상태에 따른 분기 처리 */
   if (isLoading)
