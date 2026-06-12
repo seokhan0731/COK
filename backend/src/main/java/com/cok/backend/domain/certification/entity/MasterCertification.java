@@ -1,4 +1,4 @@
-package com.cok.backend.domain.certification;
+package com.cok.backend.domain.certification.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

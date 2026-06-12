@@ -1,6 +1,6 @@
 package com.cok.backend.domain.user.entity;
 
-import com.cok.backend.domain.certification.MasterCertification;
+import com.cok.backend.domain.certification.entity.MasterCertification;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

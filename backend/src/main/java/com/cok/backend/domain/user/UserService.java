@@ -1,12 +1,14 @@
 package com.cok.backend.domain.user;
 
-import com.cok.backend.domain.certification.MasterCertification;
-import com.cok.backend.domain.certification.MasterCertificationRepository;
+import com.cok.backend.domain.certification.entity.MasterCertification;
+import com.cok.backend.domain.certification.repository.MasterCertificationRepository;
 import com.cok.backend.domain.user.dto.*;
 import com.cok.backend.domain.user.entity.User;
 import com.cok.backend.domain.user.entity.UserCertification;
+import com.cok.backend.domain.user.enums.ImageEditStatus;
 import com.cok.backend.domain.user.repository.UserCertificationRepository;
 import com.cok.backend.domain.user.repository.UserRepository;
+import com.cok.backend.global.s3.S3Service;
 import com.cok.backend.global.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,7 @@ public class UserService {
     private final UserCertificationRepository userCertificationRepository;
     private final MasterCertificationRepository masterCertificationRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final S3Service s3Service;
 
     /**
      * 프로필 생성 및 Role_USER jwt 토큰 발급
@@ -41,11 +44,10 @@ public class UserService {
     public ProfileCreateResponse createProfile(ProfileCreateRequest request, Long userId) {
         User userWhoRequest = findUserOrThrow(userId);
 
-        //TODO: 추후 스토리지 업로드 로직 필요
-        String mockImageUrl = convertImageToUrl(request.imageFile());
+        String imageUrl = convertImageToUrl(request.imageFile());
 
         userWhoRequest.createProfile(request.name(), request.birthYear(),
-                request.currentGrade(), request.attendStatus(), mockImageUrl,
+                request.currentGrade(), request.attendStatus(), imageUrl,
                 request.algorithmLevel(), request.githubId());
 
         saveUserCertifications(request.certifications(), userWhoRequest);
@@ -82,13 +84,13 @@ public class UserService {
     public BasicInformEditResponse editBasicInform(BasicInformEditRequest request, Long userId) {
         User userWhoRequest = findUserOrThrow(userId);
 
-        String finalImageUrl = convertImageToUrl(request.imageFile());
+        String imageUrl = controlImmageEdition(request, userWhoRequest);
 
         userWhoRequest.editBasicInform(request.name(),
                 request.birthYear(),
                 request.currentGrade(),
                 request.attendStatus(),
-                finalImageUrl);
+                imageUrl);
 
         return new BasicInformEditResponse(userWhoRequest.getName(),
                 userWhoRequest.getBirthYear(),
@@ -124,12 +126,12 @@ public class UserService {
     }
 
     private String convertImageToUrl(MultipartFile imageFile) {
-        String imageUrl = "http://localhost:8080";
-        if (imageFile != null && !imageFile.isEmpty()) {
-            String imageName = imageFile.getOriginalFilename();
-            log.info("프론트가 보낸 프로필 이미지 파일명: {}", imageName);
-            imageUrl = "https://images." + imageName;
+        if (imageFile == null || imageFile.isEmpty()) {
+            return null;
         }
+        String imageUrl = s3Service.upload(imageFile, "profile");
+        log.info("업로된 프로필 이미지 url: {}", imageUrl);
+
         return imageUrl;
     }
 
@@ -171,4 +173,23 @@ public class UserService {
         return userCertifications;
     }
 
+    private String controlImmageEdition(BasicInformEditRequest request, User userWhoRequest) {
+        String imageUrl = null;
+        //디폴트 이미지
+        if (request.imageState() == ImageEditStatus.INIT) {
+            s3Service.delete(userWhoRequest.getProfileImage());
+        }
+        //이미지 추가 및 수정
+        else if (request.imageState() == ImageEditStatus.CHANGE) {
+            if (userWhoRequest.getProfileImage() != null) {
+                s3Service.delete(userWhoRequest.getProfileImage());
+            }
+            imageUrl = convertImageToUrl(request.imageFile());
+        }
+        //유지
+        else {
+            imageUrl = userWhoRequest.getProfileImage();
+        }
+        return imageUrl;
+    }
 }
