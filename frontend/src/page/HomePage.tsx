@@ -31,11 +31,8 @@ import { useNavigate } from 'react-router';
 const HomePage = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { open } = useModal();
-<<<<<<< HEAD
-=======
   const navigate = useNavigate();
   const isLoggedIn = useIsLoggedIn();
->>>>>>> develop
 
   return (
     <div className="flex flex-col">
@@ -86,9 +83,6 @@ const HomePage = () => {
                 'hover:scale-105 transition-transform duration-300',
                 'dark:bg-primary-blue',
               )}
-<<<<<<< HEAD
-              onClick={() => open(<LoginModal />)}
-=======
               onClick={() => {
                 if (isLoggedIn) {
                   navigate('/dashboard');
@@ -96,7 +90,6 @@ const HomePage = () => {
                 }
                 open(<LoginModal />);
               }}
->>>>>>> develop
             >
               <span className="text-sm font-medium leading-none text-font-white">시작하기</span>
             </button>

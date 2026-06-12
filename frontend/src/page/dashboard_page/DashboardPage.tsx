@@ -1,16 +1,8 @@
 /* src/page/dashboard_page/DashboardPage.tsx */
 
 /* Library */
-<<<<<<< HEAD
-import { NavLink } from 'react-router';
-
-/* Type & constant */
-import { type SkillDataType } from './_component/chartType';
-import type { JobType } from '../../type/DashboardType';
-=======
 import { NavLink, useNavigate } from 'react-router';
 import { type AxiosError } from 'axios';
->>>>>>> develop
 
 /* Component */
 import SkillRadarChart from './_component/SkillRadarChart';
