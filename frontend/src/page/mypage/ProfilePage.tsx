@@ -219,7 +219,7 @@ const ProfilePage = () => {
             <OutlineButton className="w-full" onClick={() => navigate('../edit-profile')}>
               기본 정보 수정
             </OutlineButton>
-            <PrimaryButton className="w-full" disabled>
+            <PrimaryButton className="w-full" onClick={() => navigate('/dashboard')}>
               분석 결과 보기
             </PrimaryButton>
           </div>
