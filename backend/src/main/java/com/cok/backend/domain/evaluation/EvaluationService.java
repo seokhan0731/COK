@@ -1,5 +1,7 @@
 package com.cok.backend.domain.evaluation;
 
+import com.cok.backend.domain.ai.AiService;
+import com.cok.backend.domain.ai.dto.EmbeddingResponse;
 import com.cok.backend.domain.competency.CompetencyPolicy;
 import com.cok.backend.domain.competency.CompetencyRepository;
 import com.cok.backend.domain.competency.MasterCompetency;
@@ -50,6 +52,7 @@ public class EvaluationService {
     private final CompetencyResultRepository competencyResultRepository;
     private final JobResultRepository jobResultRepository;
     private final MasterJobRepository masterJobRepository;
+    private final AiService aiService;
 
 
     private static final double MAX_BAEKJOON_SCORE = 100.0;
@@ -188,10 +191,12 @@ public class EvaluationService {
     }
 
     private UserResponse buildWhenEssay(AnswerItem answer, SurveySession newSession, Question questionProxy) {
+        EmbeddingResponse response = aiService.getEmbeddingByFastapi(answer.essayAnswer());
         return UserResponse.builder()
                 .session(newSession)
                 .question(questionProxy)
                 .essayAnswer(answer.essayAnswer())
+                .vector(response.vector())
                 .build();
     }
 
@@ -376,7 +381,7 @@ public class EvaluationService {
      * 경험, 역량 점수에 따른 가중치 및 총합 직무 점수는 해당 Entity에 위임
      * 값 저장시, 마스터 직무의 id만 빌려쓰면 되기에 프록시 사용
      *
-     * @param newSession 해당하는 설문 회차
+     * @param newSession       해당하는 설문 회차
      * @param competencyScores 계산된 원역량점수
      * @param experienceScores 계산된 원경험점수
      */
