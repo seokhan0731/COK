@@ -107,4 +107,35 @@ public class ResultResponseService {
         }
         return items;
     }
+
+    public ResultOverviewResponse getResultOverview(Long sessionId) {
+        SurveySession session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new IllegalArgumentException("설문 회차가 존재하지 않습니다."));
+        ResultSessionItem sessionItem = new ResultSessionItem(sessionId,
+                session.getUser().getId(), session.getCreatedAt());
+
+        List<CompetencyResult> results = session.getCompetencyResults();
+        List<CompetencyItem> competencies = buildCompetencyItems(results);
+
+        List<JobResult> top3Job = jobResultRepository.findTop3BySessionIdOrderByTotalScoreDesc(sessionId);
+        List<JobItem> jobs = buildJobItems(top3Job);
+
+        List<PostingResult> top3Postings = postingResultRepository.findBySessionIdWithPostings(sessionId);
+        List<ResultPostingItem> postings = buildResultPostingItems(top3Postings);
+
+        return new ResultOverviewResponse(sessionItem, competencies, jobs, postings);
+    }
+
+    private List<ResultPostingItem> buildResultPostingItems(List<PostingResult> results) {
+        List<ResultPostingItem> items = new ArrayList<>();
+
+        for (PostingResult result : results) {
+            JobPosting posting = result.getPost();
+            String companyName = posting.getCompanyName();
+            String title = posting.getTitle();
+            float percentageScore = (float) (result.getSimilarity() * PERCENTAGE_CORRECTION);
+            items.add(new ResultPostingItem(posting.getId(), companyName, title, posting.getMainTasks(), percentageScore));
+        }
+        return items;
+    }
 }
