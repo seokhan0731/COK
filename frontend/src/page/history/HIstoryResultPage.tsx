@@ -88,8 +88,8 @@ const HistoryPageResult = () => {
                 <span className="text-sm text-font-gray">추천 직무</span>
                 <div className="flex flex-wrap gap-2">
                     {data.job_results.map((j) => (
-                        <div key={j.job_id} className="flex items-center gap-1.5 bg-blue-100 dark:bg-blue-900/40 rounded-full px-4 py-2">
-                            <span className="text-sm font-medium text-blue-700 dark:text-blue-300">{JOB_META[j.job_id].label}</span>
+                        <div key={j.jobId} className="flex items-center gap-1.5 bg-blue-100 dark:bg-blue-900/40 rounded-full px-4 py-2">
+                            <span className="text-sm font-medium text-blue-700 dark:text-blue-300">{JOB_META[j.jobId].label}</span>
                             <span className="text-xs font-bold text-white bg-blue-500 rounded-full px-2 py-0.5">{Math.round(j.match)}%</span>
                         </div>
                     ))}

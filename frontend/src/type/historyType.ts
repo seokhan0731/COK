@@ -10,7 +10,7 @@ export interface Session {
 export type CompetencyResult = SkillDataType;
 
 export interface JobResult {
-    job_id: JobType;
+    jobId: JobType;
     match: number;
 }
 
@@ -31,7 +31,7 @@ export interface SessionResultResponse {
 
 export interface SessionHistoryRaw {
     session_id: number;
-    created_at: string;
+    createdAt: string;
     top_job: JobType;
     top_competency: SkillType;
     top_score: number;
