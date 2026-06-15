@@ -1,22 +1,22 @@
 // frontend/src/components/cards/MacCard.tsx
 
-import clsx from 'clsx'
-import type { ReactNode } from 'react'
-import { cn } from '../../util/cn'
+import clsx from 'clsx';
+import type { ReactNode } from 'react';
+import { cn } from '../../util/cn';
 
 type Props = {
-  title?: string
-  className?: string
-  children: ReactNode
-}
+  title?: string;
+  className?: string;
+  children: ReactNode;
+};
 
 const MacCard = ({ title, className, children }: Props) => {
   return (
     <div
       className={cn(
-        className,
         'flex flex-col rounded-md border border-border shadow-md overflow-hidden',
         'hover:scale-105 transition-transform duration-300',
+        className,
       )}
     >
       <div
@@ -44,7 +44,7 @@ const MacCard = ({ title, className, children }: Props) => {
 
       <div className="flex flex-col p-6 bg-primary-blue/10">{children}</div>
     </div>
-  )
-}
+  );
+};
 
-export default MacCard
+export default MacCard;
