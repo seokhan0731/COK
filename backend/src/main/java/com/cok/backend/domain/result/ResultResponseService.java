@@ -16,8 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -138,4 +141,64 @@ public class ResultResponseService {
         }
         return items;
     }
+
+    public ResultListResponse getResultList(Long userId) {
+        List<SurveySession> sessions = sessionRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        List<Long> sessionIds = buildSessionIds(sessions);
+        List<JobResult> jobs = jobResultRepository.findTop1BySessionIds(sessionIds);
+        List<CompetencyResult> competencies = competencyResultRepository.findTop1BySessionIds(sessionIds);
+
+        Map<Long, CompetencyResult> competencyMapForList = buildCompetencyForLIst(competencies);
+        Map<Long, JobResult> jobMapForList = buildJobForLIst(jobs);
+
+        List<ResultListItem> results = new ArrayList<>();
+        for (SurveySession session : sessions) {
+            Long sessionId = session.getId();
+            LocalDateTime createdAt = session.getCreatedAt();
+
+            JobResult jobResult = jobMapForList.get(sessionId);
+            CompetencyResult competencyResult = competencyMapForList.get(sessionId);
+
+            Long jobId = null;
+            if (jobResult != null) {
+                jobId = jobMapForList.get(sessionId).getJob().getId();
+            }
+
+            CompetencyPolicy topCompetency = null;
+            double percentageScore = 0.0;
+            if (competencyResult != null) {
+                topCompetency = CompetencyPolicy.from(competencyResult.getCompetency().getId());
+                percentageScore = competencyResult.getTotalScore() * PERCENTAGE_CORRECTION;
+            }
+
+            results.add(new ResultListItem(sessionId, createdAt, jobId, topCompetency, percentageScore));
+        }
+        return new ResultListResponse(results);
+    }
+
+    private List<Long> buildSessionIds(List<SurveySession> sessions) {
+        List<Long> sessionIds = new ArrayList<>();
+        for (SurveySession session : sessions) {
+            sessionIds.add(session.getId());
+        }
+
+        return sessionIds;
+    }
+
+    private Map<Long, CompetencyResult> buildCompetencyForLIst(List<CompetencyResult> results) {
+        Map<Long, CompetencyResult> resultMap = new HashMap<>();
+        for (CompetencyResult result : results) {
+            resultMap.put(result.getSession().getId(), result);
+        }
+        return resultMap;
+    }
+
+    private Map<Long, JobResult> buildJobForLIst(List<JobResult> results) {
+        Map<Long, JobResult> resultMap = new HashMap<>();
+        for (JobResult result : results) {
+            resultMap.put(result.getSession().getId(), result);
+        }
+        return resultMap;
+    }
+
 }

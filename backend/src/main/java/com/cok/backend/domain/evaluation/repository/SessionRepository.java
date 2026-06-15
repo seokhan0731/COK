@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface SessionRepository extends JpaRepository<SurveySession, Long> {
@@ -15,4 +16,6 @@ public interface SessionRepository extends JpaRepository<SurveySession, Long> {
             "JOIN FETCH cr.competency " +
             "WHERE s.id = :sessionID")
     Optional<SurveySession> findByIdWithResults(@Param("sessionID") Long sessionID);
+
+    List<SurveySession> findByUserIdOrderByCreatedAtDesc(Long userId);
 }
