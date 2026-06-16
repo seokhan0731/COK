@@ -1,4 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from sqlalchemy.orm import Session
+from sqlalchemy import text
+from database import get_db
 
 app = FastAPI(
     title="COK_data-pipeline",
@@ -10,3 +13,12 @@ app = FastAPI(
 @app.get("/")
 def read_root():
     return {"status": "서버 동작?", "message": "FastAPI is running"}
+
+
+@app.get("/check")
+def check_db_connection(db: Session = Depends(get_db)):
+    try:
+        db.execute(text("SELECT 1"))
+        return True
+    except Exception as e:
+        return False

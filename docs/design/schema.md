@@ -137,7 +137,6 @@
 |:---|:-----------------|:-----------|:-------|
 | PK | posting_id       | 고유 ID      | 자동 증가  |
 |    | wanted_id        | 원티드내 공고 ID | UNIQUE |
-| FK | job_id           | 마스터 직무 ID  |        |
 |    | company_name     | 회사 이름      |        |
 |    | title            | 공고 제목      |        |
 |    | main_tasks       | 수행 업무      | 원본     |
@@ -145,6 +144,14 @@
 |    | preferred_points | 우대 사항      | 원본     |
 |    | embedding_vector | 벡터값        |        |
 |    | posting_url      | 공고 원본 주소   |        |
+
+#### -4. PostJobMapping
+
+| 구분 | 컬럼명         | 설명         | 비고    |
+|:---|:------------|:-----------|:------|
+| PK | post_job_id | 고유 ID      | 자동 증가 |
+| FK | post_id     | 원티드내 공고 ID |       |
+| FK | job_id      | 마스터 직무 ID  |       |
 
 ---
 
