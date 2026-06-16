@@ -43,14 +43,13 @@ const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Pro
     try {
       await submitStacksApi({ selected_stacks: selected, session_id: sessionId });
       onComplete();
+      close();
+      window.location.href = `/history-result/${sessionId}`;
     } catch {
       setError(true);
     } finally {
       setSubmitting(false);
     }
-
-    close();
-    window.location.reload();
   };
 
   const detected = data?.detected ?? [];
@@ -127,7 +126,7 @@ const StackSelectModal = ({ selectedRepos, sessionId, onClose, onComplete }: Pro
               {detected.map((skill) => renderSkill(skill, 'detected'))}
             </ul>
 
-            {additional.length === 0 && (
+            {detected.length === 0 && (
               <span className="flex items-center justify-center py-10 text-zinc-400">
                 추적된 스택이 없어요
               </span>

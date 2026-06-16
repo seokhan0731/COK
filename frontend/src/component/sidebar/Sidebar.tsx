@@ -139,6 +139,10 @@ const Sidebar = () => {
             >
               설문 조사
             </SidebarLink>
+
+            <SidebarLink to ="/history-result" icon={ClipboardList} onClick={close}>
+              설문 결과
+            </SidebarLink>
           </div>
 
           <div className="flex justify-between p-3 gap-4 bg-card-background border border-border rounded-2xl">

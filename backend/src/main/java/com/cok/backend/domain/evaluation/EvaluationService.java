@@ -1,5 +1,8 @@
 package com.cok.backend.domain.evaluation;
 
+import com.cok.backend.domain.ai.AiService;
+import com.cok.backend.domain.ai.dto.EmbeddingResponse;
+import com.cok.backend.domain.ai.dto.PostRecommendRequest;
 import com.cok.backend.domain.competency.CompetencyPolicy;
 import com.cok.backend.domain.competency.CompetencyRepository;
 import com.cok.backend.domain.competency.MasterCompetency;
@@ -50,6 +53,7 @@ public class EvaluationService {
     private final CompetencyResultRepository competencyResultRepository;
     private final JobResultRepository jobResultRepository;
     private final MasterJobRepository masterJobRepository;
+    private final AiService aiService;
 
 
     private static final double MAX_BAEKJOON_SCORE = 100.0;
@@ -188,10 +192,12 @@ public class EvaluationService {
     }
 
     private UserResponse buildWhenEssay(AnswerItem answer, SurveySession newSession, Question questionProxy) {
+        EmbeddingResponse response = aiService.getEmbeddingByFastapi(answer.essayAnswer());
         return UserResponse.builder()
                 .session(newSession)
                 .question(questionProxy)
                 .essayAnswer(answer.essayAnswer())
+                .vector(response.vector())
                 .build();
     }
 
@@ -280,9 +286,10 @@ public class EvaluationService {
      * 불러온 후, 정책에 따라 계산 후, 경험 점수와 함께 각 직무 점수 계산 및 저장
      *
      * @param request 사용자가 선택한 기술 스택과 해당 설문회차
+     * @return 파이썬의 공고 추천 로직의 dto
      */
     @Transactional
-    public void submitAndCalculateJob(TechSkillSelect request) {
+    public PostRecommendRequest submitAndCalculateJob(TechSkillSelect request) {
         //경험 점수
         Map<JobPolicy, Double> experienceScores = calculateExperienceScore(request);
 
@@ -292,8 +299,14 @@ public class EvaluationService {
         Map<JobPolicy, Double> competencyScoresByJob = calculateCompetencyScoreForJob(competencyScoresById);
 
         //주어진 가중치에 따른 직무 점수 계산 및 저장
-        calculateAndSaveJobResults(session, competencyScoresByJob, experienceScores);
+        Long recommendJobId = calculateAndSaveJobResults(session, competencyScoresByJob, experienceScores);
 
+        float[] userVector = responseRepository.findBySessionIdWithVector(session.getId())
+                .map(UserResponse::getVector)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회차의 주관식 응답 벡터가 존재하지 않습니다."));
+
+
+        return new PostRecommendRequest(userVector, recommendJobId);
     }
 
     private Map<JobPolicy, Double> calculateExperienceScore(TechSkillSelect request) {
@@ -376,20 +389,31 @@ public class EvaluationService {
      * 경험, 역량 점수에 따른 가중치 및 총합 직무 점수는 해당 Entity에 위임
      * 값 저장시, 마스터 직무의 id만 빌려쓰면 되기에 프록시 사용
      *
-     * @param newSession 해당하는 설문 회차
+     * @param newSession       해당하는 설문 회차
      * @param competencyScores 계산된 원역량점수
      * @param experienceScores 계산된 원경험점수
+     * @return 공고 추천을 위한 1순위 직무 고유 id
      */
-    private void calculateAndSaveJobResults(SurveySession newSession,
+    private Long calculateAndSaveJobResults(SurveySession newSession,
                                             Map<JobPolicy, Double> competencyScores, Map<JobPolicy, Double> experienceScores) {
 
         List<JobResult> results = new ArrayList<>();
 
+        Long maxScoreJobId = 0L;
+        double maxTotalScore = 0;
         for (JobPolicy policy : JobPolicy.values()) {
             double experienceScore = experienceScores.getOrDefault(policy, 0.0);
             double competencyScore = competencyScores.getOrDefault(policy, 0.0);
 
+
             Long jobId = policy.getJobId();
+
+
+            if (maxTotalScore < experienceScore + competencyScore) {
+                maxTotalScore = experienceScore + competencyScore;
+                maxScoreJobId = jobId;
+            }
+
             MasterJob jobProxy = masterJobRepository.getReferenceById(jobId);
 
             JobResult newResult = JobResult.builder()
@@ -402,5 +426,7 @@ public class EvaluationService {
             results.add(newResult);
         }
         jobResultRepository.saveAll(results);
+
+        return maxScoreJobId;
     }
 }

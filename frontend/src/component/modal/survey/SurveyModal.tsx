@@ -1,4 +1,3 @@
-import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import { useState } from 'react';
@@ -9,7 +8,6 @@ import { getSurveyApi, submitSurveyApi } from '../../../api/surveyApi';
 import SurveyCard from '../../card/survey_card/SurveyCard';
 import RepoSelectModal from './RepoSelectModal';
 import StackSelectModal from './StackSelectModal';
-import { useIsLoggedIn } from '../../../store/authStore';
 
 type Props = {
   onClose?: () => void;
@@ -27,7 +25,6 @@ const SurveyModal = ({ onClose }: Props) => {
     queryFn: ({ signal }) => getSurveyApi(signal),
   });
 
-  const isLoggedIn = useIsLoggedIn();
 
   const [step, setStep] = useState<'survey' | 'repo' | 'stack'>('survey');
   const [selectedRepos, setSelectedRepos] = useState<string[]>([]);
@@ -106,7 +103,6 @@ const SurveyModal = ({ onClose }: Props) => {
   };
 
   const handleRepoComplete = (repos: string[]) => {
-    // 레포 제출 + 스택 감지는 stack 단계의 getStacksApi(POST /survey/repos)가 함께 처리한다.
     setSelectedRepos(repos);
     setStep('stack');
   };

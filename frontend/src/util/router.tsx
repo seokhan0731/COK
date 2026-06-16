@@ -36,14 +36,14 @@ export const router = createBrowserRouter([
           { path: 'surveys', element: <HistoryListPage /> },
         ],
       },
+        { path: '/planning', element: <PlanningPage /> },
       {
         element: <HistoryLayout />,
         children: [
-          { path: '/history-result', element: <HistoryPageResult /> },
+          { path: '/history-result/:sessionId?', element: <HistoryPageResult /> },
           { path: '/history-list', element: <HistoryListPage /> },
         ],
       },
-      { path: '/planning', element: <PlanningPage /> },
     ],
   },
 ]);
