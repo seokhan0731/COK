@@ -7,15 +7,20 @@ type PostingCardProps = {
   match: number;
   companyName: string;
   title: string;
+  url?: string;
 };
 
-const PostingCard = ({ rank, match, companyName, title }: PostingCardProps) => {
+const PostingCard = ({ rank, match, companyName, title, url }: PostingCardProps) => {
   return (
     <div
       className={clsx(
         'w-full flex flex-col gap-3 px-4 py-3',
         'bg-card-background border border-border rounded-xl',
+        url && 'cursor-pointer',
       )}
+      onClick={() => {
+        if (url) window.open(url);
+      }}
     >
       {/* 상단: 순위 배지 + 적합도 */}
       <div className="flex justify-between items-center-safe">
@@ -33,7 +38,7 @@ const PostingCard = ({ rank, match, companyName, title }: PostingCardProps) => {
             'bg-primary-blue/10 text-primary-blue rounded-full',
           )}
         >
-          {match}%
+          {match.toFixed(0)}%
         </span>
       </div>
 

@@ -133,11 +133,11 @@ const DashboardPage = () => {
         <section className={clsx('flex flex-col p-6 gap-1')}>
           <div className="flex flex-row">
             <span className="text-h3 font-bold">
-              안녕하세요, <span className="text-h3 text-primary-blue">OOO님</span>
+              안녕하세요, <span className="text-h3 text-primary-blue">{name}님</span>
             </span>
             <span className="text-h3">👋</span>
           </div>
-          <span>현재 분석된 OOO님의 역량 지표 및 직무 공고입니다.</span>
+          <span>현재 분석된 {name}님의 역량 지표 및 직무 공고입니다.</span>
         </section>
 
         <div className={clsx('grid grid-cols-1 gap-5 items-start', 'lg:grid-cols-[3fr_4fr]')}>
@@ -238,9 +238,10 @@ const DashboardPage = () => {
                   <PostingCard
                     key={index}
                     rank={index + 1}
-                    match={item.match}
+                    match={item.math}
                     companyName={item.companyName}
                     title={item.title}
+                    url={item.postingUrl}
                   />
                 ))}
               </div>

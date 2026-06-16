@@ -76,7 +76,7 @@ const EditProfilePageV2 = () => {
       },
       onError: (error) => {
         console.error(error);
-        alert('수정에 실패하였습니다.');
+        alert('수정에 실패하였습니다. 다시 시도해주세요.');
       },
     });
   };

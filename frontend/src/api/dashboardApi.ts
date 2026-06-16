@@ -39,7 +39,7 @@ type GetRecommendPostingResponseType = {
 };
 
 export const getRecommendPostingApi = async (): Promise<GetRecommendPostingResponseType> => {
-  const { data } = await mockClient.get<GetRecommendPostingResponseType>('user/recommend/posting');
+  const { data } = await authClient.get<GetRecommendPostingResponseType>('user/recommend/posting');
   console.log(data);
   return data;
 };
