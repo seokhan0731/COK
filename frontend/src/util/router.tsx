@@ -6,7 +6,6 @@ import TestPage from '../page/TestPage';
 import KakaoOauthLoadingPage from '../page/KakaoOauthLoadingPage';
 import MypageLayout from '../layout/MypageLayout';
 import ProfilePage from '../page/mypage/ProfilePage';
-import EditProfilePage from '../page/mypage/EditProfilePage';
 import EditSkillPage from '../page/mypage/EditSkillPage';
 import RootLayout from '../layout/RootLayout';
 import PlanningPage from '../page/PlanningPage';
@@ -15,6 +14,7 @@ import DashboardPage from '../page/dashboard_page/DashboardPage';
 import HistoryPageResult from '../page/history/HIstoryResultPage';
 import HistoryListPage from '../page/history/HistoryListPage';
 import HistoryLayout from '../layout/HistoryLayout';
+import EditProfilePage from '../page/mypage/EditProfilePage';
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +33,7 @@ export const router = createBrowserRouter([
           { path: 'profile', element: <ProfilePage /> },
           { path: 'edit-profile', element: <EditProfilePage /> },
           { path: 'edit-skill', element: <EditSkillPage /> },
+          { path: 'surveys', element: <HistoryListPage /> },
         ],
       },
         { path: '/planning', element: <PlanningPage /> },
@@ -45,4 +46,4 @@ export const router = createBrowserRouter([
       },
     ],
   },
-])
+]);

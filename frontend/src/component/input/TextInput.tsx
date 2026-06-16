@@ -1,15 +1,10 @@
 /* src/page/mypage/_component/TextInput.tsx */
 
-import type { InputHTMLAttributes, Ref } from 'react';
-import { cn } from '../../../util/cn';
+import { type ComponentProps } from 'react';
+import { cn } from '../../util/cn';
 
-type TextInputProps = InputHTMLAttributes<HTMLInputElement> & {
-  ref?: Ref<HTMLInputElement>;
-};
-
-const TextInput = ({ ref, className, ...props }: TextInputProps) => (
+const TextInput = ({ className, ...props }: ComponentProps<'input'>) => (
   <input
-    ref={ref}
     className={cn(
       'px-4 py-2',
       'bg-background border border-border rounded-md outline-none',

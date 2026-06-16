@@ -19,13 +19,14 @@ import CardDeck from '../component/card/CardDeck';
 import { CompetencyDummyData } from '../dummy/HomeDummy';
 
 /* Preview Image */
-import previewImage from '../asset/preview/Preview.png';
+import preview_light from '../asset/preview/preview_light.png';
+import preview_dark from '../asset/preview/preview_dark.png';
 
 /* Util */
 import clsx from 'clsx';
 import { useModal } from '../component/provider/ModalProvider';
 import LoginModal from '../component/modal/LoginModal';
-import { useAuthStore, useIsLoggedIn } from '../store/authStore';
+import { useIsLoggedIn } from '../store/authStore';
 import { useNavigate } from 'react-router';
 
 const HomePage = () => {
@@ -74,7 +75,8 @@ const HomePage = () => {
               취업을 <span className={clsx('text-5xl text-primary-blue', 'lg:text-6xl')}>콕</span>
             </span>
             <span className="text-h1 font-bold">
-              진로를 <span className={clsx('text-5xl text-primary-blue ', 'lg:text-6xl ')}>COK</span>
+              진로를{' '}
+              <span className={clsx('text-5xl text-primary-blue ', 'lg:text-6xl ')}>COK</span>
             </span>
 
             <button
@@ -255,8 +257,7 @@ const HomePage = () => {
                   </div>
                 </div>
 
-                <button 
-                className="flex items-center-safe gap-3 p-2 mt-1 bg-card-background border border-border rounded-xl">
+                <button className="flex items-center-safe gap-3 p-2 mt-1 bg-card-background border border-border rounded-xl">
                   <div className="p-2 bg-primary-blue/10 border border-border rounded-full">
                     <FaCode className="text-h5" />
                   </div>
@@ -342,7 +343,12 @@ const HomePage = () => {
 
             <AnimatedDiv className="w-full max-w-2xl" scrollRef={scrollRef}>
               <MacCard className="w-full" title="DashBoard Service">
-                <img src={previewImage} alt="" />
+                <img src={preview_light} alt="dashboard preview image" className="dark:hidden" />
+                <img
+                  src={preview_dark}
+                  alt="dashboard preview image"
+                  className="hidden dark:block"
+                />
               </MacCard>
             </AnimatedDiv>
           </div>

@@ -6,8 +6,8 @@
 import { NavLink, useLocation, useNavigate } from 'react-router';
 
 /* Icon */
-import { LogOut, LucideBox, StickyNote, ClipboardList, type LucideIcon } from 'lucide-react';
-import { LayoutDashboard, User2, X, } from 'lucide-react';
+import { LogOut, LucideBox, LucideRoute, StickyNote, type LucideIcon } from 'lucide-react';
+import { LayoutDashboard, User2, X } from 'lucide-react';
 
 /* Store */
 import { useSidebarStore } from '../../store/sidebarStore';
@@ -121,16 +121,15 @@ const Sidebar = () => {
             <SidebarLink to="/dashboard" icon={LayoutDashboard} onClick={close}>
               대시보드
             </SidebarLink>
-
             <SidebarLink to="/my/profile" icon={User2} onClick={close}>
               마이페이지
             </SidebarLink>
-            {/* TODO: 추추 경로 연결 (주노) */}
             <SidebarLink to="/hub" icon={LucideBox} onClick={close}>
               역량 허브
             </SidebarLink>
-
-            {/* TODO: 추추 경로 연결 (주노) */}
+            <SidebarLink to="/planning" icon={LucideRoute} onClick={close}>
+              플래닝
+            </SidebarLink>
             <SidebarLink
               icon={StickyNote}
               onClick={() => {

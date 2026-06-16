@@ -3,20 +3,36 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getSessionResultApi, getSessionHistoryApi } from "../../api/historyApi";
 
-import { FaCheck, FaUsers, FaCode, FaDesktop, FaSitemap, FaChartLine, FaServer, FaStar } from "react-icons/fa";
+import {
+  FaCheck,
+  FaUsers,
+  FaCode,
+  FaDesktop,
+  FaSitemap,
+  FaChartLine,
+  FaServer,
+  FaStar,
+} from 'react-icons/fa';
 
 import { SKILL_META, JOB_META, type SkillType } from "../../type/dashboardType";
 
 export const getCompetencyIcon = (competency: SkillType) => {
-    switch (competency) {
-        case "COLLABORATION": return <FaUsers />;
-        case "IMPLEMENTATION": return <FaCode />;
-        case "CS_KNOWLEDGE": return <FaDesktop />;
-        case "ALGORITHM": return <FaSitemap />;
-        case "TREND": return <FaChartLine />;
-        case "INFRA_STRUCTURE": return <FaServer />;
-        default: return <FaStar />;
-    }
+  switch (competency) {
+    case 'COLLABORATION':
+      return <FaUsers />;
+    case 'IMPLEMENTATION':
+      return <FaCode />;
+    case 'CS_KNOWLEDGE':
+      return <FaDesktop />;
+    case 'ALGORITHM':
+      return <FaSitemap />;
+    case 'TREND':
+      return <FaChartLine />;
+    case 'INFRA_STRUCTURE':
+      return <FaServer />;
+    default:
+      return <FaStar />;
+  }
 };
 
 const HistoryPageResult = () => {
@@ -55,16 +71,15 @@ const HistoryPageResult = () => {
 
     if (!data) return null;
 
+  if (isLoading) {
     return (
-        <div className="flex flex-col gap-4 px-4 sm:px-6 mt-6">
+      <div className="flex w-full h-full items-center justify-center py-80">
+        <div className="w-8 h-8 rounded-full border-4 border-sky-700/30 border-t-sky-700 animate-spin" />
+      </div>
+    );
+  }
 
-            <div className="flex flex-col items-center gap-2 py-8 bg-card-background rounded-2xl border border-border">
-                <div className="w-16 h-16 bg-linear-100 from-sky-300 to-green-400 rounded-full flex justify-center items-center">
-                    <FaCheck className="w-10 h-10 text-white" />
-                </div>
-                <span className="text-lg font-semibold mt-1 text-font-black">설문이 완료되었습니다.</span>
-                <span className="text-sm text-font-gray text-center px-4">객관식 주관식 응답을 기반으로 역량과 추천 결과를 분석했습니다.</span>
-            </div>
+  if (!data) return null;
 
             <div className="bg-card-background rounded-2xl border border-border p-5 flex flex-col gap-4">
                 <span className="text-sm text-font-gray">카테고리별 역량</span>
@@ -95,6 +110,9 @@ const HistoryPageResult = () => {
                     ))}
                 </div>
             </div>
+          ))}
+        </div>
+      </div>
 
             <div className="bg-card-background rounded-2xl border border-border p-5 flex flex-col gap-3">
                 <span className="text-sm text-font-gray">매칭 공고</span>
@@ -115,6 +133,9 @@ const HistoryPageResult = () => {
                     ))}
                 </div>
             </div>
+          ))}
+        </div>
+      </div>
 
             <div className="flex flex-col sm:flex-row justify-center gap-3 py-6">
                 <button
@@ -130,8 +151,23 @@ const HistoryPageResult = () => {
                     로드맵 확인
                 </button>
             </div>
+          ))}
         </div>
-    );
+      </div>
+
+      <div className="flex flex-col sm:flex-row justify-center gap-3 py-6">
+        <button
+          onClick={() => navigate('/history-list')}
+          className="px-6 py-3 rounded-xl border border-border text-sm font-medium text-font-black"
+        >
+          이력 조회
+        </button>
+        <button className="px-6 py-3 rounded-xl bg-primary-blue text-white text-sm font-medium hover:bg-sub-blue transition-colors">
+          로드맵 확인
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default HistoryPageResult;

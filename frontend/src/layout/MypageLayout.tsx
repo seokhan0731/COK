@@ -38,6 +38,7 @@ const MypageLayout = () => {
         <MyPageNavLink to="profile">나의 프로필</MyPageNavLink>
         <MyPageNavLink to="edit-profile">프로필 수정</MyPageNavLink>
         <MyPageNavLink to="edit-skill">역량 수정</MyPageNavLink>
+        <MyPageNavLink to="surveys">이력 조회</MyPageNavLink>
       </div>
 
       <div className={clsx('flex-1 flex justify-center-safe p-4', 'lg:p-12')}>

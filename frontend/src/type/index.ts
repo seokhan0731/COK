@@ -1,6 +1,26 @@
-export type { Competency, CompetencyData } from './chart';
+/* src/type/index.ts */
+
+// #region ==================== User ====================
 
 export { USER_ROLE_TYPE, type UserRoleType } from './userType';
+
+// #endregion
+
+// #region ==================== Dashboard ====================
+
+export type { Competency, CompetencyData } from './chart';
+
+export {
+  SKILL_META,
+  type SkillType,
+  type SkillDataType,
+  type JobDataType,
+  type PostingDataType,
+} from './dashboardType';
+
+// #endregion
+
+// #region ==================== Profile ====================
 
 export {
   ATTEND_STATUS_TYPE,
@@ -23,10 +43,4 @@ export {
   type CreateProfileFormDataType,
 } from './profileType';
 
-export {
-  SKILL_META,
-  type SkillType,
-  type SkillDataType,
-  type JobDataType,
-  type PostingDataType,
-} from './dashboardType';
+// #endregion

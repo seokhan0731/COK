@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { cn } from '../../util/cn';
 
 import { useHomeMemberInfo } from '../../hook/useHome';
-import LoadingSpinner from '../../page/mypage/_component/LoadingSpinner';
+import LoadingSpinner from '../loading/LoadingSpinner';
 
 const CARD_W = 200;
 const CARD_H = 280;

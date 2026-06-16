@@ -1,6 +1,6 @@
 /* src/page/mypage/_component/PendingCard.tsx */
 
-import LoadingSpinner from './LoadingSpinner';
+import LoadingSpinner from '../../../component/loading/LoadingSpinner';
 
 const PendingCard = () => {
   return (

@@ -1,7 +1,7 @@
 /* src/page/dashboard_page/DashboardPage.tsx */
 
 /* Library */
-import { NavLink, useNavigate } from 'react-router';
+import { NavLink } from 'react-router';
 import { type AxiosError } from 'axios';
 
 /* Component */
@@ -16,7 +16,7 @@ import { useGetUserName } from '../../hook/useProfile';
 
 /* Util */
 import clsx from 'clsx';
-import LoadingSpinner from '../mypage/_component/LoadingSpinner';
+import LoadingSpinner from '../../component/loading/LoadingSpinner';
 import {
   useUserSkill,
   useRecommendJob,
@@ -133,11 +133,11 @@ const DashboardPage = () => {
         <section className={clsx('flex flex-col p-6 gap-1')}>
           <div className="flex flex-row">
             <span className="text-h3 font-bold">
-              안녕하세요, <span className="text-h3 text-primary-blue">{name}님</span>
+              안녕하세요, <span className="text-h3 text-primary-blue">OOO님</span>
             </span>
             <span className="text-h3">👋</span>
           </div>
-          <span>현재 분석된 조인흠님의 역량 지표 및 직무 공고입니다.</span>
+          <span>현재 분석된 OOO님의 역량 지표 및 직무 공고입니다.</span>
         </section>
 
         <div className={clsx('grid grid-cols-1 gap-5 items-start', 'lg:grid-cols-[3fr_4fr]')}>
@@ -214,10 +214,7 @@ const DashboardPage = () => {
                     )}
                   >
                     <span className="font-semibold mb-1">아직 로드맵을 생성하지 않았어요 </span>
-                    <NavLink
-                      to={'/'} // TODO: 경로 수정 (주노)
-                      className="text-sm underline whitespace-nowrap"
-                    >
+                    <NavLink to={'/my/surveys'} className="text-sm underline whitespace-nowrap">
                       로드맵 생성하러 가기
                     </NavLink>
                   </div>

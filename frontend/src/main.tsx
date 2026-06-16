@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router';
 import { router } from './util/router.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import axios from 'axios';
 
 /* Font */
 import '@fontsource/pretendard/400.css';
@@ -19,6 +20,12 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
+      retry: (failureCount, error) => {
+        if (axios.isAxiosError(error) && error.response && error.response.status < 500) {
+          return false;
+        }
+        return failureCount < 1;
+      },
     },
   },
 });
