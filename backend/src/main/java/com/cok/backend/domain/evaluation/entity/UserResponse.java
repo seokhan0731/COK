@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,14 +34,18 @@ public class UserResponse {
     @Column(name = "subjective_answer", columnDefinition = "Text")
     private String essayAnswer;
 
-    //TODO 주관식 벡터값 필드 추가 필요
+    @Column(name = "subjective_vector", columnDefinition = "vector(768)")
+    @JdbcTypeCode(SqlTypes.VECTOR)
+    private float[] vector;
 
     @Builder
-    public UserResponse(SurveySession session, Question question, Option option, String essayAnswer) {
+    public UserResponse(SurveySession session, Question question, Option option, String essayAnswer,
+                        float[] vector) {
         this.session = session;
         this.question = question;
         this.option = option;
         this.essayAnswer = essayAnswer;
+        this.vector = vector;
     }
 
 }

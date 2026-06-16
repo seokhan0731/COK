@@ -3,14 +3,14 @@ package com.cok.backend.domain.result;
 import com.cok.backend.domain.competency.CompetencyPolicy;
 import com.cok.backend.domain.evaluation.entity.SurveySession;
 import com.cok.backend.domain.evaluation.repository.SessionRepository;
-import com.cok.backend.domain.result.dto.CompetencyItem;
-import com.cok.backend.domain.result.dto.CompetencyResultResponse;
-import com.cok.backend.domain.result.dto.JobItem;
-import com.cok.backend.domain.result.dto.JobResultResponse;
+import com.cok.backend.domain.job_posting.entity.JobPosting;
+import com.cok.backend.domain.result.dto.*;
 import com.cok.backend.domain.result.entity.CompetencyResult;
 import com.cok.backend.domain.result.entity.JobResult;
+import com.cok.backend.domain.result.entity.PostingResult;
 import com.cok.backend.domain.result.repository.CompetencyResultRepository;
 import com.cok.backend.domain.result.repository.JobResultRepository;
+import com.cok.backend.domain.result.repository.PostingResultRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,6 +29,7 @@ public class ResultResponseService {
     private final JobResultRepository jobResultRepository;
 
     private static final double PERCENTAGE_CORRECTION = 100.0;
+    private final PostingResultRepository postingResultRepository;
 
     /**
      * DB에서 가장 최근의 측정된 역량 조회 및 반환
@@ -81,6 +82,28 @@ public class ResultResponseService {
             double percentageScore = result.getTotalScore() * PERCENTAGE_CORRECTION;
 
             items.add(new JobItem(jobId, percentageScore));
+        }
+        return items;
+    }
+
+    public PostingResultResponse getLatestPostingResult(Long userId) {
+        SurveySession latestSession = getLatestSessionOrThrow(userId);
+
+        List<PostingResult> results = postingResultRepository.findBySessionIdWithPostings(latestSession.getId());
+        List<PostingItem> items = buildPostingItems(results);
+        return new PostingResultResponse(items);
+    }
+
+    private List<PostingItem> buildPostingItems(List<PostingResult> results) {
+        List<PostingItem> items = new ArrayList<>();
+
+        for (PostingResult result : results) {
+            JobPosting posting = result.getPost();
+            String companyName = posting.getCompanyName();
+            String title = posting.getTitle();
+            String url = posting.getPostingUrl();
+            float percentageScore = (float) (result.getSimilarity() * PERCENTAGE_CORRECTION);
+            items.add(new PostingItem(companyName, title, percentageScore, url));
         }
         return items;
     }

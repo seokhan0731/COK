@@ -1,5 +1,9 @@
 package com.cok.backend.domain.survey;
 
+import com.cok.backend.domain.ai.AiClient;
+import com.cok.backend.domain.ai.AiService;
+import com.cok.backend.domain.ai.dto.PostRecommendRequest;
+import com.cok.backend.domain.ai.dto.PostRecommendResponse;
 import com.cok.backend.domain.evaluation.EvaluationService;
 import com.cok.backend.domain.evaluation.dto.AnswersRequest;
 import com.cok.backend.domain.github.GithubService;
@@ -22,6 +26,8 @@ public class SurveyController {
     private final SurveyService surveyService;
     private final EvaluationService evaluationService;
     private final GithubService githubService;
+    private final AiService aiService;
+    private final AiClient aiClient;
 
     @GetMapping
     @PreAuthorize("hasRole('USER')")
@@ -56,8 +62,13 @@ public class SurveyController {
 
     @PostMapping("/stacks")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> submitSkills(@RequestBody TechSkillSelect request) {
-        evaluationService.submitAndCalculateJob(request);
+    public ResponseEntity<Void> submitSkillsAndRecommendPost(@RequestBody TechSkillSelect request) {
+        PostRecommendRequest requestForPython = evaluationService.submitAndCalculateJob(request);
+
+        //파이썬 서버 요청 보내기(공고 추천 후 저장)
+        PostRecommendResponse response = aiClient.getRecommend(requestForPython);
+        aiService.loadPostRecommend(response, request.sessionId());
+
         return ResponseEntity.ok().build();
     }
 
