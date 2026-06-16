@@ -1,0 +1,204 @@
+package com.cok.backend.domain.result;
+
+import com.cok.backend.domain.competency.CompetencyPolicy;
+import com.cok.backend.domain.evaluation.entity.SurveySession;
+import com.cok.backend.domain.evaluation.repository.SessionRepository;
+import com.cok.backend.domain.job_posting.entity.JobPosting;
+import com.cok.backend.domain.result.dto.*;
+import com.cok.backend.domain.result.entity.CompetencyResult;
+import com.cok.backend.domain.result.entity.JobResult;
+import com.cok.backend.domain.result.entity.PostingResult;
+import com.cok.backend.domain.result.repository.CompetencyResultRepository;
+import com.cok.backend.domain.result.repository.JobResultRepository;
+import com.cok.backend.domain.result.repository.PostingResultRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+@Transactional(readOnly = true)
+public class ResultResponseService {
+    private final CompetencyResultRepository competencyResultRepository;
+    private final SessionRepository sessionRepository;
+    private final JobResultRepository jobResultRepository;
+
+    private static final double PERCENTAGE_CORRECTION = 100.0;
+    private final PostingResultRepository postingResultRepository;
+
+    /**
+     * DB에서 가장 최근의 측정된 역량 조회 및 반환
+     * 역량값이 정의된 CompetencyPolicy가 있기에, join을 사용하기보단, 프록시의 역량 id를 이용
+     *
+     * @param userId 조회 요청핞 사용자 id
+     * @return skill: value형태의 모든 역량 값을 담은 리스트
+     */
+    public CompetencyResultResponse getLatestCompetencyResult(Long userId) {
+        SurveySession latestSession = getLatestSessionOrThrow(userId);
+
+        List<CompetencyResult> results = latestSession.getCompetencyResults();
+        List<CompetencyItem> items = buildCompetencyItems(results);
+
+        return new CompetencyResultResponse(items);
+    }
+
+    private SurveySession getLatestSessionOrThrow(Long userId) {
+        return sessionRepository.findFirstByUserIdOrderByCreatedAtDesc(userId)
+                .orElseThrow(() -> new IllegalArgumentException("설문 회차가 존재하지 않습니다."));
+    }
+
+    private List<CompetencyItem> buildCompetencyItems(List<CompetencyResult> results) {
+        List<CompetencyItem> items = new ArrayList<>();
+
+        for (CompetencyResult result : results) {
+            Long competencyId = result.getCompetency().getId();
+            CompetencyPolicy competency = CompetencyPolicy.from(competencyId);
+            double percentageScore = result.getTotalScore() * PERCENTAGE_CORRECTION;
+
+            items.add(new CompetencyItem(competency, percentageScore));
+        }
+        return items;
+    }
+
+    public JobResultResponse getLatestJobResult(Long userId) {
+        SurveySession latestSession = getLatestSessionOrThrow(userId);
+
+        List<JobResult> top3Job = jobResultRepository.findTop3BySessionIdOrderByTotalScoreDesc(latestSession.getId());
+        List<JobItem> items = buildJobItems(top3Job);
+
+        return new JobResultResponse(items);
+    }
+
+    private List<JobItem> buildJobItems(List<JobResult> jobResults) {
+        List<JobItem> items = new ArrayList<>();
+
+        for (JobResult result : jobResults) {
+            Long jobId = result.getJob().getId();
+            double percentageScore = result.getTotalScore() * PERCENTAGE_CORRECTION;
+
+            items.add(new JobItem(jobId, percentageScore));
+        }
+        return items;
+    }
+
+    public PostingResultResponse getLatestPostingResult(Long userId) {
+        SurveySession latestSession = getLatestSessionOrThrow(userId);
+
+        List<PostingResult> results = postingResultRepository.findBySessionIdWithPostings(latestSession.getId());
+        List<PostingItem> items = buildPostingItems(results);
+        return new PostingResultResponse(items);
+    }
+
+    private List<PostingItem> buildPostingItems(List<PostingResult> results) {
+        List<PostingItem> items = new ArrayList<>();
+
+        for (PostingResult result : results) {
+            JobPosting posting = result.getPost();
+            String companyName = posting.getCompanyName();
+            String title = posting.getTitle();
+            String url = posting.getPostingUrl();
+            float percentageScore = (float) (result.getSimilarity() * PERCENTAGE_CORRECTION);
+            items.add(new PostingItem(companyName, title, percentageScore, url));
+        }
+        return items;
+    }
+
+    public ResultOverviewResponse getResultOverview(Long sessionId) {
+        SurveySession session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new IllegalArgumentException("설문 회차가 존재하지 않습니다."));
+        ResultSessionItem sessionItem = new ResultSessionItem(sessionId,
+                session.getUser().getId(), session.getCreatedAt());
+
+        List<CompetencyResult> results = session.getCompetencyResults();
+        List<CompetencyItem> competencies = buildCompetencyItems(results);
+
+        List<JobResult> top3Job = jobResultRepository.findTop3BySessionIdOrderByTotalScoreDesc(sessionId);
+        List<JobItem> jobs = buildJobItems(top3Job);
+
+        List<PostingResult> top3Postings = postingResultRepository.findBySessionIdWithPostings(sessionId);
+        List<ResultPostingItem> postings = buildResultPostingItems(top3Postings);
+
+        return new ResultOverviewResponse(sessionItem, competencies, jobs, postings);
+    }
+
+    private List<ResultPostingItem> buildResultPostingItems(List<PostingResult> results) {
+        List<ResultPostingItem> items = new ArrayList<>();
+
+        for (PostingResult result : results) {
+            JobPosting posting = result.getPost();
+            String companyName = posting.getCompanyName();
+            String title = posting.getTitle();
+            float percentageScore = (float) (result.getSimilarity() * PERCENTAGE_CORRECTION);
+            items.add(new ResultPostingItem(posting.getId(), companyName, title, posting.getMainTasks(), percentageScore));
+        }
+        return items;
+    }
+
+    public ResultListResponse getResultList(Long userId) {
+        List<SurveySession> sessions = sessionRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        List<Long> sessionIds = buildSessionIds(sessions);
+        List<JobResult> jobs = jobResultRepository.findTop1BySessionIds(sessionIds);
+        List<CompetencyResult> competencies = competencyResultRepository.findTop1BySessionIds(sessionIds);
+
+        Map<Long, CompetencyResult> competencyMapForList = buildCompetencyForLIst(competencies);
+        Map<Long, JobResult> jobMapForList = buildJobForLIst(jobs);
+
+        List<ResultListItem> results = new ArrayList<>();
+        for (SurveySession session : sessions) {
+            Long sessionId = session.getId();
+            LocalDateTime createdAt = session.getCreatedAt();
+
+            JobResult jobResult = jobMapForList.get(sessionId);
+            CompetencyResult competencyResult = competencyMapForList.get(sessionId);
+
+            Long jobId = null;
+            if (jobResult != null) {
+                jobId = jobMapForList.get(sessionId).getJob().getId();
+            }
+
+            CompetencyPolicy topCompetency = null;
+            double percentageScore = 0.0;
+            if (competencyResult != null) {
+                topCompetency = CompetencyPolicy.from(competencyResult.getCompetency().getId());
+                percentageScore = competencyResult.getTotalScore() * PERCENTAGE_CORRECTION;
+            }
+
+            results.add(new ResultListItem(sessionId, createdAt, jobId, topCompetency, percentageScore));
+        }
+        return new ResultListResponse(results);
+    }
+
+    private List<Long> buildSessionIds(List<SurveySession> sessions) {
+        List<Long> sessionIds = new ArrayList<>();
+        for (SurveySession session : sessions) {
+            sessionIds.add(session.getId());
+        }
+
+        return sessionIds;
+    }
+
+    private Map<Long, CompetencyResult> buildCompetencyForLIst(List<CompetencyResult> results) {
+        Map<Long, CompetencyResult> resultMap = new HashMap<>();
+        for (CompetencyResult result : results) {
+            resultMap.put(result.getSession().getId(), result);
+        }
+        return resultMap;
+    }
+
+    private Map<Long, JobResult> buildJobForLIst(List<JobResult> results) {
+        Map<Long, JobResult> resultMap = new HashMap<>();
+        for (JobResult result : results) {
+            resultMap.put(result.getSession().getId(), result);
+        }
+        return resultMap;
+    }
+
+}
