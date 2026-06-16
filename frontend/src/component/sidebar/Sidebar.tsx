@@ -6,8 +6,8 @@
 import { NavLink, useLocation, useNavigate } from 'react-router';
 
 /* Icon */
-import { LogOut, LucideBox, StickyNote, type LucideIcon } from 'lucide-react';
-import { LayoutDashboard, User2, X } from 'lucide-react';
+import { LogOut, LucideBox, StickyNote, ClipboardList, type LucideIcon } from 'lucide-react';
+import { LayoutDashboard, User2, X, } from 'lucide-react';
 
 /* Store */
 import { useSidebarStore } from '../../store/sidebarStore';
@@ -139,6 +139,10 @@ const Sidebar = () => {
               }}
             >
               설문 조사
+            </SidebarLink>
+
+            <SidebarLink to ="/history-result" icon={ClipboardList} onClick={close}>
+              설문 결과
             </SidebarLink>
           </div>
 

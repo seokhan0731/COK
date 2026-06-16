@@ -1,50 +1,37 @@
-import type { JobType, SkillType } from './DashboardType';
+import type { JobType, SkillType, SkillDataType } from './dashboardType';
 
 export interface Session {
-    sessionId: number;
-    userId: number;
-    createdAt: string;
+    session_id: number;
+    user_id: number;
+    created_at: string;
 }
 
-export interface CompetencyResult {
-    competencyResultId: number;
-    sessionId: number;
-    competencyId: number;
-    name: string;
-    value: number;
-    rank: number;
-}
+/* dashboard의 SkillDataType({ skill, value })과 동일한 형태 */
+export type CompetencyResult = SkillDataType;
 
 export interface JobResult {
-    jobResultId: number;
-    sessionId: number;
-    jobId: number;
-    name: string;
+    jobId: JobType;
     match: number;
-    rank: number;
 }
 
 export interface PostingResult {
-    postingResultId: number;
-    sessionId: number;
-    postingId: number;
-    companyName: string;
+    posting_id: number;
+    company_name: string;
     title: string;
     description: string;
     match: number;
-    rank: number;
 }
 
 export interface SessionResultResponse {
     session: Session;
-    competencyResults: CompetencyResult[];
-    jobResults: JobResult[];
-    postingResults: PostingResult[];
+    competency_results: CompetencyResult[];
+    job_results: JobResult[];
+    posting_results: PostingResult[];
 }
 
 export interface SessionHistoryRaw {
     session_id: number;
-    created_at: string;
+    createdAt: string;
     top_job: JobType;
     top_competency: SkillType;
     top_score: number;
