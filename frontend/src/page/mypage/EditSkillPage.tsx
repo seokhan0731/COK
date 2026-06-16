@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router';
 import LoadingSpinner from '../../component/loading/LoadingSpinner';
 import AsyncDebounce from '../../util/AsyncDebounce';
 import { checkGithubIDApi } from '../../api/profileApi';
+
 // #region Component
 type EditSkillCardProps = {
   icon: LucideIcon;

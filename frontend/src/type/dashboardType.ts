@@ -43,7 +43,7 @@ export type JobDataType = {
 export type PostingDataType = {
   companyName: string;
   title: string;
-  match: number;
+  math: number;
   postingUrl: string;
 };
 // #endregion

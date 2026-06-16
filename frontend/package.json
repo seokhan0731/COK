@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "sync": "browser-sync start --proxy \"localhost:5173\" --port 3000 --no-open --no-notify",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -16,6 +17,7 @@
     "@tailwindcss/vite": "^4.2.4",
     "@tanstack/react-query": "^5.100.14",
     "axios": "^1.16.0",
+    "browser-sync": "^3.0.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",

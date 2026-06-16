@@ -51,7 +51,7 @@ const RepoSelectModal = ({ onClose, onComplete }: Props) => {
   return (
     <div
       onClick={(e) => e.stopPropagation()}
-      className="relative flex w-full max-w-2xl max-h-[90dvh] flex-col overflow-hidden rounded-3xl shadow-2xl bg-background dark:bg-neutral-900"
+      className="relative flex w-full max-w-[min(42rem,calc(100dvw-3.75rem)) max-h-[90dvh] flex-col overflow-hidden rounded-3xl shadow-2xl bg-background dark:bg-neutral-900"
     >
       <div className="flex items-center justify-start px-6 pt-8 lg:px-8">
         <span className="text-xl font-extrabold tracking-tight text-primary-blue">COK</span>

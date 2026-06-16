@@ -91,7 +91,7 @@ public class GithubService {
                     String content = githubClient.getFileContents(gitId, repository, filePath, header, accept);
                     techSkills.addAll(buildGradleAnalyzer.analyze(content));
                 }
-                case "Dockerfile" -> techSkills.add(TechSkill.DOCKER);
+                case "docker-compose.yml", "docker-compose.yaml" -> techSkills.add(TechSkill.DOCKER);
                 case "Makefile" -> techSkills.add(TechSkill.MAKE);
                 case "FreeRTOSConfig.h" -> techSkills.add(TechSkill.FREERTOS);
             }
