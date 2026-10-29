@@ -1,0 +1,5 @@
+* text=auto eol=lf
+
+# 윈도우 관련은 crlf로 처리
+*.bat text eol=crlf
+*.cmd text eol=crlf
