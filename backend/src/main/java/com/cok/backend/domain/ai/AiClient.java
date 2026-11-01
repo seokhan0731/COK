@@ -8,7 +8,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "aiClient", url = "http://127.0.0.1:8000/ai")
+@FeignClient(name = "aiClient", url = "${ai.client.url}")
 public interface AiClient {
     @PostMapping(value = "/embedding")
     EmbeddingResponse getEmbedding(@RequestBody EmbeddingRequest request);
