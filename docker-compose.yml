@@ -1,8 +1,7 @@
-version: '3.8'
-
 services:
   db:
-    image: ankane/pgvector:latest
+    # ankane/pgvector, PostgreSQL 15.4
+    image: ankane/pgvector@sha256:956744bd14e9cbdf639c61c2a2a7c7c2c48a9c8cdd42f7de4ac034f4e96b90f8
     container_name: cok-db
     restart: always
     # DB 접속을 위한 환경 설정(유저 이름, 비밀번호, DB 이름)
@@ -13,6 +12,56 @@ services:
     # 포트 매핑
     ports:
       - "54321:5432"
-    # 데이터 보존을 /postgres_data
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data
+      # 데이터 보존을 /pgdata-new
+      - ./pgdata-new:/var/lib/postgresql/data
+      # 컨테이너 기동시, /docker/initdb/ 내부 파일 이름순으로 실행
+      - ./docker/initdb:/docker-entrypoint-initdb.d:ro
+      # 복원할 덤프 데이터 미리 마운트
+      - ./seed:/seed:ro
+    healthcheck:
+      test: [ "CMD-SHELL","pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  ai:
+    build: ./data-pipeline
+    container_name: cok-ai
+    restart: always
+    env_file:
+      - ./data-pipeline/.env
+    environment:
+      POSTGRES_URL: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  backend:
+    build: ./backend
+    container_name: cok-backend
+    restart: always
+    env_file:
+      - ./backend/.env
+    environment:
+      POSTGRES_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      # Docker끼리는 서로의 네트워트 조회 가능하니까 ai를 알아서 ip로 변환해 연결시켜줌
+      AI_CLIENT_URL: http://ai:8000/ai
+      # 호스트와 연결해야하니 ai와 다르게 ports 지정 필요
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+      ai:
+        condition: service_started
+
+  web:
+    build: ./frontend
+    container_name: cok-web
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_started

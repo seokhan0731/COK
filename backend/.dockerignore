@@ -1,0 +1,7 @@
+# 컨텍스트 줄이기 위해서 .dockerignore에 추가
+
+build/
+.gradle/
+*.iml
+.env
+HELP.md
