@@ -2,7 +2,8 @@ version: '3.8'
 
 services:
   db:
-    image: ankane/pgvector:latest
+    # ankane/pgvector, PostgreSQL 15.4
+    image: ankane/pgvector@sha256:956744bd14e9cbdf639c61c2a2a7c7c2c48a9c8cdd42f7de4ac034f4e96b90f8
     container_name: cok-db
     restart: always
     # DB 접속을 위한 환경 설정(유저 이름, 비밀번호, DB 이름)
@@ -13,6 +14,8 @@ services:
     # 포트 매핑
     ports:
       - "54321:5432"
-    # 데이터 보존을 /postgres_data
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data
+      # 데이터 보존을 /pgdata-new
+      - ./pgdata-new:/var/lib/postgresql/data
+      # 컨테이너 기동시, /docker/initdb/ 내부 파일 이름순으로 실행
+      - ./docker/initdb:/docker-entrypoint-initdb.d:ro
