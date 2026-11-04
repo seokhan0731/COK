@@ -1,0 +1,7 @@
+venv/
+*.iml
+.env
+__pycache__
+
+# 운영 중에, 약관 위배이기 때문에, 굳이 컨테이너에 올릴 필요 X
+crawler/
